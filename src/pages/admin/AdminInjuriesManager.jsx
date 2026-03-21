@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Eye, X, Activity, RefreshCw, ClipboardCheck, User, Calendar, FileText, Fingerprint } from 'lucide-react';
 import toast from 'react-hot-toast';
 import lesionService from '../../services/lesion.service';
-import InjuryEvaluationModal from '../../components/admin/injuries/InjuryEvaluationModal';
+import InjuryEvaluationModal from '../../components/Admin/Injuries/InjuryEvaluationModal';
 
 const AdminInjuriesManager = () => {
     const [solicitudes, setSolicitudes] = useState([]);
