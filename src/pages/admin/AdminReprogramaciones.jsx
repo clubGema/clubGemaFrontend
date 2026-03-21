@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MassRescheduleForm from '../../components/Admin/MassRescheduleForm';
 import MassRescheduleHistory from '../../components/Admin/MassRescheduleHistory';
-import FeriadoHistory from '../../components/admin/FeriadoHistory'; 
+import FeriadoHistory from '../../components/Admin/FeriadoHistory'; 
 import {
     History,
     Info,
