@@ -153,6 +153,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
         </div>
 
         {/* LADO DERECHO: QR (Responsivo para Celular) */}
+        {/* LADO DERECHO: QR (Responsivo para Celular) */}
         {!esEfectivo && (
           <div className="flex-1 bg-[#f8fafc] p-8 flex flex-col items-center justify-center relative animate-in slide-in-from-bottom md:slide-in-from-right duration-700 border-t md:border-t-0 md:border-l border-slate-100 pb-12 md:pb-8">
             <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none text-[#1e3a8a] hidden md:block"><QrCode size={250} /></div>
@@ -166,15 +167,21 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
                 <h4 className="text-2xl md:text-3xl font-black text-[#1e3a8a] uppercase italic tracking-tighter leading-none">Paga con <span className="text-orange-500">QR</span></h4>
               </div>
 
-              {/* QR Compacto */}
+              {/* ✅ QR LOCAL: Usando tu archivo QrYapeGema.PNG de public */}
               <div className="bg-white p-4 rounded-[3rem] shadow-xl border-4 border-white group relative">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=GEMA_STUDENT_PAOLO_15" alt="QR Gema" className="w-full h-auto rounded-[2.5rem] mb-4 shadow-inner" />
-                <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] pb-1 italic opacity-70 leading-none">Escanea Yape / Plin</p>
+                <img
+                  src="/QrYapeGema.PNG"
+                  alt="QR Oficial Club Gema"
+                  className="w-full h-auto rounded-[2.5rem] mb-4 shadow-inner grayscale-[0.2] group-hover:grayscale-0 transition-all duration-500"
+                />
+                <div className="bg-[#1e3a8a]/5 py-2 rounded-2xl mx-4">
+                  <p className="text-[9px] font-black text-[#1e3a8a] uppercase tracking-[0.3em] italic leading-none">Escanea Yape / Plin</p>
+                </div>
               </div>
 
-              {/* Botón de Copiado */}
+              {/* Botón de Copiado: El "Plan B" rápido */}
               <div className="bg-[#1e3a8a] p-6 rounded-[2.5rem] shadow-xl relative overflow-hidden group border border-white/10">
-                <p className="text-[9px] font-bold text-blue-300 uppercase tracking-widest mb-3 italic leading-none">Titular: Club Gema S.A.C.</p>
+                <p className="text-[9px] font-bold text-blue-300 uppercase tracking-widest mb-3 italic leading-none">¿No puedes escanear? Usa el número:</p>
                 <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md p-2 rounded-2xl border border-white/10">
                   <span className="flex-1 font-black text-white tracking-tighter text-xl ml-3 leading-none">{CLUB_PHONE}</span>
                   <button type="button" onClick={handleCopy}
@@ -182,26 +189,26 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
                     {copied ? <CheckCircle2 size={20} /> : <Copy size={20} />}
                   </button>
                 </div>
-                <p className="text-[8px] font-black text-white/30 mt-4 uppercase tracking-[0.4em] leading-none">Toca para copiar número</p>
+                <p className="text-[8px] font-black text-white/30 mt-4 uppercase tracking-[0.4em] leading-none italic">Titular: Club Gema S.A.C.</p>
               </div>
-              {/* NUEVO: Caja de Cuentas BCP */}
+
+              {/* CUENTAS BCP: La alternativa final */}
               <div className="bg-white p-5 rounded-[2rem] shadow-lg border border-slate-200 relative overflow-hidden text-left">
-                {/* Acento visual izquierdo */}
-                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-orange-500"></div>
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#1e3a8a]"></div>
 
                 <div className="flex items-center gap-2 mb-3 pl-2">
-                  <Landmark size={14} className="text-[#1e3a8a]" />
+                  <Landmark size={14} className="text-orange-500" />
                   <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest italic mt-0.5">
-                    ¿No puedes Plinear / Yapear? <br></br> Te brindamos nuestras cuentas:
+                    Transferencia Bancaria <br /> (BCP / Otros Bancos)
                   </p>
                 </div>
 
-                <div className="space-y-3 pl-2">
+                <div className="space-y-3 pl-2 bg-slate-50/50 p-2 rounded-xl">
                   <div>
-                    <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">CCI (BCP)</p>
+                    <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Nro de Cuenta (BCP)</p>
                     <p className="text-sm font-black text-[#1e3a8a] tracking-wider font-mono">19411410110063</p>
                   </div>
-                  <div>
+                  <div className="pt-2 border-t border-slate-100">
                     <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">CCI (Interbancaria)</p>
                     <p className="text-sm font-black text-[#1e3a8a] tracking-wider font-mono">00219411141011006392</p>
                   </div>
