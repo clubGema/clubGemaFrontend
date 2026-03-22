@@ -72,17 +72,19 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center p-2 md:p-6 bg-[#0f172a]/90 backdrop-blur-sm animate-in fade-in duration-300">
       <div className={`bg-white w-full ${esEfectivo ? 'max-w-md' : 'max-w-5xl'} 
-        max-h-[98vh] md:max-h-[90vh] overflow-y-auto md:overflow-hidden rounded-[2.5rem] md:rounded-[4rem] shadow-2xl flex flex-col md:flex-row border border-white/20 custom-scrollbar`}>
+        /* ✅ CORRECCIÓN 1: Scroll habilitado para el padre en móvil */
+        max-h-[95vh] overflow-y-auto md:overflow-hidden rounded-[2.5rem] md:rounded-[4rem] shadow-2xl flex flex-col md:flex-row border border-white/20 custom-scrollbar`}>
 
         {/* LADO IZQUIERDO: Formulario */}
-        <div className="flex-[1.1] flex flex-col min-w-full md:min-w-[380px] bg-white">
+        <div className="flex-[1.1] flex flex-col min-w-full md:min-w-[380px] bg-white border-b md:border-b-0">
           <div className="bg-[#1e3a8a] p-5 md:p-8 text-white relative">
             <button onClick={onClose} className="absolute top-5 right-6 md:hidden text-white/50 hover:text-white"><X size={24} /></button>
             <h3 className="font-black uppercase italic text-lg md:text-2xl tracking-tighter leading-none">Reportar <span className="text-orange-500">Pago</span></h3>
             <p className="text-[9px] font-black opacity-50 uppercase tracking-[0.2em] mt-1 italic">Gema Student Elite</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-5 md:p-8 space-y-4 md:space-y-6 flex-1">
+          {/* ✅ CORRECCIÓN 2: Quitamos overflow-y-auto aquí en móvil (md: solamente) */}
+          <form onSubmit={handleSubmit} className="p-5 md:p-8 space-y-4 md:space-y-6 flex-1 md:overflow-y-auto custom-scrollbar">
             <div className="space-y-1">
                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
                  <Banknote size={12} className="text-orange-500" /> Monto (S/)
@@ -115,20 +117,15 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
               )}
             </div>
 
-            {!esEfectivo ? (
+            {!esEfectivo && (
                <div className="space-y-1">
                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Voucher</label>
                  <input type="file" accept="image/*" className="hidden" id="voucher-input" onChange={(e) => { if (e.target.files[0]) { setVoucherFile(e.target.files[0]); setPreviewUrl(URL.createObjectURL(e.target.files[0])); } }} />
-                 <label htmlFor="voucher-input" className="block bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl py-10 md:py-14 text-center cursor-pointer hover:bg-orange-50 transition-all group overflow-hidden">
-                   {previewUrl ? <img src={previewUrl} className="h-24 md:h-28 mx-auto rounded-lg shadow-md" alt="Voucher" /> :
-                     <div className="py-1"><Upload size={28} className="mx-auto text-slate-300 mb-2 group-hover:text-orange-500 transition-colors" /><p className="text-[9px] font-black text-slate-400 uppercase italic leading-none">Subir Imagen</p></div>}
+                 <label htmlFor="voucher-input" className="block bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl py-8 md:py-12 text-center cursor-pointer hover:bg-orange-50 transition-all group overflow-hidden">
+                   {previewUrl ? <img src={previewUrl} className="h-20 md:h-28 mx-auto rounded-lg shadow-md" alt="Voucher" /> :
+                     <div className="py-1"><Upload size={28} className="mx-auto text-slate-300 mb-1 group-hover:text-orange-500 transition-colors" /><p className="text-[9px] font-black text-slate-400 uppercase italic leading-none">Subir Imagen</p></div>}
                  </label>
                </div>
-            ) : (
-              <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100 flex gap-3 items-center">
-                <Info size={20} className="text-blue-500" />
-                <p className="text-[9px] font-black text-blue-700 uppercase italic">Valida tu pago en la oficina principal.</p>
-              </div>
             )}
 
             <div className="pt-2 flex gap-2 pb-2">
@@ -141,54 +138,48 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
           </form>
         </div>
 
-        {/* LADO DERECHO: Info de Pago */}
+        {/* LADO DERECHO: QR e Info */}
         {!esEfectivo && (
-          <div className="flex-1 bg-[#f8fafc] p-6 md:p-8 flex flex-col items-center justify-start md:justify-center overflow-y-auto custom-scrollbar border-t md:border-t-0 md:border-l border-slate-100">
-            <div className="text-center space-y-4 w-full max-w-[260px]">
+          <div className="flex-1 bg-[#f8fafc] p-6 md:p-8 flex flex-col items-center justify-start md:justify-center md:overflow-y-auto custom-scrollbar border-t md:border-t-0 md:border-l border-slate-100">
+            <div className="text-center space-y-4 w-full max-w-[260px] pb-10 md:pb-0">
               
-              {/* QR COMPACTO */}
-              <div className="bg-white p-2.5 rounded-[2rem] shadow-lg border-2 border-white group relative">
-                <img src="/QrYapeGema.PNG" alt="QR Gema" className="w-44 mx-auto h-auto rounded-[1.5rem] mb-2" />
-                <div className="bg-[#1e3a8a]/5 py-1 rounded-lg">
-                  <p className="text-[8px] font-black text-[#1e3a8a] uppercase tracking-widest italic">Yape / Plin</p>
-                </div>
+              {/* QR Compacto */}
+              <div className="bg-white p-2.5 rounded-[2rem] shadow-lg border-2 border-white">
+                <img src="/QrYapeGema.PNG" alt="QR Gema" className="w-36 md:w-44 mx-auto h-auto rounded-[1.5rem] mb-2" />
+                <div className="bg-[#1e3a8a]/5 py-1 rounded-lg"><p className="text-[8px] font-black text-[#1e3a8a] uppercase italic">Yape / Plin</p></div>
               </div>
 
-              {/* NUMERO CELULAR */}
-              <div className="bg-[#1e3a8a] p-4 rounded-2xl shadow-md border border-white/10">
-                <p className="text-[8px] font-bold text-blue-300 uppercase tracking-widest mb-2 italic">Número de Contacto</p>
-                <div className="flex items-center gap-2 bg-white/10 p-1.5 rounded-lg border border-white/5">
+              {/* Número */}
+              <div className="bg-[#1e3a8a] p-4 rounded-2xl shadow-md">
+                <p className="text-[8px] font-bold text-blue-300 uppercase mb-2 italic">Número Oficial</p>
+                <div className="flex items-center gap-2 bg-white/10 p-1.5 rounded-lg">
                   <span className="flex-1 font-black text-white text-lg leading-none">902 585 995</span>
-                  <button type="button" onClick={() => handleCopy(CLUB_PHONE, "cel")} className="p-2 bg-orange-500 text-white rounded-lg hover:bg-white hover:text-orange-500 transition-all active:scale-90">
+                  <button type="button" onClick={() => handleCopy(CLUB_PHONE, "cel")} className="p-2 bg-orange-500 text-white rounded-lg active:scale-90 transition-all">
                     {copiedField === "cel" ? <CheckCircle2 size={14} /> : <Copy size={14} />}
                   </button>
                 </div>
               </div>
 
-              {/* CUENTAS BANCARIAS */}
+              {/* Cuentas */}
               <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 text-left">
                 <div className="flex items-center gap-2 mb-3">
                   <Landmark size={12} className="text-orange-500" />
-                  <p className="text-[9px] font-black text-slate-500 uppercase tracking-tight italic">
-                    ¿No puedes Yapear? Usa nuestras cuentas:
-                  </p>
+                  <p className="text-[8px] font-black text-slate-500 uppercase italic">¿No Yape? Usa cuentas:</p>
                 </div>
                 <div className="space-y-2">
-                   {/* BCP */}
                    <div className="bg-slate-50 p-2 rounded-xl flex items-center justify-between border border-slate-100">
                      <div className="flex flex-col">
-                        <span className="text-[7px] font-bold text-slate-400 uppercase">BCP Directo</span>
-                        <span className="text-[11px] font-black text-[#1e3a8a] font-mono leading-none">19411410110063</span>
+                        <span className="text-[7px] font-bold text-slate-400 uppercase">BCP</span>
+                        <span className="text-[10px] font-black text-[#1e3a8a] font-mono tracking-tighter">19411410110063</span>
                      </div>
                      <button onClick={() => handleCopy(BCP_CUENTA, "bcp")} className="p-1.5 text-slate-400 hover:text-orange-500 transition-colors">
                         {copiedField === "bcp" ? <CheckCircle2 size={12} className="text-green-500" /> : <Copy size={12} />}
                      </button>
                    </div>
-                   {/* CCI */}
                    <div className="bg-slate-50 p-2 rounded-xl flex items-center justify-between border border-slate-100">
                      <div className="flex flex-col">
-                        <span className="text-[7px] font-bold text-slate-400 uppercase">CCI (Interbancario)</span>
-                        <span className="text-[11px] font-black text-[#1e3a8a] font-mono leading-none">00219411141011006392</span>
+                        <span className="text-[7px] font-bold text-slate-400 uppercase">CCI</span>
+                        <span className="text-[10px] font-black text-[#1e3a8a] font-mono tracking-tighter">00219411141011006392</span>
                      </div>
                      <button onClick={() => handleCopy(CCI_CUENTA, "cci")} className="p-1.5 text-slate-400 hover:text-orange-500 transition-colors">
                         {copiedField === "cci" ? <CheckCircle2 size={12} className="text-green-500" /> : <Copy size={12} />}
@@ -196,7 +187,6 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
                    </div>
                 </div>
               </div>
-
             </div>
           </div>
         )}
