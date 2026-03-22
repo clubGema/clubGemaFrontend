@@ -43,7 +43,7 @@ const Footer = () => {
             <ul className="space-y-4 text-white/60 font-black uppercase italic text-xs tracking-widest">
               <li className="flex items-center gap-3 italic underline decoration-orange-500/50">Sede San Martín de Porres, Lima</li>
               <li>info@gemavolley.com</li>
-              <li className="text-white text-lg">+51 999 123 456</li>
+              <li className="text-white text-lg">+51 902 585 995</li>
             </ul>
           </div>
         </div>

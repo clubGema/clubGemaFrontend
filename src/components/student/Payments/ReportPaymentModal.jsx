@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { X, Send, Loader2, Banknote, Upload, Info, Coins, Copy, CheckCircle2, QrCode, Smartphone, Calendar } from "lucide-react";
+import { X, Send, Loader2, Banknote, Upload, Info, Coins, Copy, CheckCircle2, QrCode, Smartphone, Calendar, Landmark } from "lucide-react";
 import apiFetch from "../../../interceptors/api.js";
 import toast from "react-hot-toast";
 import { API_ROUTES } from "../../../constants/apiRoutes.js";
@@ -15,7 +15,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
     monto: ""
   });
 
-  const CLUB_PHONE = "945616596";
+  const CLUB_PHONE = "902 585 995";
   const esEfectivo = formData.metodo_pago === "EFECTIVO";
 
   const handleCopy = () => {
@@ -54,20 +54,20 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
       const response = await apiFetch.post(API_ROUTES.PAGOS.REPORTAR, paymentData);
       if (!response.ok) {
         // Intentamos leer el JSON que nos mandó tu backend (donde está el textazo)
-        const errorData = await response.json(); 
-        
+        const errorData = await response.json();
+
         // Lanzamos el error usando el texto del backend (o uno genérico si falla)
-        throw new Error(errorData.message || "Error al reportar el pago."); 
+        throw new Error(errorData.message || "Error al reportar el pago.");
       }
 
       toast.success("¡Pago reportado!");
       if (onSuccess) await onSuccess();
       onClose();
-   } catch (error) {
+    } catch (error) {
       // Ahora error.message contendrá tu mensaje "⛔ PAGO DENEGADO..."
-      toast.error(error.message, { 
-        duration: 5000, 
-        style: { maxWidth: '500px' } 
+      toast.error(error.message, {
+        duration: 5000,
+        style: { maxWidth: '500px' }
       });
     } finally {
       setLoading(false);
@@ -77,7 +77,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center p-2 md:p-4 bg-[#0f172a]/90 backdrop-blur-sm animate-in fade-in duration-300">
       <div className={`bg-white w-full ${esEfectivo ? 'max-w-md' : 'max-w-4xl'} max-h-[95vh] overflow-y-auto rounded-[2.5rem] md:rounded-[4rem] shadow-2xl transition-all duration-500 ease-in-out flex flex-col md:flex-row border border-white/20 custom-scrollbar`}>
-        
+
         {/* LADO IZQUIERDO: Formulario (Compacto y Ajustable) */}
         <div className="flex-[1.2] flex flex-col min-w-full md:min-w-[350px]">
           <div className="bg-[#1e3a8a] p-6 md:p-8 text-white relative">
@@ -128,9 +128,9 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
               <div className="space-y-1.5">
                 <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2">Comprobante</label>
                 <input type="file" accept="image/*" className="hidden" id="voucher-input" onChange={(e) => { if (e.target.files[0]) { setVoucherFile(e.target.files[0]); setPreviewUrl(URL.createObjectURL(e.target.files[0])); } }} />
-                <label htmlFor="voucher-input" className="block bg-slate-50 border-2 border-dashed border-slate-200 rounded-[2rem] py-8 text-center cursor-pointer hover:bg-orange-50 transition-all group overflow-hidden">
-                  {previewUrl ? <img src={previewUrl} className="h-28 mx-auto rounded-xl shadow-lg" alt="Voucher" /> : 
-                  <div className="py-1"><Upload size={32} className="mx-auto text-slate-300 mb-2 group-hover:text-orange-500 transition-colors" /><p className="text-[10px] font-black text-slate-400 uppercase italic tracking-widest leading-none">Subir Imagen</p></div>}
+                <label htmlFor="voucher-input" className="block bg-slate-50 border-2 border-dashed border-slate-200 rounded-[2rem] py-24 text-center cursor-pointer hover:bg-orange-50 transition-all group overflow-hidden">
+                  {previewUrl ? <img src={previewUrl} className="h-28 mx-auto rounded-xl shadow-lg" alt="Voucher" /> :
+                    <div className="py-1"><Upload size={32} className="mx-auto text-slate-300 mb-2 group-hover:text-orange-500 transition-colors" /><p className="text-[10px] font-black text-slate-400 uppercase italic tracking-widest leading-none">Subir Imagen</p></div>}
                 </label>
               </div>
             ) : (
@@ -156,7 +156,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
         {!esEfectivo && (
           <div className="flex-1 bg-[#f8fafc] p-8 flex flex-col items-center justify-center relative animate-in slide-in-from-bottom md:slide-in-from-right duration-700 border-t md:border-t-0 md:border-l border-slate-100 pb-12 md:pb-8">
             <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none text-[#1e3a8a] hidden md:block"><QrCode size={250} /></div>
-            
+
             <div className="text-center space-y-6 md:space-y-8 w-full max-w-[280px] relative z-10">
               <div className="space-y-3">
                 <div className="inline-flex items-center gap-2 bg-white px-5 py-2 rounded-full shadow-md border border-slate-100">
@@ -183,6 +183,29 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
                   </button>
                 </div>
                 <p className="text-[8px] font-black text-white/30 mt-4 uppercase tracking-[0.4em] leading-none">Toca para copiar número</p>
+              </div>
+              {/* NUEVO: Caja de Cuentas BCP */}
+              <div className="bg-white p-5 rounded-[2rem] shadow-lg border border-slate-200 relative overflow-hidden text-left">
+                {/* Acento visual izquierdo */}
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-orange-500"></div>
+
+                <div className="flex items-center gap-2 mb-3 pl-2">
+                  <Landmark size={14} className="text-[#1e3a8a]" />
+                  <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest italic mt-0.5">
+                    ¿No puedes Plinear / Yapear? <br></br> Te brindamos nuestras cuentas:
+                  </p>
+                </div>
+
+                <div className="space-y-3 pl-2">
+                  <div>
+                    <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">CCI (BCP)</p>
+                    <p className="text-sm font-black text-[#1e3a8a] tracking-wider font-mono">19411410110063</p>
+                  </div>
+                  <div>
+                    <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">CCI (Interbancaria)</p>
+                    <p className="text-sm font-black text-[#1e3a8a] tracking-wider font-mono">00219411141011006392</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

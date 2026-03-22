@@ -2,7 +2,7 @@ import React from 'react';
 import { QrCode, Copy, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const PaymentMethodCard = ({ phoneNumber = "999123456", owner = "Club Gema S.A.C." }) => {
+const PaymentMethodCard = ({ phoneNumber = "902585995", owner = "Club Gema S.A.C." }) => {
   
   const copyToClipboard = () => {
     navigator.clipboard.writeText(phoneNumber);
