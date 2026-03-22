@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { X, Send, Loader2, Banknote, Upload, Info, Coins, Copy, CheckCircle2, QrCode, Smartphone, Calendar, Landmark } from "lucide-react";
+import { X, Send, Loader2, Banknote, Upload, Info, Coins, Copy, CheckCircle2, QrCode, Smartphone, Landmark } from "lucide-react";
 import apiFetch from "../../../interceptors/api.js";
 import toast from "react-hot-toast";
 import { API_ROUTES } from "../../../constants/apiRoutes.js";
@@ -53,10 +53,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
 
       const response = await apiFetch.post(API_ROUTES.PAGOS.REPORTAR, paymentData);
       if (!response.ok) {
-        // Intentamos leer el JSON que nos mandó tu backend (donde está el textazo)
         const errorData = await response.json();
-
-        // Lanzamos el error usando el texto del backend (o uno genérico si falla)
         throw new Error(errorData.message || "Error al reportar el pago.");
       }
 
@@ -64,7 +61,6 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
       if (onSuccess) await onSuccess();
       onClose();
     } catch (error) {
-      // Ahora error.message contendrá tu mensaje "⛔ PAGO DENEGADO..."
       toast.error(error.message, {
         duration: 5000,
         style: { maxWidth: '500px' }
@@ -77,13 +73,9 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center p-2 md:p-6 bg-[#0f172a]/90 backdrop-blur-sm animate-in fade-in duration-300">
       <div className={`bg-white w-full ${esEfectivo ? 'max-w-md' : 'max-w-5xl'} 
-        /* 1. LIMITAMOS EL ALTO EN PC */
-        max-h-[95vh] md:max-h-[90vh] 
-        /* 2. EVITAMOS EL SCROLL GLOBAL DEL MODAL */
-        overflow-hidden 
-        rounded-[2.5rem] md:rounded-[4rem] shadow-2xl transition-all duration-500 flex flex-col md:flex-row border border-white/20`}>
+        max-h-[95vh] md:max-h-[90vh] overflow-hidden rounded-[2.5rem] md:rounded-[4rem] shadow-2xl transition-all duration-500 flex flex-col md:flex-row border border-white/20`}>
 
-        {/* LADO IZQUIERDO: Formulario (Ahora con scroll independiente si es necesario) */}
+        {/* LADO IZQUIERDO: Formulario */}
         <div className="flex-[1.2] flex flex-col min-w-full md:min-w-[400px] overflow-y-auto custom-scrollbar">
           <div className="bg-[#1e3a8a] p-6 md:p-10 text-white relative">
             <button onClick={onClose} className="absolute top-6 right-6 md:hidden text-white/50 hover:text-white">
@@ -96,7 +88,6 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
           </div>
 
           <form onSubmit={handleSubmit} className="p-6 md:p-10 space-y-6 flex-1 bg-white">
-            {/* ... (campos del formulario iguales) */}
             <div className="space-y-1.5">
                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2 flex items-center gap-2">
                  <Banknote size={12} className="text-orange-500" /> Monto a Reportar (S/)
@@ -117,7 +108,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
                 </select>
               </div>
               {!esEfectivo ? (
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 animate-in slide-in-from-right-2 duration-300">
                   <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2">Operación</label>
                   <input type="text" placeholder="000000" value={formData.codigo_operacion} onChange={(e) => setFormData({ ...formData, codigo_operacion: e.target.value })}
                     className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl px-4 py-3.5 text-xs font-black outline-none focus:border-[#1e3a8a]" />
@@ -130,77 +121,87 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
               )}
             </div>
 
-            {!esEfectivo && (
+            {!esEfectivo ? (
                <div className="space-y-1.5">
                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2">Comprobante</label>
                  <input type="file" accept="image/*" className="hidden" id="voucher-input" onChange={(e) => { if (e.target.files[0]) { setVoucherFile(e.target.files[0]); setPreviewUrl(URL.createObjectURL(e.target.files[0])); } }} />
-                 <label htmlFor="voucher-input" className="block bg-slate-50 border-2 border-dashed border-slate-200 rounded-[2rem] py-16 text-center cursor-pointer hover:bg-orange-50 transition-all group overflow-hidden">
+                 <label htmlFor="voucher-input" className="block bg-slate-50 border-2 border-dashed border-slate-200 rounded-[2rem] py-14 text-center cursor-pointer hover:bg-orange-50 transition-all group overflow-hidden">
                    {previewUrl ? <img src={previewUrl} className="h-32 mx-auto rounded-xl shadow-lg" alt="Voucher" /> :
                      <div className="py-1"><Upload size={32} className="mx-auto text-slate-300 mb-2 group-hover:text-orange-500 transition-colors" /><p className="text-[10px] font-black text-slate-400 uppercase italic tracking-widest leading-none">Subir Imagen</p></div>}
                  </label>
                </div>
+            ) : (
+              <div className="bg-blue-50 p-6 rounded-[2rem] border border-blue-100 flex gap-4 items-center">
+                <div className="bg-blue-500 p-3 rounded-xl text-white shadow-lg shadow-blue-200"><Info size={24} /></div>
+                <p className="text-[10px] font-black text-blue-700 leading-tight uppercase italic">Acércate a la oficina principal para validar tu pago.</p>
+              </div>
             )}
 
-            <div className="pt-4 flex gap-3 pb-2">
-              <button onClick={onClose} type="button" className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-500 font-black py-4 rounded-2xl transition-all uppercase italic text-[10px] tracking-widest">
+            <div className="pt-4 flex gap-3 pb-4">
+              <button onClick={onClose} type="button" className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-500 font-black py-4 rounded-2xl transition-all uppercase italic text-[10px] tracking-widest active:scale-95">
                 Cancelar
               </button>
-              <button disabled={loading} className="flex-[2] bg-[#1e3a8a] hover:bg-orange-600 text-white font-black py-4 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-lg">
+              <button disabled={loading} className="flex-[2] bg-[#1e3a8a] hover:bg-orange-600 text-white font-black py-4 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-lg active:scale-95">
                 {loading ? <Loader2 className="animate-spin" size={18} /> : <Send size={18} />}
-                <span className="uppercase italic tracking-tighter text-xs">{loading ? "..." : "CONFIRMAR REGISTRO"}</span>
+                <span className="uppercase italic tracking-tighter text-xs leading-none">{loading ? "..." : "CONFIRMAR REGISTRO"}</span>
               </button>
             </div>
           </form>
         </div>
 
-        {/* LADO DERECHO: QR (Fijo y con scroll propio si la pantalla es muy pequeña) */}
+        {/* LADO DERECHO: QR e Info (Optimizado) */}
         {!esEfectivo && (
-          <div className="flex-1 bg-[#f8fafc] p-8 md:p-12 flex flex-col items-center justify-start md:justify-center overflow-y-auto custom-scrollbar border-t md:border-t-0 md:border-l border-slate-100">
-            <div className="text-center space-y-6 w-full max-w-[320px] py-4">
-              <div className="space-y-3">
-                <div className="inline-flex items-center gap-2 bg-white px-5 py-2 rounded-full shadow-md border border-slate-100">
-                  <Smartphone size={14} className="text-orange-500" />
-                  <span className="text-[9px] font-black text-[#1e3a8a] uppercase tracking-widest italic">Recaudación Segura</span>
-                </div>
-                <h4 className="text-2xl md:text-3xl font-black text-[#1e3a8a] uppercase italic tracking-tighter leading-none">Paga con <span className="text-orange-500">QR</span></h4>
+          <div className="flex-1 bg-[#f8fafc] p-6 md:p-10 flex flex-col items-center justify-start md:justify-center overflow-y-auto custom-scrollbar border-t md:border-t-0 md:border-l border-slate-100">
+            <div className="text-center space-y-5 w-full max-w-[280px] py-2">
+              
+              <div className="space-y-1">
+                <h4 className="text-xl md:text-2xl font-black text-[#1e3a8a] uppercase italic tracking-tighter leading-none">
+                  Pago <span className="text-orange-500">Rápido</span>
+                </h4>
+                <p className="text-[7px] font-black text-slate-400 uppercase tracking-[0.3em] italic leading-none">
+                  🔒 Recaudación Oficial Gema
+                </p>
               </div>
 
-              {/* QR */}
-              <div className="bg-white p-4 rounded-[3rem] shadow-xl border-4 border-white">
-                <img src="/QrYapeGema.PNG" alt="QR Gema" className="w-full h-auto rounded-[2.5rem] mb-4" />
-                <div className="bg-[#1e3a8a]/5 py-2 rounded-2xl mx-4">
-                  <p className="text-[9px] font-black text-[#1e3a8a] uppercase tracking-[0.3em] italic">Escanea Yape / Plin</p>
+              {/* QR Compacto */}
+              <div className="bg-white p-3 rounded-[2.5rem] shadow-xl border-4 border-white group transition-transform hover:scale-105">
+                <img src="/QrYapeGema.PNG" alt="QR Gema" className="w-full h-auto rounded-[1.8rem] mb-3" />
+                <div className="bg-[#1e3a8a]/5 py-1.5 rounded-xl mx-2">
+                  <p className="text-[8px] font-black text-[#1e3a8a] uppercase tracking-widest italic leading-none">Yape / Plin</p>
                 </div>
               </div>
 
               {/* Número Copiable */}
-              <div className="bg-[#1e3a8a] p-6 rounded-[2.5rem] shadow-xl border border-white/10">
-                <p className="text-[9px] font-bold text-blue-300 uppercase tracking-widest mb-3 italic">¿No puedes escanear?</p>
-                <div className="flex items-center gap-3 bg-white/10 p-2 rounded-2xl">
-                  <span className="flex-1 font-black text-white text-xl ml-3">{CLUB_PHONE}</span>
-                  <button type="button" onClick={handleCopy} className="p-3 bg-orange-500 text-white rounded-xl hover:bg-white hover:text-orange-500 transition-all">
-                    {copied ? <CheckCircle2 size={18} /> : <Copy size={18} />}
+              <div className="bg-[#1e3a8a] p-5 rounded-[2rem] shadow-xl border border-white/10">
+                <p className="text-[8px] font-bold text-blue-300 uppercase tracking-widest mb-3 italic leading-none">¿No puedes escanear?</p>
+                <div className="flex items-center gap-2 bg-white/10 p-1.5 rounded-xl border border-white/5">
+                  <span className="flex-1 font-black text-white text-lg ml-2 leading-none">{CLUB_PHONE}</span>
+                  <button type="button" onClick={handleCopy} className="p-2.5 bg-orange-500 text-white rounded-lg hover:bg-white hover:text-orange-500 transition-all active:scale-90">
+                    {copied ? <CheckCircle2 size={16} /> : <Copy size={16} />}
                   </button>
                 </div>
               </div>
 
-              {/* Cuentas Bancarias */}
-              <div className="bg-white p-5 rounded-[2.5rem] shadow-lg border border-slate-200 text-left">
-                <div className="flex items-center gap-2 mb-3">
-                  <Landmark size={14} className="text-orange-500" />
-                  <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest italic">Cuentas Bancarias</p>
+              {/* CUENTAS BANCARIAS - Con el mensaje solicitado */}
+              <div className="bg-white p-4 rounded-[2rem] shadow-lg border border-slate-200 text-left">
+                <div className="flex items-center gap-2 mb-2 ml-1">
+                  <Landmark size={12} className="text-orange-500" />
+                  <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest italic mt-0.5 leading-tight">
+                    ¿No puedes Plinear / Yapear? <br/> Te brindamos nuestras cuentas:
+                  </p>
                 </div>
-                <div className="space-y-3 bg-slate-50 p-3 rounded-2xl">
-                   <div>
-                     <p className="text-[7px] font-bold text-slate-400 uppercase mb-0.5">BCP Directo</p>
-                     <p className="text-xs font-black text-[#1e3a8a] font-mono">19411410110063</p>
+                <div className="space-y-1.5">
+                   <div className="bg-slate-50 p-2 rounded-xl flex justify-between items-center border border-slate-100">
+                     <span className="text-[7px] font-bold text-slate-400 uppercase">BCP:</span>
+                     <span className="text-[10px] font-black text-[#1e3a8a] font-mono tracking-tighter">19411410110063</span>
                    </div>
-                   <div className="pt-2 border-t border-slate-200">
-                     <p className="text-[7px] font-bold text-slate-400 uppercase mb-0.5">Interbancaria (CCI)</p>
-                     <p className="text-xs font-black text-[#1e3a8a] font-mono">00219411141011006392</p>
+                   <div className="bg-slate-50 p-2 rounded-xl flex justify-between items-center border border-slate-100">
+                     <span className="text-[7px] font-bold text-slate-400 uppercase">CCI:</span>
+                     <span className="text-[10px] font-black text-[#1e3a8a] font-mono tracking-tighter">00219411141011006392</span>
                    </div>
                 </div>
               </div>
+
             </div>
           </div>
         )}
