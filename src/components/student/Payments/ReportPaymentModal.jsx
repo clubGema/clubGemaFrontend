@@ -75,28 +75,34 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[150] flex items-center justify-center p-2 md:p-4 bg-[#0f172a]/90 backdrop-blur-sm animate-in fade-in duration-300">
-      <div className={`bg-white w-full ${esEfectivo ? 'max-w-md' : 'max-w-4xl'} max-h-[95vh] overflow-y-auto rounded-[2.5rem] md:rounded-[4rem] shadow-2xl transition-all duration-500 ease-in-out flex flex-col md:flex-row border border-white/20 custom-scrollbar`}>
+    <div className="fixed inset-0 z-[150] flex items-center justify-center p-2 md:p-6 bg-[#0f172a]/90 backdrop-blur-sm animate-in fade-in duration-300">
+      <div className={`bg-white w-full ${esEfectivo ? 'max-w-md' : 'max-w-5xl'} 
+        /* 1. LIMITAMOS EL ALTO EN PC */
+        max-h-[95vh] md:max-h-[90vh] 
+        /* 2. EVITAMOS EL SCROLL GLOBAL DEL MODAL */
+        overflow-hidden 
+        rounded-[2.5rem] md:rounded-[4rem] shadow-2xl transition-all duration-500 flex flex-col md:flex-row border border-white/20`}>
 
-        {/* LADO IZQUIERDO: Formulario (Compacto y Ajustable) */}
-        <div className="flex-[1.2] flex flex-col min-w-full md:min-w-[350px]">
-          <div className="bg-[#1e3a8a] p-6 md:p-8 text-white relative">
+        {/* LADO IZQUIERDO: Formulario (Ahora con scroll independiente si es necesario) */}
+        <div className="flex-[1.2] flex flex-col min-w-full md:min-w-[400px] overflow-y-auto custom-scrollbar">
+          <div className="bg-[#1e3a8a] p-6 md:p-10 text-white relative">
             <button onClick={onClose} className="absolute top-6 right-6 md:hidden text-white/50 hover:text-white">
               <X size={24} />
             </button>
             <div className="relative z-10">
-              <h3 className="font-black uppercase italic text-xl md:text-2xl tracking-tighter leading-none">Reportar <span className="text-orange-500">Pago</span></h3>
-              <p className="text-[9px] font-black opacity-50 uppercase tracking-[0.2em] mt-1 italic">Gema Student Elite</p>
+              <h3 className="font-black uppercase italic text-xl md:text-3xl tracking-tighter leading-none">Reportar <span className="text-orange-500">Pago</span></h3>
+              <p className="text-[10px] font-black opacity-50 uppercase tracking-[0.2em] mt-1 italic">Gema Student Elite</p>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-5 flex-1 bg-white">
+          <form onSubmit={handleSubmit} className="p-6 md:p-10 space-y-6 flex-1 bg-white">
+            {/* ... (campos del formulario iguales) */}
             <div className="space-y-1.5">
-              <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2 flex items-center gap-2">
-                <Banknote size={12} className="text-orange-500" /> Monto a Reportar (S/)
-              </label>
-              <input type="number" step="0.01" value={formData.monto} onChange={(e) => setFormData({ ...formData, monto: e.target.value })}
-                className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-3.5 text-xl font-black text-[#1e3a8a] outline-none focus:border-orange-500 transition-all" />
+               <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2 flex items-center gap-2">
+                 <Banknote size={12} className="text-orange-500" /> Monto a Reportar (S/)
+               </label>
+               <input type="number" step="0.01" value={formData.monto} onChange={(e) => setFormData({ ...formData, monto: e.target.value })}
+                 className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-3.5 text-xl font-black text-[#1e3a8a] outline-none focus:border-orange-500 transition-all" />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -111,7 +117,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
                 </select>
               </div>
               {!esEfectivo ? (
-                <div className="space-y-1.5 animate-in slide-in-from-right-2 duration-300">
+                <div className="space-y-1.5">
                   <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2">Operación</label>
                   <input type="text" placeholder="000000" value={formData.codigo_operacion} onChange={(e) => setFormData({ ...formData, codigo_operacion: e.target.value })}
                     className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl px-4 py-3.5 text-xs font-black outline-none focus:border-[#1e3a8a]" />
@@ -124,41 +130,33 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
               )}
             </div>
 
-            {!esEfectivo ? (
-              <div className="space-y-1.5">
-                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2">Comprobante</label>
-                <input type="file" accept="image/*" className="hidden" id="voucher-input" onChange={(e) => { if (e.target.files[0]) { setVoucherFile(e.target.files[0]); setPreviewUrl(URL.createObjectURL(e.target.files[0])); } }} />
-                <label htmlFor="voucher-input" className="block bg-slate-50 border-2 border-dashed border-slate-200 rounded-[2rem] py-24 text-center cursor-pointer hover:bg-orange-50 transition-all group overflow-hidden">
-                  {previewUrl ? <img src={previewUrl} className="h-28 mx-auto rounded-xl shadow-lg" alt="Voucher" /> :
-                    <div className="py-1"><Upload size={32} className="mx-auto text-slate-300 mb-2 group-hover:text-orange-500 transition-colors" /><p className="text-[10px] font-black text-slate-400 uppercase italic tracking-widest leading-none">Subir Imagen</p></div>}
-                </label>
-              </div>
-            ) : (
-              <div className="bg-blue-50 p-6 rounded-[2rem] border border-blue-100 flex gap-4 items-center">
-                <div className="bg-blue-500 p-3 rounded-xl text-white shadow-lg shadow-blue-200"><Info size={24} /></div>
-                <p className="text-[10px] font-black text-blue-700 leading-tight uppercase italic">Acércate a la oficina principal para validar tu pago.</p>
-              </div>
+            {!esEfectivo && (
+               <div className="space-y-1.5">
+                 <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2">Comprobante</label>
+                 <input type="file" accept="image/*" className="hidden" id="voucher-input" onChange={(e) => { if (e.target.files[0]) { setVoucherFile(e.target.files[0]); setPreviewUrl(URL.createObjectURL(e.target.files[0])); } }} />
+                 <label htmlFor="voucher-input" className="block bg-slate-50 border-2 border-dashed border-slate-200 rounded-[2rem] py-16 text-center cursor-pointer hover:bg-orange-50 transition-all group overflow-hidden">
+                   {previewUrl ? <img src={previewUrl} className="h-32 mx-auto rounded-xl shadow-lg" alt="Voucher" /> :
+                     <div className="py-1"><Upload size={32} className="mx-auto text-slate-300 mb-2 group-hover:text-orange-500 transition-colors" /><p className="text-[10px] font-black text-slate-400 uppercase italic tracking-widest leading-none">Subir Imagen</p></div>}
+                 </label>
+               </div>
             )}
 
-            <div className="pt-4 flex gap-3">
-              <button onClick={onClose} type="button" className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-500 font-black py-4 rounded-2xl transition-all uppercase italic text-[10px] tracking-widest active:scale-95">
+            <div className="pt-4 flex gap-3 pb-2">
+              <button onClick={onClose} type="button" className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-500 font-black py-4 rounded-2xl transition-all uppercase italic text-[10px] tracking-widest">
                 Cancelar
               </button>
-              <button disabled={loading} className="flex-[2] bg-[#1e3a8a] hover:bg-orange-600 text-white font-black py-4 rounded-2xl transition-all flex items-center justify-center gap-3 active:scale-95 shadow-lg">
+              <button disabled={loading} className="flex-[2] bg-[#1e3a8a] hover:bg-orange-600 text-white font-black py-4 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-lg">
                 {loading ? <Loader2 className="animate-spin" size={18} /> : <Send size={18} />}
-                <span className="uppercase italic tracking-tighter text-xs leading-none">{loading ? "..." : "CONFIRMAR REGISTRO"}</span>
+                <span className="uppercase italic tracking-tighter text-xs">{loading ? "..." : "CONFIRMAR REGISTRO"}</span>
               </button>
             </div>
           </form>
         </div>
 
-        {/* LADO DERECHO: QR (Responsivo para Celular) */}
-        {/* LADO DERECHO: QR (Responsivo para Celular) */}
+        {/* LADO DERECHO: QR (Fijo y con scroll propio si la pantalla es muy pequeña) */}
         {!esEfectivo && (
-          <div className="flex-1 bg-[#f8fafc] p-8 flex flex-col items-center justify-center relative animate-in slide-in-from-bottom md:slide-in-from-right duration-700 border-t md:border-t-0 md:border-l border-slate-100 pb-12 md:pb-8">
-            <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none text-[#1e3a8a] hidden md:block"><QrCode size={250} /></div>
-
-            <div className="text-center space-y-6 md:space-y-8 w-full max-w-[280px] relative z-10">
+          <div className="flex-1 bg-[#f8fafc] p-8 md:p-12 flex flex-col items-center justify-start md:justify-center overflow-y-auto custom-scrollbar border-t md:border-t-0 md:border-l border-slate-100">
+            <div className="text-center space-y-6 w-full max-w-[320px] py-4">
               <div className="space-y-3">
                 <div className="inline-flex items-center gap-2 bg-white px-5 py-2 rounded-full shadow-md border border-slate-100">
                   <Smartphone size={14} className="text-orange-500" />
@@ -167,51 +165,40 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
                 <h4 className="text-2xl md:text-3xl font-black text-[#1e3a8a] uppercase italic tracking-tighter leading-none">Paga con <span className="text-orange-500">QR</span></h4>
               </div>
 
-              {/* ✅ QR LOCAL: Usando tu archivo QrYapeGema.PNG de public */}
-              <div className="bg-white p-4 rounded-[3rem] shadow-xl border-4 border-white group relative">
-                <img
-                  src="/QrYapeGema.PNG"
-                  alt="QR Oficial Club Gema"
-                  className="w-full h-auto rounded-[2.5rem] mb-4 shadow-inner grayscale-[0.2] group-hover:grayscale-0 transition-all duration-500"
-                />
+              {/* QR */}
+              <div className="bg-white p-4 rounded-[3rem] shadow-xl border-4 border-white">
+                <img src="/QrYapeGema.PNG" alt="QR Gema" className="w-full h-auto rounded-[2.5rem] mb-4" />
                 <div className="bg-[#1e3a8a]/5 py-2 rounded-2xl mx-4">
-                  <p className="text-[9px] font-black text-[#1e3a8a] uppercase tracking-[0.3em] italic leading-none">Escanea Yape / Plin</p>
+                  <p className="text-[9px] font-black text-[#1e3a8a] uppercase tracking-[0.3em] italic">Escanea Yape / Plin</p>
                 </div>
               </div>
 
-              {/* Botón de Copiado: El "Plan B" rápido */}
-              <div className="bg-[#1e3a8a] p-6 rounded-[2.5rem] shadow-xl relative overflow-hidden group border border-white/10">
-                <p className="text-[9px] font-bold text-blue-300 uppercase tracking-widest mb-3 italic leading-none">¿No puedes escanear? Usa el número:</p>
-                <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md p-2 rounded-2xl border border-white/10">
-                  <span className="flex-1 font-black text-white tracking-tighter text-xl ml-3 leading-none">{CLUB_PHONE}</span>
-                  <button type="button" onClick={handleCopy}
-                    className={`p-3.5 rounded-xl transition-all duration-500 shadow-xl ${copied ? 'bg-green-500 scale-110' : 'bg-orange-500 hover:bg-white hover:text-orange-500 text-white'}`}>
-                    {copied ? <CheckCircle2 size={20} /> : <Copy size={20} />}
+              {/* Número Copiable */}
+              <div className="bg-[#1e3a8a] p-6 rounded-[2.5rem] shadow-xl border border-white/10">
+                <p className="text-[9px] font-bold text-blue-300 uppercase tracking-widest mb-3 italic">¿No puedes escanear?</p>
+                <div className="flex items-center gap-3 bg-white/10 p-2 rounded-2xl">
+                  <span className="flex-1 font-black text-white text-xl ml-3">{CLUB_PHONE}</span>
+                  <button type="button" onClick={handleCopy} className="p-3 bg-orange-500 text-white rounded-xl hover:bg-white hover:text-orange-500 transition-all">
+                    {copied ? <CheckCircle2 size={18} /> : <Copy size={18} />}
                   </button>
                 </div>
-                <p className="text-[8px] font-black text-white/30 mt-4 uppercase tracking-[0.4em] leading-none italic">Titular: Club Gema S.A.C.</p>
               </div>
 
-              {/* CUENTAS BCP: La alternativa final */}
-              <div className="bg-white p-5 rounded-[2rem] shadow-lg border border-slate-200 relative overflow-hidden text-left">
-                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#1e3a8a]"></div>
-
-                <div className="flex items-center gap-2 mb-3 pl-2">
+              {/* Cuentas Bancarias */}
+              <div className="bg-white p-5 rounded-[2.5rem] shadow-lg border border-slate-200 text-left">
+                <div className="flex items-center gap-2 mb-3">
                   <Landmark size={14} className="text-orange-500" />
-                  <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest italic mt-0.5">
-                    Transferencia Bancaria <br /> (BCP / Otros Bancos)
-                  </p>
+                  <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest italic">Cuentas Bancarias</p>
                 </div>
-
-                <div className="space-y-3 pl-2 bg-slate-50/50 p-2 rounded-xl">
-                  <div>
-                    <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Nro de Cuenta (BCP)</p>
-                    <p className="text-sm font-black text-[#1e3a8a] tracking-wider font-mono">19411410110063</p>
-                  </div>
-                  <div className="pt-2 border-t border-slate-100">
-                    <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">CCI (Interbancaria)</p>
-                    <p className="text-sm font-black text-[#1e3a8a] tracking-wider font-mono">00219411141011006392</p>
-                  </div>
+                <div className="space-y-3 bg-slate-50 p-3 rounded-2xl">
+                   <div>
+                     <p className="text-[7px] font-bold text-slate-400 uppercase mb-0.5">BCP Directo</p>
+                     <p className="text-xs font-black text-[#1e3a8a] font-mono">19411410110063</p>
+                   </div>
+                   <div className="pt-2 border-t border-slate-200">
+                     <p className="text-[7px] font-bold text-slate-400 uppercase mb-0.5">Interbancaria (CCI)</p>
+                     <p className="text-xs font-black text-[#1e3a8a] font-mono">00219411141011006392</p>
+                   </div>
                 </div>
               </div>
             </div>
