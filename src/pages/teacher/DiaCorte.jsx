@@ -36,24 +36,23 @@ const DiaCorte = () => {
         }
     };
 
-    // 🔍 LÓGICA DE BÚSQUEDA AVANZADA (Ignora espacios y orden)
+    // 🔍 LÓGICA DE BÚSQUEDA AVANZADA (Protegida contra valores null)
     const filteredAlumnos = useMemo(() => {
         const searchClean = searchTerm.trim().toLowerCase();
         
         return alumnos.filter(alumno => {
-            // Datos base del alumno
-            const nombreCompleto = alumno.nombre_completo.toLowerCase();
-            const dni = alumno.dni;
+            // 🛡️ Agregamos fallback "" por si el ETL dejó campos null
+            const nombreCompleto = (alumno.nombre_completo || "").toLowerCase();
+            const dni = (alumno.dni || "").toString(); // Aseguramos que sea string
 
-            // Dividir la búsqueda en palabras sueltas (ej: "pepe villa" -> ["pepe", "villa"])
             const palabrasBusqueda = searchClean.split(/\s+/); 
 
-            // Verificar si cada palabra escrita coincide con algo del nombre o DNI
+            // Verificamos coincidencia protegiendo el includes
             const coincideBusqueda = palabrasBusqueda.every(palabra => 
                 nombreCompleto.includes(palabra) || dni.includes(palabra)
             );
 
-            // Lógica de fechas (30 días exactos)
+            // Lógica de fechas (protegemos también la lectura de contratos)
             const inscripcionRaw = alumno.contratos?.[0]?.fecha_inicio;
             const fechaInscripcion = inscripcionRaw ? new Date(inscripcionRaw) : null;
             const fechaCorte = fechaInscripcion ? addDays(fechaInscripcion, 30) : null;
@@ -61,7 +60,6 @@ const DiaCorte = () => {
             const vencido = fechaCorte && isPast(fechaCorte) && !isToday(fechaCorte);
             const esHoy = fechaCorte && isToday(fechaCorte);
 
-            // Aplicar filtro por estado (Badge)
             let coincideEstado = true;
             if (filterStatus === 'vencidos') coincideEstado = vencido;
             if (filterStatus === 'hoy') coincideEstado = esHoy;
@@ -152,7 +150,7 @@ const DiaCorte = () => {
                                         </td>
                                         <td className="px-8 py-6">
                                             <span className="text-[11px] font-bold text-slate-500 tabular-nums bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
-                                                {alumno.dni}
+                                                {alumno.dni || "S/D"}
                                             </span>
                                         </td>
                                         <td className="px-8 py-6">

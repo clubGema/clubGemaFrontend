@@ -23,26 +23,31 @@ const AdminStudentsManager = () => {
             const result = await response.json();
 
             if (response.ok) {
-                // Mapeamos la data de Prisma a la estructura del componente
-                const formattedData = result.data.map(user => ({
-                    id: user.id,
-                    nombres: user.nombres,
-                    apellidos: user.apellidos,
-                    email: user.email,
-                    tipo_documento_id: user.tipo_documento_id || 'DNI',
-                    numero_documento: user.numero_documento,
-                    telefono_personal: user.telefono_personal || 'No registrado',
-                    fecha_nacimiento: user.fecha_nacimiento ? new Date(user.fecha_nacimiento).toLocaleDateString() : '---',
-                    genero: user.genero,
-                    contacto_emergencia: user.alumnos.alumnos_contactos[0]?.telefono ?? 'S/N',
-                    parentesco: user.alumnos.alumnos_contactos[0]?.relacion ?? 'S/N',
-                    // Extraemos los datos del objeto 'alumnos' que viene de Prisma
-                    datosRolEspecifico: {
-                        condiciones_medicas: user.alumnos?.condiciones_medicas || 'Ninguna conocida',
-                        seguro_medico: user.alumnos?.seguro_medico || 'No especificado',
-                        grupo_sanguineo: user.alumnos?.grupo_sanguineo || 'S/N'
-                    }
-                }));
+                const formattedData = result.data.map(user => {
+                    // 🛡️ Extraemos con seguridad el objeto alumnos
+                    const alumnoData = user.alumnos || {};
+                    const contactos = alumnoData.alumnos_contactos || [];
+
+                    return {
+                        id: user.id,
+                        nombres: user.nombres || "Sin Nombre",
+                        apellidos: user.apellidos || "Sin Apellido",
+                        email: user.email,
+                        tipo_documento_id: user.tipo_documento_id || 'DNI',
+                        numero_documento: user.numero_documento || "---",
+                        telefono_personal: user.telefono_personal || 'No registrado',
+                        fecha_nacimiento: user.fecha_nacimiento ? new Date(user.fecha_nacimiento).toLocaleDateString() : '---',
+                        genero: user.genero,
+                        // 🛡️ Acceso seguro a contactos de emergencia
+                        contacto_emergencia: contactos[0]?.telefono ?? 'S/N',
+                        parentesco: contactos[0]?.relacion ?? 'S/N',
+                        datosRolEspecifico: {
+                            condiciones_medicas: alumnoData.condiciones_medicas || 'Ninguna conocida',
+                            seguro_medico: alumnoData.seguro_medico || 'No especificado',
+                            grupo_sanguineo: alumnoData.grupo_sanguineo || 'S/N'
+                        }
+                    };
+                });
                 setAlumnos(formattedData);
             }
         } catch (error) {
