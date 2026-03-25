@@ -21,8 +21,8 @@ const AdminStudentsManager = () => {
     const fetchAlumnos = async () => {
         try {
             setLoading(true);
-            const url = selectedSede 
-                ? `${API_ROUTES.USUARIOS.ALUMNOS}?sede_id=${selectedSede}` 
+            const url = selectedSede
+                ? `${API_ROUTES.USUARIOS.ALUMNOS}?sede_id=${selectedSede}`
                 : API_ROUTES.USUARIOS.ALUMNOS;
             const response = await apiFetch.get(url);
             const result = await response.json();
@@ -90,7 +90,6 @@ const AdminStudentsManager = () => {
         alum.numero_documento?.includes(searchTerm)
     );
 
-    // Resetear a primera página cuando se busca
     useEffect(() => {
         setCurrentPage(1);
     }, [searchTerm]);
