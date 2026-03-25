@@ -10,6 +10,8 @@ const AdminStudentsManager = () => {
     const [alumnos, setAlumnos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [sedes, setSedes] = useState([]);
+    const [selectedSede, setSelectedSede] = useState('');
 
     // Paginación
     const [currentPage, setCurrentPage] = useState(1);
@@ -19,7 +21,10 @@ const AdminStudentsManager = () => {
     const fetchAlumnos = async () => {
         try {
             setLoading(true);
-            const response = await apiFetch.get(API_ROUTES.USUARIOS.ALUMNOS);
+            const url = selectedSede 
+                ? `${API_ROUTES.USUARIOS.ALUMNOS}?sede_id=${selectedSede}` 
+                : API_ROUTES.USUARIOS.ALUMNOS;
+            const response = await apiFetch.get(url);
             const result = await response.json();
 
             if (response.ok) {
@@ -58,8 +63,24 @@ const AdminStudentsManager = () => {
         }
     };
 
+    const fetchSedes = async () => {
+        try {
+            const response = await apiFetch.get(API_ROUTES.SEDES.ACTIVOS);
+            const result = await response.json();
+            if (response.ok) {
+                setSedes(result.data || []);
+            }
+        } catch (error) {
+            console.error("Error fetching sedes:", error);
+        }
+    };
+
     useEffect(() => {
         fetchAlumnos();
+    }, [selectedSede]);
+
+    useEffect(() => {
+        fetchSedes();
     }, []);
 
     // 2. Filtrado en tiempo real
@@ -256,15 +277,34 @@ const AdminStudentsManager = () => {
                 </div>
             </div>
 
-            <div className="relative group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1e3a8a]" size={18} />
-                <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="BUSCAR POR NOMBRE O DOCUMENTO..."
-                    className="w-full bg-white border border-slate-200 rounded-2xl pl-12 pr-4 py-3 text-xs font-bold uppercase tracking-widest outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm"
-                />
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                <div className="relative group flex-1">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1e3a8a]" size={18} />
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="BUSCAR POR NOMBRE O DOCUMENTO..."
+                        className="w-full bg-white border border-slate-200 rounded-2xl pl-12 pr-4 py-3 text-xs font-bold uppercase tracking-widest outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm"
+                    />
+                </div>
+                <div className="relative min-w-[250px]">
+                    <select
+                        value={selectedSede}
+                        onChange={(e) => setSelectedSede(e.target.value)}
+                        className="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-xs font-bold uppercase tracking-widest text-slate-600 outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm appearance-none cursor-pointer"
+                    >
+                        <option value="">TODAS LAS SEDES</option>
+                        {sedes.map((sede) => (
+                            <option key={sede.id} value={sede.id}>
+                                SEDE {sede.nombre}
+                            </option>
+                        ))}
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                        <ChevronRight size={16} className="rotate-90" />
+                    </div>
+                </div>
             </div>
 
             <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden min-h-[300px]">

@@ -39,7 +39,7 @@ export const API_ROUTES = {
   },
   SEDES: {
     BASE: "/sedes",
-    ACTIVOS: "/sedes/activas",
+    ACTIVOS: "/sedes?activo=true&limit=100",
     OCUPACION: "/sedes/dashboard/ocupacion",
     BY_ID: (id) => `/sedes/${id}`,
   },
