@@ -4,7 +4,7 @@ import { sedeService } from '../../services/sede.service';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 
-const AdminLocations = ({ onBack, onSuccess, initialData }) => {
+const AdminLocations = ({ onSuccess, initialData }) => {
     const [loading, setLoading] = useState(false);
     const isEdit = !!initialData;
 
@@ -100,7 +100,11 @@ const AdminLocations = ({ onBack, onSuccess, initialData }) => {
             if (onSuccess) onSuccess();
 
         } catch (error) {
-            toast.error(error.message || "Error en los datos");
+            const backendMessage = error.message || "Error en los datos";
+            const message = backendMessage.includes("horarios o inscripciones")
+                ? `${backendMessage}. Reasigna o elimina esos horarios antes de actualizar la sede.`
+                : backendMessage;
+            toast.error(message);
         } finally {
             setLoading(false);
         }
