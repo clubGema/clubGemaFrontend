@@ -184,6 +184,17 @@ const AdminSchedule = ({ onBack, initialData }) => {
                                     </select>
                                 </div>
                             </div>
+                            <div className="space-y-1">
+                                <label className="text-[10px] font-black text-slate-400 uppercase ml-1">Aforo</label>
+                                <input
+                                    type='number'
+                                    min={0}
+                                    step={1}
+                                    value={commonData.capacidad_max}
+                                    onChange={(e) => setCommonData({ ...commonData, capacidad_max: e.target.value })}
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                                />
+                            </div>
                         </div>
                     </div>
 
