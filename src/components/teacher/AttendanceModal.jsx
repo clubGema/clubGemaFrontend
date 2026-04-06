@@ -59,8 +59,8 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-            <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-zoom-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pb-28 bg-black/60 backdrop-blur-sm animate-fade-in">
+            <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[80vh] animate-zoom-in">
 
                 <div className="bg-[#1e3a8a] p-8 text-white flex justify-between items-center">
                     <div>
@@ -84,15 +84,14 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
                                     {alumno.nombreCompleto}
                                 </p>
                                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic flex items-center gap-2">
-                                    DNI: {alumno.dni} 
+                                    DNI: {alumno.dni}
                                     {alumno.fechaCorte && (
-                                        <span className={`px-2 py-0.5 rounded-lg border font-black tracking-tighter ${
-                                            alumno.vencido 
-                                                ? 'bg-red-50 text-red-600 border-red-100 animate-pulse' 
-                                                : alumno.esHoyCorte 
-                                                    ? 'bg-orange-50 text-orange-600 border-orange-100'
-                                                    : 'bg-emerald-50 text-emerald-600 border-emerald-100'
-                                        }`}>
+                                        <span className={`px-2 py-0.5 rounded-lg border font-black tracking-tighter ${alumno.vencido
+                                            ? 'bg-red-50 text-red-600 border-red-100 animate-pulse'
+                                            : alumno.esHoyCorte
+                                                ? 'bg-orange-50 text-orange-600 border-orange-100'
+                                                : 'bg-emerald-50 text-emerald-600 border-emerald-100'
+                                            }`}>
                                             CORTE: {format(alumno.fechaCorte, "dd/MM", { locale: es })}
                                         </span>
                                     )}
