@@ -72,7 +72,7 @@ const ClassCard = ({ category, title, time, location, coordinator, spots, image 
             <div className="bg-slate-100 p-1.5 rounded-lg text-slate-400 group-hover:bg-blue-50 group-hover:text-[#1e3a8a] transition-colors">
               <User size={14} />
             </div>
-            <span className="text-xs font-bold uppercase tracking-wide">Coach: <span className="text-slate-700">{coordinator || 'Sin asignar'}</span></span>
+            <span className="text-xs font-bold uppercase tracking-wide">Coordinador: <span className="text-slate-700">{coordinator || 'Sin asignar'}</span></span>
           </div>
           <div className="flex items-center gap-3 text-slate-500">
             <div className="bg-slate-100 p-1.5 rounded-lg text-slate-400 group-hover:bg-blue-50 group-hover:text-[#1e3a8a] transition-colors">

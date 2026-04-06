@@ -18,7 +18,7 @@ const Pricing = () => {
           // Mapeamos los datos de la DB a los estilos del front
           const planesConfigurados = response.data.map((plan, index) => {
             const isUnitario = plan.nombre.toUpperCase().includes('UNITARIA') || plan.nombre.toUpperCase().includes('SESIÓN') || plan.nombre.toUpperCase().includes('SESION');
-            
+
             let config = {
               badge: isUnitario ? "Pago Único" : "Membresía",
               icon: <Rocket className="text-blue-600" size={26} />,
@@ -76,17 +76,17 @@ const Pricing = () => {
     // El scroll total disponible
     const maxScroll = scrollWidth - offsetWidth;
     if (maxScroll <= 0) return;
-    
+
     // Calculamos el progreso del scroll y lo mapeamos a la cantidad de planes
     const progress = scrollLeft / maxScroll;
     const index = Math.round(progress * (planes.length - 1));
-    
+
     setActiveTab(index);
   };
 
   return (
     <div className="bg-slate-50 min-h-screen font-sans text-slate-900">
-      
+
       {/* --- HERO SECTION --- */}
       <section className="relative pt-20 pb-40 md:pt-24 md:pb-48 bg-[#0f172a] px-6 overflow-hidden">
         {/* Unificación de luces de fondo con la paleta */}
@@ -100,12 +100,12 @@ const Pricing = () => {
             <Trophy size={14} className="text-orange-400" />
             <span className="text-white text-[10px] font-black uppercase tracking-[0.3em]">Temporada 2026</span>
           </div>
-          
+
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-white uppercase italic tracking-tighter leading-none mb-6">
             Elige tu <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">Plan de Juego</span>
           </h1>
           <p className="text-slate-400 max-w-2xl mx-auto text-base md:text-xl font-medium leading-relaxed px-4">
-            Formación de alto rendimiento con la misma pasión en cada nivel.
+            Entrenamiento de excelencia con la misma pasión en cada nivel.
           </p>
         </div>
       </section>
@@ -123,14 +123,14 @@ const Pricing = () => {
           </div>
         ) : (
           <>
-            <div 
+            <div
               ref={scrollRef}
               onScroll={handleScroll}
               className="flex overflow-x-auto pt-6 pb-10 snap-x snap-mandatory hide-scrollbar lg:grid lg:grid-cols-5 lg:gap-4 xl:gap-6 lg:overflow-visible lg:pb-0 lg:pt-0 scroll-smooth px-[10%] sm:px-[15%] lg:px-0 gap-6"
             >
               {planes.map((opt) => (
-                <div 
-                  key={opt.id} 
+                <div
+                  key={opt.id}
                   className={`relative p-6 xl:p-8 rounded-[2.5rem] border-2 transition-all duration-500 flex flex-col h-full hover:-translate-y-2 snap-center min-w-[80vw] sm:min-w-[60vw] lg:min-w-0 ${opt.color} shadow-xl lg:shadow-none mb-4 lg:mb-0`}
                 >
                   {opt.recommended && (
@@ -178,11 +178,11 @@ const Pricing = () => {
                   </div>
 
                   {/* Botones con paleta unificada */}
-                  <Link 
-                    to="/register" 
+                  <Link
+                    to="/register"
                     className={`w-full py-4 rounded-xl font-black uppercase tracking-widest text-[9px] text-center transition-all active:scale-95 flex items-center justify-center gap-2 group/btn ${opt.btnStyle} mt-auto overflow-hidden text-ellipsis whitespace-nowrap`}
                   >
-                    Inscribirme 
+                    Inscribirme
                     <ChevronRight size={12} className="group-hover/btn:translate-x-1 transition-transform flex-shrink-0" />
                   </Link>
                 </div>
@@ -192,7 +192,7 @@ const Pricing = () => {
             {/* Pagination Dots for Mobile */}
             <div className="flex justify-center gap-2 mt-4 lg:hidden">
               {planes.map((_, i) => (
-                <div 
+                <div
                   key={i}
                   className={`h-1.5 rounded-full transition-all duration-300 ${activeTab === i ? 'w-6 bg-orange-500' : 'w-2 bg-slate-300'}`}
                 />
@@ -210,7 +210,7 @@ const Pricing = () => {
             <img src="https://images.unsplash.com/photo-1526676037777-05a232554f77?q=80&w=2000" className="w-full h-full object-cover" alt="voleibol" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] to-transparent"></div>
           </div>
-          
+
           <div className="relative z-10 max-w-3xl mx-auto">
             <h3 className="text-4xl md:text-6xl font-black text-white uppercase italic leading-tight mb-6 tracking-tighter">
               ¿Quieres sentir la <span className="text-orange-500 text-glow">Energía</span>?
