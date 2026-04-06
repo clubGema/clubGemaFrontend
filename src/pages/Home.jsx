@@ -107,7 +107,7 @@ function Home() {
             </h2>
           </div>
           <p className="text-[11px] md:text-base text-slate-500 font-medium ml-3.5 md:ml-4 leading-relaxed">
-            Reserva tu cupo en nuestras clases de alto rendimiento.
+            Reserva tu cupo en nuestras clases de entrenamiento.
           </p>
 
           <div className="mt-5 md:mt-8 bg-white p-1 md:p-2 rounded-xl md:rounded-3xl shadow-sm border border-slate-100 overflow-x-auto overflow-y-hidden scrollbar-hide">

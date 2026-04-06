@@ -21,8 +21,8 @@ const Footer = () => {
               GEMA <span className="text-orange-500">CLUB</span>
             </h3>
             <p className="text-slate-400 font-medium italic leading-relaxed">
-              Formando atletas de alto rendimiento desde 2015. Nuestra metodología se basa en la disciplina y la pasión por el voleibol profesional.
-            </p>
+              Formando apasionados del voleibol desde 2015. Nuestra metodología se basa en la disciplina y la excelencia del juego profesional.            
+              </p>
           </div>
 
           <div className="space-y-8">

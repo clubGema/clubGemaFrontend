@@ -117,7 +117,7 @@ const StudentAnnouncements = () => {
 // --- DASHBOARD PRINCIPAL ---
 const DashboardEstudiante = () => {
   const { user, userId } = useAuth();
-  
+
   // Estados de datos
   const [attendance, setAttendance] = useState([]);
   const [debts, setDebts] = useState([]);
@@ -150,7 +150,7 @@ const DashboardEstudiante = () => {
       const resCount = await apiFetch.get((API_ROUTES.NOTIFICACIONES?.BASE || "/notificaciones") + "/conteo-no-leidas");
       const countResult = await resCount.json();
       if (countResult.success) {
-        setUnreadCountDB(countResult.data || 0); 
+        setUnreadCountDB(countResult.data || 0);
       }
     } catch (error) {
       console.error("Error al cargar notificaciones:", error);
@@ -200,16 +200,16 @@ const DashboardEstudiante = () => {
   const handleMarkAsRead = async (id) => {
     // 1. Actualizamos la lista visualmente al instante (Optimistic UI)
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, leido: true } : n));
-    
+
     // 2. Bajamos el contador rojito al instante
     setUnreadCountDB(prev => Math.max(0, prev - 1));
-    
+
     try {
       // 3. Le avisamos a la base de datos en segundo plano
       const res = await apiFetch.patch(
         (API_ROUTES.NOTIFICACIONES?.BASE || "/notificaciones") + `/${id}/leer`
       );
-      
+
       if (!res.ok) {
         // Si falla el backend, devolvemos el contador a como estaba
         setUnreadCountDB(prev => prev + 1);
@@ -220,12 +220,12 @@ const DashboardEstudiante = () => {
     }
   };
 
- const agendaParaTimeline = useMemo(() => {
+  const agendaParaTimeline = useMemo(() => {
     return (attendance || [])
       .filter(s => s?.inscripciones?.horarios_clases)
       .map(s => {
         const horario = s.inscripciones.horarios_clases;
-        
+
         // Si hay reprogramación, usamos las horas destino. Si no, las originales.
         const horaInicioFinal = s.reprogramaciones_clases ? (s.reprogramaciones_clases.hora_inicio_destino + ":00") : horario.hora_inicio;
         const horaFinFinal = s.reprogramaciones_clases ? (s.reprogramaciones_clases.hora_fin_destino + ":00") : horario.hora_fin;
@@ -263,18 +263,18 @@ const DashboardEstudiante = () => {
             </h1>
             <div className="h-1.5 w-20 bg-orange-500 rounded-full mt-3"></div>
             <p className="text-[10px] md:text-xs text-slate-500 font-bold mt-4 italic uppercase tracking-[0.2em] flex items-center gap-2">
-              <Sparkles size={14} className="text-orange-400" />Centro de Alto Rendimiento
+              <Sparkles size={14} className="text-orange-400" />Centro de Gestión
             </p>
           </div>
 
           <div className="flex items-center gap-4 relative">
             {/* CAMPANITA GEMA */}
             <div className="relative">
-              <NotificationBell 
-                count={unreadCountDB} 
-                onClick={() => setShowNotifList(!showNotifList)} 
+              <NotificationBell
+                count={unreadCountDB}
+                onClick={() => setShowNotifList(!showNotifList)}
               />
-              
+
               {/* DROPDOWN DE ALERTAS DIVIDIDO EN NUEVAS Y ANTERIORES */}
               {showNotifList && (
                 <div className="absolute right-0 top-16 w-72 md:w-96 bg-white rounded-[2rem] shadow-2xl border border-slate-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
@@ -286,11 +286,11 @@ const DashboardEstudiante = () => {
                       </span>
                     )}
                   </div>
-                  
+
                   <div className="max-h-[350px] overflow-y-auto custom-scrollbar">
                     {(notifications || []).length > 0 ? (
                       <div className="flex flex-col">
-                        
+
                         {/* --- GRUPO 1: PENDIENTES (NO LEÍDAS) --- */}
                         {(notifications || []).filter(n => !n.leido).length > 0 && (
                           <div>
@@ -298,8 +298,8 @@ const DashboardEstudiante = () => {
                               Nuevas
                             </div>
                             {notifications.filter(n => !n.leido).map((n) => (
-                              <div 
-                                key={n.id} 
+                              <div
+                                key={n.id}
                                 className="p-5 border-b border-slate-50 transition-all cursor-pointer hover:bg-blue-50/50 bg-white"
                                 onClick={() => handleMarkAsRead(n.id)}
                               >
@@ -325,8 +325,8 @@ const DashboardEstudiante = () => {
                               Anteriores
                             </div>
                             {notifications.filter(n => n.leido).map((n) => (
-                              <div 
-                                key={n.id} 
+                              <div
+                                key={n.id}
                                 className="p-5 border-b border-slate-50 bg-slate-50/30 opacity-70"
                               >
                                 <div className="flex items-start gap-3">
