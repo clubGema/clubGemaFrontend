@@ -103,12 +103,15 @@ function Register() {
             };
 
             const response = await registerService(payloadFinal);
-            const generatedUsername = response.data?.username || "Usuario";
+            const generatedUsername = response.data?.username;
+            const displayUsername = generatedUsername || "Usuario";
             toast.success(
-                (t) => (<span>¡Bienvenido! Tu usuario es: <b>{generatedUsername}</b></span>),
+                (t) => (<span>¡Bienvenido! Tu usuario es: <b>{displayUsername}</b></span>),
                 { id: toastId, duration: 10000 }
             );
-            navigate('/login');
+            navigate('/login', {
+                state: { prefillUsername: generatedUsername || '' }
+            });
         } catch (error) {
             toast.error(error.message || "Error al crear la cuenta", { id: toastId });
         } finally {
@@ -300,3 +303,4 @@ function Register() {
 }
 
 export default Register;
+
