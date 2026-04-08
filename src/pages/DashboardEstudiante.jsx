@@ -11,7 +11,7 @@ import { API_ROUTES } from "../constants/apiRoutes";
 import StudentStats from "../components/student/StudentStats";
 import StudentSchedule from "../components/student/StudentSchedule";
 import StudentPayments from "../components/student/StudentPayments";
-import WeeklyTimeline from "../components/student/WeeklyTimelineDashboard";
+import MonthlyCalendarDashboard from "../components/student/MonthlyCalendarDashboard";
 import NotificationBell from "../components/student/Notifications/NotificationBell";
 
 // --- COMPONENTE CARRUSEL (BENEFICIOS GEMA) ---
@@ -373,15 +373,6 @@ const DashboardEstudiante = () => {
         {/* 3. STATS */}
         <StudentStats />
 
-        {/* 4. TIMELINE SEMANAL */}
-        <div className="mb-10">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-1.5 h-4 bg-white rounded-full"></div>
-            <h2 className="font-black uppercase tracking-tighter italic text-xs text-slate-700">Tu Horario de la Semana</h2>
-          </div>
-          <WeeklyTimeline />
-        </div>
-
         {/* 5. GRID PRINCIPAL */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           <div className="lg:col-span-2 space-y-6">
@@ -413,6 +404,15 @@ const DashboardEstudiante = () => {
               <StudentPayments debts={debts} payments={payments} />
             </div>
           </div>
+        </div>
+
+        {/* 4. TIMELINE SEMANAL */}
+        <div className="mb-10 mt-10">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-1.5 h-4 bg-white rounded-full"></div>
+            <h2 className="font-black uppercase tracking-tighter italic text-xs text-slate-700">Tu Horario de la Semana</h2>
+          </div>
+          <MonthlyCalendarDashboard />
         </div>
 
         <p className="mt-16 text-center text-[9px] text-slate-300 font-black uppercase tracking-[0.5em] opacity-50 italic">
