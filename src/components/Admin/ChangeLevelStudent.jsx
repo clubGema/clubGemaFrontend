@@ -26,7 +26,7 @@ const diasSemana = (dia) => {
     return nombreDia;
 }
 
-const ChangeLevelStudent = ({ alumno, onBack, sedeId }) => {
+const ChangeLevelStudent = ({ alumno, onBack }) => {
     const [horariosActuales, setHorariosActuales] = useState([]);
     const [selectedHorarioActual, setSelectedHorarioActual] = useState(null);
     const [loadingActuales, setLoadingActuales] = useState(true);
@@ -81,7 +81,7 @@ const ChangeLevelStudent = ({ alumno, onBack, sedeId }) => {
         };
 
         fetchHorariosDisponibles();
-    }, [sedeId]);
+    }, []);
 
     const sedesUnicas = [...new Set(horariosDisponibles.map(h => h.cancha?.sede?.nombre).filter(Boolean))];
     const nivelesUnicos = [...new Set(horariosDisponibles.map(h => h.nivel?.nombre).filter(Boolean))];
