@@ -51,7 +51,9 @@ const AdminStudentsManager = () => {
                             condiciones_medicas: alumnoData.condiciones_medicas || 'Ninguna conocida',
                             seguro_medico: alumnoData.seguro_medico || 'No especificado',
                             grupo_sanguineo: alumnoData.grupo_sanguineo || 'S/N'
-                        }
+                        },
+                        sedeId: user.alumnos.inscripciones?.map(i => i.horarios_clases?.canchas?.sedes?.id).filter(value => Boolean(value)) ?? [], //Trae todos los ID de sedes, sin quitar duplicados
+                        sedeNombre: user.alumnos.inscripciones?.map(i => i.horarios_clases?.canchas?.sedes?.nombre).filter(value => Boolean(value)) ?? [], //Trae los nombres de la sedes, sin quitar duplicados
                     };
                 });
                 setAlumnos(formattedData);
@@ -267,7 +269,6 @@ const AdminStudentsManager = () => {
         return (
             <ChangeLevelStudent
                 alumno={selectedAlumno}
-                sedeId={selectedSede}
                 onBack={() => setView('list')}
             />
         );
@@ -342,23 +343,25 @@ const AdminStudentsManager = () => {
                                     <td className="p-4 text-xs font-bold text-slate-500">{alum.numero_documento}</td>
                                     <td className="p-4 text-xs font-bold text-slate-500">{alum.telefono_personal}</td>
                                     <td className="p-4 text-right">
-                                        <button
-                                            onClick={() => handleViewDetails(alum)}
-                                            className="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-orange-500 hover:text-white text-slate-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm"
-                                        >
-                                            Ver Perfil
-                                            <ChevronRight size={14} />
-                                        </button>
-                                        <button
-                                            onClick={() => {
-                                                setSelectedAlumno(alum);
-                                                setView('cambio_nivel');
-                                            }}
-                                            className="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-orange-500 hover:text-white text-slate-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm"
-                                        >
-                                            Cambiar Nivel
-                                            <ChevronRight size={14} />
-                                        </button>
+                                        <div className="inline-flex gap-2">
+                                            <button
+                                                onClick={() => handleViewDetails(alum)}
+                                                className="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-orange-500 hover:text-white text-slate-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm"
+                                            >
+                                                Ver Perfil
+                                                <ChevronRight size={14} />
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    setSelectedAlumno(alum);
+                                                    setView('cambio_nivel');
+                                                }}
+                                                className="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-orange-500 hover:text-white text-slate-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm"
+                                            >
+                                                Cambiar Horario
+                                                <ChevronRight size={14} />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             )) : (
