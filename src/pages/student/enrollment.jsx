@@ -19,7 +19,7 @@ const Enrollment = () => {
   const [submitting, setSubmitting] = useState(false);
   const [horarios, setHorarios] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
-  const [incluyeCamiseta, setIncluyeCamiseta] = useState(false);
+  const [incluyeCamiseta, setIncluyeCamiseta] = useState(true);
   const [pendingPayment, setPendingPayment] = useState(null);
   const [activeSede, setActiveSede] = useState(null);
   const [previewModal, setPreviewModal] = useState({ open: false, data: null });
