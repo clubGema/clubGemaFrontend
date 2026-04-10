@@ -14,7 +14,7 @@ const StudentLayout = () => {
   return (
     <div className="min-h-screen bg-slate-50">
       <StudentSidebar />
-      <div className="w-full md:pl-64 pb-24 md:pb-8 relative">
+      <div className="w-full md:pl-64 flex-1 relative min-h-screen">
         <Outlet />
       </div>
       <MobileNavbar />

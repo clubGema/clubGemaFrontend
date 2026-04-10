@@ -66,6 +66,7 @@ export const API_ROUTES = {
   },
   ASISTENCIAS: {
     BASE: "/asistencias",
+    PREVISUALIZAR: "/asistencias/previsualizar-fechas",
     ALUMNO_HISTORIAL: (id) => `/asistencias/alumno/${id}`,
     ALUMNO_ESTADISTICAS: (id) => `/asistencias/alumno/${id}/estadisticas`,
   },
