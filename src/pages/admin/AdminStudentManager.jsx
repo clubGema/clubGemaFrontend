@@ -3,7 +3,7 @@ import { Search, Phone, ShieldAlert, ChevronRight, ArrowLeft, Heart, Mail, Calen
 import toast from 'react-hot-toast';
 import { apiFetch } from '../../interceptors/api';
 import { API_ROUTES } from '../../constants/apiRoutes';
-import ChangeLevelStudent from '../../components/Admin/changeLevelStudent';
+import ChangeLevelStudent from '../../components/Admin/ChangeLevelStudent';
 
 const AdminStudentsManager = () => {
     const [view, setView] = useState('list');
