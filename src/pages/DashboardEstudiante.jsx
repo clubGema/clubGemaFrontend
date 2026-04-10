@@ -31,7 +31,7 @@ const StudentAnnouncements = () => {
     {
       id: 2,
       tipo: 'REFERIDOS',
-      titulo: 'Trae a un amigo y ahorra S/ 10',
+      titulo: 'Trae a un amigo y ahorra S/ 30',
       descripcion: 'Por cada referido que se inscriba, obtén un descuento directo en tu siguiente pago. ¡Sin límites!',
       icon: <Users size={28} />,
       gradient: 'from-orange-600 to-orange-400',
