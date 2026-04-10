@@ -52,8 +52,8 @@ const AdminStudentsManager = () => {
                             seguro_medico: alumnoData.seguro_medico || 'No especificado',
                             grupo_sanguineo: alumnoData.grupo_sanguineo || 'S/N'
                         },
-                        sedeId: user.alumnos.inscripciones?.map(i => i.horarios_clases?.canchas?.sedes?.id).filter(value => Boolean(value)) ?? [], //Trae todos los ID de sedes, sin quitar duplicados
-                        sedeNombre: user.alumnos.inscripciones?.map(i => i.horarios_clases?.canchas?.sedes?.nombre).filter(value => Boolean(value)) ?? [], //Trae los nombres de la sedes, sin quitar duplicados
+                        sedeId: user.alumnos?.inscripciones?.map(i => i.horarios_clases?.canchas?.sedes?.id).filter(Boolean) ?? [],
+                        sedeNombre: user.alumnos?.inscripciones?.map(i => i.horarios_clases?.canchas?.sedes?.nombre).filter(Boolean) ?? [],
                     };
                 });
                 setAlumnos(formattedData);
