@@ -174,7 +174,7 @@ const AdminTeachers = ({ onBack }) => {
                             <textarea
                                 name="especializacion"
                                 onChange={handleChange}
-                                placeholder="Describa el área técnica (Ej: Entrenamiento de alto rendimiento)..."
+                                placeholder="Describa el área técnica (Ej: Nivel Básico)..."
                                 className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-4 text-sm font-bold outline-none h-40 resize-none focus:ring-2 focus:ring-orange-500/20"
                             />
                         </div>

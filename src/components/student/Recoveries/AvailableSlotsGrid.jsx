@@ -4,7 +4,7 @@ import { Clock, MapPin, User, Star, CalendarPlus, Search } from 'lucide-react';
 const AvailableSlotsGrid = ({ slots, onSlotClick, loading }) => {
     const diasSemana = ["DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"];
     const mesesCompletos = [
-        "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", 
+        "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
         "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"
     ];
 
@@ -28,7 +28,7 @@ const AvailableSlotsGrid = ({ slots, onSlotClick, loading }) => {
                 const horario = slot.horarioData;
                 const fechaObj = new Date(slot.fecha);
                 const coordinatorName = horario.coordinador?.nombre_completo || "Coach Gema";
-                
+
                 // Formateamos ambas horas: inicio y fin
                 const horaInicio = horario.hora_inicio.substring(0, 5);
                 const horaFin = horario.hora_fin ? horario.hora_fin.substring(0, 5) : null;
@@ -45,7 +45,7 @@ const AvailableSlotsGrid = ({ slots, onSlotClick, loading }) => {
                                 {/* 🗓️ Bloque de Día Numérico */}
                                 <div className="flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-[#1e3a8a] text-white font-black shadow-lg shadow-blue-900/20 group-hover:bg-orange-500 group-hover:shadow-orange-500/30 transition-colors shrink-0">
                                     <span className="text-2xl leading-none italic font-black">
-                                        {fechaObj.getUTCDate()}
+                                        {fechaObj.getDate()}
                                     </span>
                                 </div>
 
@@ -53,21 +53,21 @@ const AvailableSlotsGrid = ({ slots, onSlotClick, loading }) => {
                                 <div className="min-w-0">
                                     <div className="flex flex-col">
                                         <span className="text-[10px] text-slate-400 font-black uppercase tracking-tighter leading-none">
-                                            {diasSemana[fechaObj.getUTCDay()]}
+                                            {diasSemana[fechaObj.getDay()]}
                                         </span>
                                         <span className="text-sm text-[#1e3a8a] font-black uppercase tracking-tighter italic leading-tight">
-                                            {mesesCompletos[fechaObj.getUTCMonth()]}
+                                            {mesesCompletos[fechaObj.getMonth()]}
                                         </span>
                                     </div>
-                                    
+
                                     {/* 🕒 Muestra el rango: 00:00 - 00:00 */}
                                     <div className="flex items-center gap-1.5 mt-1 text-slate-700 font-black text-xs uppercase tracking-tighter bg-slate-50 group-hover:bg-orange-50 px-2 py-0.5 rounded-lg w-fit transition-colors">
-                                        <Clock size={12} className="text-orange-500" /> 
+                                        <Clock size={12} className="text-orange-500" />
                                         {horaInicio} {horaFin && `— ${horaFin}`}
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="bg-slate-50 p-2.5 rounded-xl text-slate-400 group-hover:bg-orange-50 group-hover:text-orange-500 transition-all shrink-0">
                                 <CalendarPlus size={22} />
                             </div>
@@ -109,7 +109,7 @@ const AvailableSlotsGrid = ({ slots, onSlotClick, loading }) => {
                                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
                                 <span className="text-[9px] text-emerald-600 font-black uppercase tracking-widest">Cupo Disponible</span>
                             </div>
-                            
+
                             {/* Botón flotante simulado para mejorar el feedback visual */}
                             <span className="text-[9px] font-black uppercase text-orange-500 tracking-widest opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
                                 AGENDAR →

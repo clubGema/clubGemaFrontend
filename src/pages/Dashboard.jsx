@@ -303,7 +303,9 @@ const Dashboard = ({ role = 'student' }) => {
                     <h1 className="text-5xl md:text-6xl font-black text-[#1e3a8a] tracking-tight uppercase italic leading-[0.9]">
                         Panel de <span className="text-orange-500">Control</span>
                     </h1>
-                    <p className="text-slate-400 text-xs font-bold uppercase tracking-[0.3em] mt-3">Sincronización de Alto Rendimiento</p>
+                    <p className="text-slate-400 text-xs font-bold uppercase tracking-[0.3em] mt-3">
+                        Sincronización de Datos
+                    </p>
                 </div>
 
                 <div className="flex items-center gap-4">
@@ -343,7 +345,9 @@ const Dashboard = ({ role = 'student' }) => {
                     <h2 className="text-4xl font-black text-[#1e3a8a] uppercase tracking-tighter italic">
                         Inteligencia <span className="text-orange-500 underline decoration-orange-500/20 underline-offset-8">Financiera y Operativa</span>
                     </h2>
-                    <p className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mt-3">Análisis de Alto Rendimiento ({selectedYear})</p>
+                    <p className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mt-3">
+                        Análisis de Resultados ({selectedYear})
+                    </p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

@@ -3,7 +3,7 @@ export const generarClasesDisponibles = (horariosPatron, semanasAVer = 2) => {
     const hoy = new Date();
 
     // Generamos clases para los próximos X días (semanasAVer * 7)
-    for (let i = 1; i <= semanasAVer * 7; i++) {
+    for (let i = 0; i <= semanasAVer * 7; i++) {
         const fechaActual = new Date();
         fechaActual.setDate(hoy.getDate() + i); // Empezamos desde mañana
         const diaSemanaActual = fechaActual.getDay();
