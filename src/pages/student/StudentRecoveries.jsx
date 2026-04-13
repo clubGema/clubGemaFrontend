@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, RefreshCw, AlertCircle, CalendarPlus, History, Activity, ShieldPlus } from 'lucide-react';
+import { ArrowLeft, RefreshCw, AlertCircle, CalendarPlus, History, Activity, ShieldPlus, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
@@ -35,13 +35,15 @@ const StudentRecoveries = () => {
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [availableSlots, setAvailableSlots] = useState([]);
 
+    const [filtroSede, setFiltroSede] = useState('');
+
     // 1. Cargar datos iniciales
     const loadData = async () => {
         try {
             setLoading(true);
             const [ticketsData, horariosData, historialData] = await Promise.all([
                 recuperacionService.obtenerPendientes(),
-                horarioService.obtenerDisponibles(),
+                horarioService.obtenerDisponiblesPorNivel(),
                 recuperacionService.obtenerHistorial()
             ]);
             setTickets(ticketsData);
@@ -64,6 +66,7 @@ const StudentRecoveries = () => {
 
     // 2. Cuando selecciono un ticket, calculo los horarios disponibles
     useEffect(() => {
+        setFiltroSede('');
         if (selectedTicket && horariosPatron.length > 0) {
             // Generamos clases para las próximas 3 semanas
             const rawSlots = generarClasesDisponibles(horariosPatron, 4);
@@ -208,6 +211,14 @@ const StudentRecoveries = () => {
     // Helper para saber si ya llegó al límite visualmente
     const alLimite = stats.recuperacion_usadas >= stats.limite_permitido;
 
+    const sedesUnicas = [...new Set(availableSlots.map(slot => slot.horarioData?.cancha?.sede?.nombre).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+
+    const slotsFiltrados = availableSlots.filter(slot => {
+        if (filtroSede === '') return true;
+        const nombreSede = slot.horarioData?.cancha?.sede?.nombre;
+        return nombreSede === filtroSede;
+    });
+
     return (
         <div className="p-6 md:p-10 max-w-7xl mx-auto min-h-screen">
             <Link to="/dashboard/student" className="inline-flex items-center gap-2 text-slate-400 hover:text-[#1e3a8a] transition-all mb-4 text-[10px] font-black uppercase tracking-widest italic">
@@ -307,16 +318,34 @@ const StudentRecoveries = () => {
                                 <h3 className="text-emerald-500 font-bold uppercase tracking-widest text-xs flex items-center gap-2">
                                     2. Elige tu nueva clase
                                 </h3>
-                                <div className="bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/30 text-emerald-500 text-[10px] font-bold">
-                                    Mostrando clases disponibles próximas
-                                </div>
+                                {availableSlots.length > 0 && (
+                                    <div className="flex items-center gap-2 bg-slate-200 px-3 py-2 rounded-xl border border-slate-100">
+                                        <Filter size={14} className="text-slate-400" />
+                                        <select
+                                            value={filtroSede}
+                                            onChange={(e) => setFiltroSede(e.target.value)}
+                                            className="bg-transparent border-none text-slate-600 text-[10px] font-bold uppercase tracking-widest outline-none cursor-pointer"
+                                        >
+                                            <option value="">TODAS LAS SEDES</option>
+                                            {sedesUnicas.map((sede, idx) => (
+                                                <option key={idx} value={sede}>{sede}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
                             </div>
 
-                            <AvailableSlotsGrid
-                                slots={availableSlots}
-                                onSlotClick={handleSlotClick}
-                                loading={false}
-                            />
+                            {slotsFiltrados.length > 0 ? (
+                                <AvailableSlotsGrid
+                                    slots={slotsFiltrados}
+                                    onSlotClick={handleSlotClick}
+                                    loading={false}
+                                />
+                            ) : (
+                                <div className="p-8 rounded-2xl border border-dashed border-slate-200 text-center text-slate-400 text-sm font-bold uppercase tracking-widest">
+                                    No hay horarios disponibles en esta sede.
+                                </div>
+                            )}
                         </div>
                     )}
 

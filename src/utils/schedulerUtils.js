@@ -5,7 +5,7 @@ export const generarClasesDisponibles = (horariosPatron, semanasAVer = 2) => {
     // Generamos clases para los próximos X días (semanasAVer * 7)
     for (let i = 0; i <= semanasAVer * 7; i++) {
         const fechaActual = new Date();
-        fechaActual.setDate(hoy.getDate() + i); // Empezamos desde mañana
+        fechaActual.setDate(hoy.getDate() + i); // Empezamos desde hoy
         const diaSemanaActual = fechaActual.getDay();
 
         // Filtramos los horarios que coinciden con este día de la semana
@@ -19,11 +19,23 @@ export const generarClasesDisponibles = (horariosPatron, semanasAVer = 2) => {
 
             // Formato YYYY-MM-DD (Esto es indestructible, no tiene zona horaria)
             const fechaPlana = `${año}-${mes}-${dia}`;
-            clasesGeneradas.push({
-                id: `slot-${horario.id}-${fechaActual.getTime()}`,
-                fecha: `${fechaPlana}T${horario.hora_inicio}`,
-                horarioData: horario
-            });
+
+            const [h, m] = horario.hora_inicio.split(':');
+            const fechaClase = new Date(
+                fechaActual.getFullYear(),
+                fechaActual.getMonth(),
+                fechaActual.getDate(),
+                parseInt(h),
+                parseInt(m)
+            );
+
+            if (fechaClase > hoy) {
+                clasesGeneradas.push({
+                    id: `slot-${horario.id}-${fechaActual.getTime()}`,
+                    fecha: `${fechaPlana}T${horario.hora_inicio}`,
+                    horarioData: horario
+                });
+            }
         });
     }
 
