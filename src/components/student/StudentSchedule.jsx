@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Clock, MapPin, User, Star, Zap, CheckCircle2, CircleDashed, Calendar, RefreshCw, CalendarX, ArrowRight, Sparkles, History } from 'lucide-react';
+import { Clock, MapPin, User, Star, Zap, CheckCircle2, CircleDashed, Calendar, RefreshCw, CalendarX, ArrowRight, Sparkles, History, AlertCircle } from 'lucide-react';
 
 const StudentSchedule = ({ attendance = [], filtroMes, filtroAnio }) => {
   const diasSemana = ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"];
@@ -65,6 +65,9 @@ const StudentSchedule = ({ attendance = [], filtroMes, filtroAnio }) => {
     }, {});
   }, [sesionesFiltradas]);
 
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+
   return (
     <div className="flex flex-col h-full bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden animate-fade-in">
       {/* HEADER */}
@@ -106,6 +109,11 @@ const StudentSchedule = ({ attendance = [], filtroMes, filtroAnio }) => {
                 : horario?.hora_inicio;
 
               const fechaObj = parseLocalDate(sesion.fecha || sesion.fecha_programada);
+
+              const fechaSesionFinDia = new Date(fechaObj);
+              fechaSesionFinDia.setHours(23, 59, 59, 0);
+              const esPasada = fechaSesionFinDia < hoy && estadoReal === 'PROGRAMADA';
+
               const esPresente = estadoReal === 'PRESENTE';
               const esFalta = estadoReal === 'FALTA';
               const esReprogramado = estadoReal === 'REPROGRAMADO';
@@ -211,11 +219,13 @@ const StudentSchedule = ({ attendance = [], filtroMes, filtroAnio }) => {
                       }`}>
                       {esPresente ? <CheckCircle2 size={14} strokeWidth={3} /> :
                         esReprogramado ? <CalendarX size={14} strokeWidth={3} /> :
-                          (sesion.fecha_original || sesion.tipo_sesion === 'REPOSICION') ? <RefreshCw size={14} className="animate-pulse" /> :
-                            <CircleDashed size={14} className={sesion.estado === 'PROGRAMADA' ? "animate-spin-slow" : ""} />}
+                          esPasada ? <AlertCircle size={14} strokeWidth={2} /> :
+                            (sesion.fecha_original || sesion.tipo_sesion === 'REPOSICION') ? <RefreshCw size={14} className="animate-pulse" /> :
+                              <CircleDashed size={14} className={sesion.estado === 'PROGRAMADA' ? "animate-spin-slow" : ""} />}
                       {esReprogramado ? 'MOVIDA' :
-                        (sesion.fecha_original || sesion.tipo_sesion === 'REPOSICION') ? 'REPOSICIÓN' :
-                          sesion.estado === 'PROGRAMADA' ? 'PRÓXIMA' : sesion.estado}
+                        esPasada ? 'PASADA' :
+                          (sesion.fecha_original || sesion.tipo_sesion === 'REPOSICION') ? 'REPOSICIÓN' :
+                            sesion.estado === 'PROGRAMADA' ? 'PRÓXIMA' : sesion.estado}
                     </div>
                   </div>
                 </div>
