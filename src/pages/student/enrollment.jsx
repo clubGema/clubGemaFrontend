@@ -14,12 +14,12 @@ import EnrollmentDateModal from '../../components/student/EnrollmentDateModal';
 const Enrollment = () => {
   const { userId } = useAuth();
   const scrollRef = useRef(null);
-  
+
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [horarios, setHorarios] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
-  const [incluyeCamiseta, setIncluyeCamiseta] = useState(true);
+  const [incluyeCamiseta, setIncluyeCamiseta] = useState(false);
   const [pendingPayment, setPendingPayment] = useState(null);
   const [activeSede, setActiveSede] = useState(null);
   const [previewModal, setPreviewModal] = useState({ open: false, data: null });
@@ -35,7 +35,7 @@ const Enrollment = () => {
       ]);
       const dataH = await resH.json();
       const dataC = await resC.json();
-      
+
       if (resH.ok) {
         const activos = dataH.data?.filter(h => h.activo) || [];
         setHorarios(activos);
@@ -90,7 +90,7 @@ const Enrollment = () => {
   const toggleSelection = (id) => {
     const claseNueva = horarios.find(h => h.id === id);
     if (!selectedIds.includes(id)) {
-      const choque = agendaSeleccionada.find(h => 
+      const choque = agendaSeleccionada.find(h =>
         h.dia_semana === claseNueva.dia_semana && (
           (claseNueva.hora_inicio >= h.hora_inicio && claseNueva.hora_inicio < h.hora_fin) ||
           (claseNueva.hora_fin > h.hora_inicio && claseNueva.hora_fin <= h.hora_fin)
@@ -117,17 +117,17 @@ const Enrollment = () => {
     setPreviewModal({ open: false, data: null });
     setSubmitting(true);
     try {
-      const response = await apiFetch.post(API_ROUTES.INSCRIPCIONES.BASE, { 
-        alumno_id: userId, 
+      const response = await apiFetch.post(API_ROUTES.INSCRIPCIONES.BASE, {
+        alumno_id: userId,
         horario_ids: selectedIds,
         fecha_inicio_electiva: fechaElectiva,
         incluye_camiseta: incluyeCamiseta
       });
       const result = await response.json();
       if (response.ok) {
-        toast.success("Sede y Horario conforme", { 
+        toast.success("Sede y Horario conforme", {
           icon: <CheckCircle className="text-green-500" />,
-          duration: 5000 
+          duration: 5000
         });
         await fetchInitialData();
         setSelectedIds([]);
@@ -143,7 +143,7 @@ const Enrollment = () => {
   return (
     <div className={`min-h-screen bg-[#f8fafc] px-4 md:px-8 transition-all duration-500 ${selectedIds.length > 0 ? 'pb-96 md:pb-60' : 'pb-24'}`}>
       <div className="max-w-6xl mx-auto py-8">
-        
+
         <header className="mb-8">
           <Link to="/dashboard/student" className="inline-flex items-center gap-1 text-slate-400 hover:text-[#1e3a8a] mb-4 text-[10px] font-black uppercase italic tracking-widest">
             <ArrowLeft size={12} /> Dashboard
@@ -165,9 +165,8 @@ const Enrollment = () => {
               <button
                 key={sede}
                 onClick={() => setActiveSede(sede)}
-                className={`px-8 py-4 rounded-[2rem] font-black text-[10px] uppercase italic transition-all duration-500 border-2 flex-shrink-0 flex items-center gap-3 ${
-                  activeSede === sede ? 'bg-[#1e3a8a] border-[#1e3a8a] text-white shadow-lg' : 'bg-white border-slate-100 text-slate-400'
-                }`}
+                className={`px-8 py-4 rounded-[2rem] font-black text-[10px] uppercase italic transition-all duration-500 border-2 flex-shrink-0 flex items-center gap-3 ${activeSede === sede ? 'bg-[#1e3a8a] border-[#1e3a8a] text-white shadow-lg' : 'bg-white border-slate-100 text-slate-400'
+                  }`}
               >
                 <Building2 size={16} /> {sede}
               </button>
@@ -193,24 +192,24 @@ const Enrollment = () => {
 
         {/* EL TIMELINE AHORA VA DEBAJO DE TODO */}
         <div className="mt-16">
-           <div className="flex items-center gap-4 mb-8 px-2">
-              <h2 className="text-[12px] font-black text-[#1e3a8a] uppercase tracking-[0.4em] italic flex items-center gap-3">
-                <Zap size={18} className="text-orange-500" /> Tu Horario Semanal
-              </h2>
-              <div className="h-px bg-slate-200 flex-1"></div>
-            </div>
-           <WeeklyTimeline agendaSeleccionada={agendaSeleccionada} />
+          <div className="flex items-center gap-4 mb-8 px-2">
+            <h2 className="text-[12px] font-black text-[#1e3a8a] uppercase tracking-[0.4em] italic flex items-center gap-3">
+              <Zap size={18} className="text-orange-500" /> Tu Horario Semanal
+            </h2>
+            <div className="h-px bg-slate-200 flex-1"></div>
+          </div>
+          <WeeklyTimeline agendaSeleccionada={agendaSeleccionada} />
         </div>
 
         {/* FOOTER FLOTANTE */}
         {!pendingPayment && selectedIds.length > 0 && (
           <div className="fixed bottom-24 md:bottom-10 inset-x-0 flex flex-col items-center z-[50] px-4 pointer-events-none">
-            
+
             {/* CHECKBOX CAMISETA: ¡QUIERO MI CAMISETA! */}
             <label className="pointer-events-auto flex items-center gap-4 bg-[#0f172a] text-white px-6 py-3.5 rounded-[1.8rem] mb-3 border-2 border-white/20 shadow-2xl animate-fade-in-up cursor-pointer hover:bg-slate-900 transition-all active:scale-95 group">
               <div className="relative flex items-center justify-center">
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   checked={incluyeCamiseta}
                   onChange={(e) => setIncluyeCamiseta(e.target.checked)}
                   className="peer appearance-none w-6 h-6 border-2 border-white/30 rounded-lg checked:bg-orange-500 checked:border-orange-500 transition-all"
@@ -252,10 +251,10 @@ const Enrollment = () => {
           </div>
         )}
 
-        <EnrollmentDateModal 
-          isOpen={previewModal.open} previewData={previewModal.data} 
-          onClose={() => setPreviewModal({ open: false, data: null })} 
-          onConfirm={confirmarMatriculaFinal} 
+        <EnrollmentDateModal
+          isOpen={previewModal.open} previewData={previewModal.data}
+          onClose={() => setPreviewModal({ open: false, data: null })}
+          onConfirm={confirmarMatriculaFinal}
         />
       </div>
     </div>
