@@ -56,8 +56,9 @@ const DashboardTeacher = () => {
       const todasLasSesiones = [];
       const hoy = new Date(Date.now() - (5 * 60 * 60 * 1000)).toISOString().split('T')[0];
 
+      const fechasUnicas = {};
+
       data.forEach(horario => {
-        const fechasUnicas = {};
         const baseTimeRange = `${horario.hora_inicio} - ${horario.hora_fin}`;
 
         horario.inscripciones.forEach(ins => {
@@ -75,9 +76,11 @@ const DashboardTeacher = () => {
               reprogramacionData = reg.reprogramaciones_clases;
             }
 
-            if (!fechasUnicas[fechaKey]) {
-              fechasUnicas[fechaKey] = {
-                id: `${horario.id}-${fechaKey}`,
+            const globalKey = `${fechaKey}-${timeRange}`;
+
+            if (!fechasUnicas[globalKey]) {
+              fechasUnicas[globalKey] = {
+                id: globalKey,
                 title: horario.niveles_entrenamiento?.nombre || 'BASICO-C',
                 timeRange, // Start with whatever time range this first student gives us
                 reprogramacionData, // Track the full object for UI rendering
@@ -96,35 +99,35 @@ const DashboardTeacher = () => {
             } else {
               // Priority override: If ANY student in this date bucket has the custom time override, force it onto the bucket.
               if (reg.reprogramaciones_clases) {
-                fechasUnicas[fechaKey].timeRange = `${reg.reprogramaciones_clases.hora_inicio_destino} - ${reg.reprogramaciones_clases.hora_fin_destino}`;
-                fechasUnicas[fechaKey].reprogramacionData = reg.reprogramaciones_clases;
+                fechasUnicas[globalKey].timeRange = `${reg.reprogramaciones_clases.hora_inicio_destino} - ${reg.reprogramaciones_clases.hora_fin_destino}`;
+                fechasUnicas[globalKey].reprogramacionData = reg.reprogramaciones_clases;
               }
             }
-            fechasUnicas[fechaKey].inscripcionesEnEstaFecha.push({ ...ins, registro_especifico: reg });
-          });
-        });
-
-        Object.values(fechasUnicas).forEach(sesion => {
-          const inscripciones = sesion.inscripcionesEnEstaFecha;
-          const esReprogramadaTotal = inscripciones.length > 0 && inscripciones.every(al => al.tipo_sesion === 'REPROGRAMADO');
-          const esReposicionTotal = inscripciones.length > 0 && inscripciones.every(al => al.tipo_sesion === 'REPOSICION');
-          const tieneRecuperadores = inscripciones.some(al => al.tipo_sesion === 'RECUPERACION');
-
-          const completada = inscripciones.length > 0 && inscripciones.every(al =>
-            al.registro_especifico.estado !== 'PROGRAMADA' && al.registro_especifico.estado !== 'PENDIENTE'
-          );
-
-          todasLasSesiones.push({
-            ...sesion,
-            attended: completada && !esReprogramadaTotal,
-            isReprogramada: esReprogramadaTotal,
-            isReposicion: esReposicionTotal,
-            tieneRecuperadores,
-            totalStudents: inscripciones.length
+            fechasUnicas[globalKey].inscripcionesEnEstaFecha.push({ ...ins, registro_especifico: reg });
           });
         });
       });
 
+      Object.values(fechasUnicas).forEach(sesion => {
+        const inscripciones = Array.from(new Map(sesion.inscripcionesEnEstaFecha.map(i => [i.alumno_id, i])).values());
+        const esReprogramadaTotal = inscripciones.length > 0 && inscripciones.every(al => al.tipo_sesion === 'REPROGRAMADO');
+        const esReposicionTotal = inscripciones.length > 0 && inscripciones.every(al => al.tipo_sesion === 'REPOSICION');
+        const tieneRecuperadores = inscripciones.some(al => al.tipo_sesion === 'RECUPERACION');
+
+        const completada = inscripciones.length > 0 && inscripciones.every(al =>
+          al.registro_especifico.estado !== 'PROGRAMADA' && al.registro_especifico.estado !== 'PENDIENTE'
+        );
+
+        todasLasSesiones.push({
+          ...sesion,
+          inscripcionesEnEstaFecha: inscripciones,
+          attended: completada && !esReprogramadaTotal,
+          isReprogramada: esReprogramadaTotal,
+          isReposicion: esReposicionTotal,
+          tieneRecuperadores,
+          totalStudents: inscripciones.length
+        });
+      });
       todasLasSesiones.sort((a, b) => new Date(a.fechaReal) - new Date(b.fechaReal));
       setClases(todasLasSesiones);
 
