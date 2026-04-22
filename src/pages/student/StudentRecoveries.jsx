@@ -108,6 +108,7 @@ const StudentRecoveries = () => {
                 // Si el ticket seleccionado NO es por lesión, aplicamos la regla de los 30 días
                 if (stats.fin_ciclo_regular && stats.horarios_regulares) {
                     const finCicloDate = new Date(stats.fin_ciclo_regular);
+                    finCicloDate.setHours(23, 59, 59);
 
                     if (slotDate <= finCicloDate) {
                         esHorarioRegularProtegido = stats.horarios_regulares.includes(slot.horarioData.id);
@@ -171,7 +172,7 @@ const StudentRecoveries = () => {
                 alumnoId: userId,
                 recuperacionId: selectedTicket.id,
                 horarioDestinoId: slot.horarioData.id,
-                fechaProgramada: slot.fecha
+                fechaProgramada: new Date(slot.fecha).toISOString(),
             });
 
             await toast.promise(promise, {

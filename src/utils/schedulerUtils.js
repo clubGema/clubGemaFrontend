@@ -6,7 +6,8 @@ export const generarClasesDisponibles = (horariosPatron, semanasAVer = 2) => {
     for (let i = 0; i <= semanasAVer * 7; i++) {
         const fechaActual = new Date();
         fechaActual.setDate(hoy.getDate() + i); // Empezamos desde hoy
-        const diaSemanaActual = fechaActual.getDay();
+        let diaSemanaActual = fechaActual.getDay();
+        diaSemanaActual = diaSemanaActual === 0 ? 7 : diaSemanaActual;
 
         // Filtramos los horarios que coinciden con este día de la semana
         const horariosDelDia = horariosPatron.filter(h => h.dia_semana === diaSemanaActual && h.activo);
