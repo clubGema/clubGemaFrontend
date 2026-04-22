@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Phone, ShieldAlert, ChevronRight, ArrowLeft, Heart, Mail, Calendar, User, Fingerprint, Activity, Info, FileText, Loader2 } from 'lucide-react';
+import { 
+    Search, Phone, ShieldAlert, ChevronRight, ArrowLeft, Heart, Mail, 
+    Calendar, User, Fingerprint, Activity, Info, FileText, Loader2, 
+    MapPin, Zap, RefreshCw, Eye, Stethoscope, Users
+} from 'lucide-react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../../interceptors/api';
 import { API_ROUTES } from '../../constants/apiRoutes';
 import ChangeLevelStudent from '../../components/Admin/ChangeLevelStudent';
+import { format, addDays, isPast } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 const AdminStudentsManager = () => {
     const [view, setView] = useState('list');
@@ -14,248 +20,214 @@ const AdminStudentsManager = () => {
     const [sedes, setSedes] = useState([]);
     const [selectedSede, setSelectedSede] = useState('');
 
-    // Paginación
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
-    // 1. Cargar alumnos desde el Backend
     const fetchAlumnos = async () => {
         try {
             setLoading(true);
-            const url = selectedSede
-                ? `${API_ROUTES.USUARIOS.ALUMNOS}?sede_id=${selectedSede}`
-                : API_ROUTES.USUARIOS.ALUMNOS;
+            const url = selectedSede ? `${API_ROUTES.USUARIOS.ALUMNOS}?sede_id=${selectedSede}` : API_ROUTES.USUARIOS.ALUMNOS;
             const response = await apiFetch.get(url);
             const result = await response.json();
 
             if (response.ok) {
                 const formattedData = result.data.map(user => {
-                    // 🛡️ Extraemos con seguridad el objeto alumnos
                     const alumnoData = user.alumnos || {};
-                    const contactos = alumnoData.alumnos_contactos || [];
+                    const contacto = alumnoData.alumnos_contactos?.[0] || {};
+                    const inscripciones = alumnoData.inscripciones || [];
+                    const dir = alumnoData.direcciones || {};
+                    
+                    const sedesNombres = [...new Set(inscripciones.map(i => i.horarios_clases?.canchas?.sedes?.nombre).filter(Boolean))];
+                    const nivelesNombres = [...new Set(inscripciones.map(i => i.horarios_clases?.niveles_entrenamiento?.nombre).filter(Boolean))];
+                    
+                    const ultimaInsc = inscripciones[0];
+                    const fCorte = ultimaInsc?.fecha_inscripcion ? addDays(new Date(ultimaInsc.fecha_inscripcion), 30) : null;
 
                     return {
-                        id: user.id,
-                        nombres: user.nombres || "Sin Nombre",
-                        apellidos: user.apellidos || "Sin Apellido",
-                        email: user.email,
-                        tipo_documento_id: user.tipo_documento_id || 'DNI',
-                        numero_documento: user.numero_documento || "---",
-                        telefono_personal: user.telefono_personal || 'No registrado',
-                        fecha_nacimiento: user.fecha_nacimiento ? new Date(user.fecha_nacimiento).toLocaleDateString() : '---',
-                        genero: user.genero,
-                        // 🛡️ Acceso seguro a contactos de emergencia
-                        contacto_emergencia: contactos[0]?.telefono ?? 'S/N',
-                        parentesco: contactos[0]?.relacion ?? 'S/N',
-                        datosRolEspecifico: {
-                            condiciones_medicas: alumnoData.condiciones_medicas || 'Ninguna conocida',
-                            seguro_medico: alumnoData.seguro_medico || 'No especificado',
-                            grupo_sanguineo: alumnoData.grupo_sanguineo || 'S/N'
+                        ...user,
+                        full_name: `${user.nombres} ${user.apellidos}`,
+                        dni: user.numero_documento || '---',
+                        telefono: user.telefono_personal || 'S/N',
+                        cumpleanos: user.fecha_nacimiento ? format(new Date(user.fecha_nacimiento), "dd 'de' MMM", { locale: es }) : 'S/D',
+                        sedes: sedesNombres,
+                        niveles: nivelesNombres,
+                        fechaCorte: fCorte,
+                        estaVencido: fCorte ? isPast(fCorte) : false,
+                        // --- DATA PARA EL EXPEDIENTE (EL OJO) ---
+                        direccion: {
+                            completa: dir.direccion_completa || 'No registrada',
+                            distrito: dir.distrito || 'S/D',
+                            referencia: dir.referencia || ''
                         },
-                        sedeId: user.alumnos?.inscripciones?.map(i => i.horarios_clases?.canchas?.sedes?.id).filter(Boolean) ?? [],
-                        sedeNombre: user.alumnos?.inscripciones?.map(i => i.horarios_clases?.canchas?.sedes?.nombre).filter(Boolean) ?? [],
+                        salud: {
+                            condiciones: alumnoData.condiciones_medicas || 'Ninguna',
+                            seguro: alumnoData.seguro_medico || 'S/N',
+                            sangre: alumnoData.grupo_sanguineo || 'S/N',
+                            historial: alumnoData.historial || 'Sin observaciones'
+                        },
+                        contactoEmergencia: {
+                            nombre: contacto.nombre_completo || 'No registrado',
+                            telefono: contacto.telefono || 'S/N',
+                            relacion: contacto.relacion || 'No especificada'
+                        }
                     };
                 });
                 setAlumnos(formattedData);
             }
         } catch (error) {
-            toast.error("Error al conectar con el servidor");
-            console.error(error);
+            toast.error("Error al sincronizar Base Gema");
         } finally {
             setLoading(false);
         }
     };
 
-    const fetchSedes = async () => {
-        try {
-            const response = await apiFetch.get(API_ROUTES.SEDES.ACTIVOS);
-            const result = await response.json();
-            if (response.ok) {
-                setSedes(result.data || []);
-            }
-        } catch (error) {
-            console.error("Error fetching sedes:", error);
-        }
-    };
+    useEffect(() => { fetchAlumnos(); }, [selectedSede]);
 
     useEffect(() => {
-        fetchAlumnos();
-    }, [selectedSede]);
-
-    useEffect(() => {
-        fetchSedes();
+        const loadSedes = async () => {
+            const res = await apiFetch.get(API_ROUTES.SEDES.ACTIVOS);
+            const result = await res.json();
+            if (res.ok) setSedes(result.data || []);
+        };
+        loadSedes();
     }, []);
 
-    // 2. Filtrado en tiempo real
     const filteredAlumnos = alumnos.filter(alum =>
-        alum.nombres?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        alum.apellidos?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        alum.numero_documento?.includes(searchTerm)
+        alum.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        alum.dni.includes(searchTerm)
     );
 
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchTerm]);
-
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentAlumnos = filteredAlumnos.slice(indexOfFirstItem, indexOfLastItem);
+    const currentAlumnos = filteredAlumnos.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
     const totalPages = Math.ceil(filteredAlumnos.length / itemsPerPage);
 
-    const handleViewDetails = (alumno) => {
-        setSelectedAlumno(alumno);
-        setView('details');
-    };
-
     if (loading) return (
-        <div className="flex flex-col items-center justify-center h-64 text-slate-500 gap-3">
-            <Loader2 className="animate-spin text-[#1e3a8a]" size={40} />
-            <p className="font-bold italic animate-pulse">Sincronizando expedientes...</p>
+        <div className="flex flex-col items-center justify-center h-96 gap-4">
+            <Loader2 className="animate-spin text-[#1e3a8a]" size={48} />
+            <p className="font-black text-[#1e3a8a] text-xs uppercase italic tracking-widest animate-pulse">Consultando Registros...</p>
         </div>
     );
 
+    // ==========================================
+    // 👁️ VISTA DETALLADA: EXPEDIENTE ACADÉMICO
+    // ==========================================
     if (view === 'details' && selectedAlumno) {
         return (
             <div className="space-y-6 animate-fade-in-up p-1">
-                {/* Header Expediente */}
-                <div className="flex items-center gap-3">
-                    <button
-                        onClick={() => setView('list')}
-                        className="group flex items-center justify-center w-10 h-10 bg-white border border-slate-200 rounded-xl hover:border-[#1e3a8a] transition-all shadow-sm"
-                    >
-                        <ArrowLeft size={20} />
+                <div className="flex items-center gap-4">
+                    <button onClick={() => setView('list')} className="w-12 h-12 bg-white border border-slate-200 rounded-2xl flex items-center justify-center hover:bg-slate-50 transition-all shadow-sm">
+                        <ArrowLeft size={24} className="text-slate-600" />
                     </button>
                     <div>
-                        <div className="flex items-center gap-2 mb-0.5">
-                            <div className="h-5 w-1 bg-orange-500 rounded-full"></div>
-                            <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tight">
-                                Expediente <span className="text-[#1e3a8a]">Académico</span>
-                            </h1>
-                        </div>
-                        <p className="text-slate-500 text-[11px] font-bold uppercase tracking-wide ml-3">
-                            Perfil completo del <span className="text-orange-500">Deportista</span>
-                        </p>
+                        <h2 className="text-2xl font-black uppercase italic text-slate-800 leading-none">Expediente <span className="text-[#1e3a8a]">Gema</span></h2>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">Ficha completa del Alumno</p>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2 space-y-6">
-                        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-                            <div className="p-6">
-                                <div className="flex flex-col md:flex-row md:items-center gap-6 mb-8">
-                                    <div className="w-20 h-20 bg-gradient-to-br from-[#1e3a8a] to-[#0f172a] text-white rounded-3xl flex items-center justify-center font-black text-3xl uppercase italic shadow-lg shadow-blue-900/20">
-                                        {selectedAlumno.nombres.charAt(0)}{selectedAlumno.apellidos.charAt(0)}
+                        {/* Perfil e Identidad */}
+                        <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col md:flex-row gap-8 items-center md:items-start relative overflow-hidden">
+                            <div className="w-28 h-28 bg-[#1e3a8a] text-white rounded-3xl flex items-center justify-center font-black text-5xl italic shadow-2xl relative z-10">
+                                {selectedAlumno.nombres.charAt(0)}
+                            </div>
+                            <div className="flex-1 space-y-6 relative z-10 w-full">
+                                <div>
+                                    <h3 className="text-4xl font-black text-slate-800 uppercase italic tracking-tighter leading-none">{selectedAlumno.full_name}</h3>
+                                    <div className="flex gap-2 mt-2">
+                                        {selectedAlumno.sedes.map((s, i) => (
+                                            <span key={i} className="px-3 py-1 bg-orange-100 text-orange-600 rounded-lg text-[9px] font-black uppercase italic border border-orange-200">{s}</span>
+                                        ))}
                                     </div>
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <h2 className="text-2xl font-black text-slate-800 uppercase italic tracking-tighter">
-                                                {selectedAlumno.nombres} {selectedAlumno.apellidos}
-                                            </h2>
-                                            <span className="bg-green-100 text-green-600 text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest border border-green-200">Activo</span>
-                                        </div>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                                            <div className="flex items-center gap-2 text-slate-500">
-                                                <Fingerprint size={16} className="text-blue-500" />
-                                                <span className="text-xs font-bold uppercase">{selectedAlumno.tipo_documento_id}: {selectedAlumno.numero_documento}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-slate-500">
-                                                <Calendar size={16} className="text-blue-500" />
-                                                <span className="text-xs font-bold uppercase">Nacimiento: {selectedAlumno.fecha_nacimiento}</span>
-                                            </div>
-                                        </div>
+                                </div>
+                                
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-slate-50 pt-4">
+                                    <div className="flex items-center gap-2 text-slate-500 text-sm font-bold uppercase tracking-tighter">
+                                        <Fingerprint size={16} className="text-blue-500"/> {selectedAlumno.dni}
+                                    </div>
+                                    <div className="flex items-center gap-2 text-slate-500 text-sm font-bold lowercase">
+                                        <Mail size={16} className="text-blue-500"/> {selectedAlumno.email}
+                                    </div>
+                                    <div className="flex items-center gap-2 text-slate-500 text-sm font-bold uppercase tracking-tighter">
+                                        <Calendar size={16} className="text-blue-500"/> {selectedAlumno.cumpleanos}
+                                    </div>
+                                    <div className="flex items-center gap-2 text-slate-500 text-sm font-bold uppercase tracking-tighter">
+                                        <Phone size={16} className="text-blue-500"/> {selectedAlumno.telefono}
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-slate-100">
-                                    <div className="space-y-1">
-                                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Género</span>
-                                        <div className="flex items-center gap-2 font-bold text-slate-700">
-                                            <User size={14} className="text-slate-400" />
-                                            <span>{selectedAlumno.genero === 'M' ? 'Masculino' : 'Femenino'}</span>
-                                        </div>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Email</span>
-                                        <div className="flex items-center gap-2 font-bold text-slate-700">
-                                            <Mail size={14} className="text-slate-400" />
-                                            <span className="text-sm lowercase truncate max-w-[150px]">{selectedAlumno.email}</span>
-                                        </div>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Teléfono</span>
-                                        <div className="flex items-center gap-2 font-bold text-slate-700">
-                                            <Phone size={14} className="text-slate-400" />
-                                            <span>{selectedAlumno.telefono_personal}</span>
-                                        </div>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Contacto de Emergencia</span>
-                                        <div className="flex items-center gap-2 font-bold text-slate-700">
-                                            <Phone size={14} className="text-slate-400" />
-                                            <span>{selectedAlumno.contacto_emergencia}</span>
-                                        </div>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Parentesco</span>
-                                        <div className="flex items-center gap-2 font-bold text-slate-700">
-                                            <User size={14} className="text-slate-400" />
-                                            <span className='uppercase'>{selectedAlumno.parentesco}</span>
+                                {/* 📍 SECCIÓN DIRECCIÓN */}
+                                <div className="pt-4 border-t border-slate-50">
+                                    <p className="text-[9px] font-black text-slate-400 uppercase mb-2">Dirección Registrada</p>
+                                    <div className="flex items-start gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                        <MapPin size={20} className="text-orange-500 shrink-0 mt-1" />
+                                        <div>
+                                            <p className="text-sm font-black text-slate-700 uppercase italic leading-tight">
+                                                {selectedAlumno.direccion.distrito} <span className="text-slate-300 font-normal mx-2">|</span> {selectedAlumno.direccion.completa}
+                                            </p>
+                                            {selectedAlumno.direccion.referencia && (
+                                                <p className="text-[10px] text-slate-400 mt-1 font-bold italic tracking-wide">Ref: {selectedAlumno.direccion.referencia}</p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-                            <div className="px-6 py-4 bg-red-50/50 border-b border-red-100 flex items-center justify-between">
-                                <div className="flex items-center gap-2 text-red-600">
-                                    <Heart size={20} fill="currentColor" className="opacity-80" />
-                                    <span className="text-[11px] font-black uppercase tracking-widest">Protocolo de Salud Deportiva</span>
+                        {/* Salud e Historial */}
+                        <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+                            <div className="px-8 py-5 bg-blue-50/50 border-b border-blue-100 flex items-center justify-between">
+                                <div className="flex items-center gap-2 text-[#1e3a8a]">
+                                    <Stethoscope size={20} />
+                                    <span className="text-[11px] font-black uppercase tracking-widest italic">Información de Salud</span>
                                 </div>
-                                <Activity size={18} className="text-red-300" />
+                                <span className="bg-[#1e3a8a] text-white text-[8px] font-black px-2 py-1 rounded-md">GRUPO SANGUÍNEO: {selectedAlumno.salud.sangre}</span>
                             </div>
-                            <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <div className="space-y-3 bg-slate-50 p-5 rounded-2xl border border-slate-100">
-                                    <div className="flex items-center gap-2">
-                                        <ShieldAlert size={16} className="text-red-500" />
-                                        <span className="text-[10px] font-black text-slate-400 uppercase">Condiciones / Alergias:</span>
+                            <div className="p-8 grid md:grid-cols-2 gap-8">
+                                <div className="space-y-6">
+                                    <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                                        <p className="text-[9px] font-black text-slate-400 uppercase mb-2 italic">Alergias / Condiciones:</p>
+                                        <p className="text-sm font-bold text-slate-700 italic leading-relaxed">{selectedAlumno.salud.condiciones}</p>
                                     </div>
-                                    <p className="text-sm font-bold text-slate-800 leading-relaxed">
-                                        {selectedAlumno.datosRolEspecifico.condiciones_medicas}
-                                    </p>
+                                    <div className="flex justify-between p-5 bg-white border border-slate-100 rounded-3xl">
+                                        <span className="text-[9px] font-black text-slate-400 uppercase">Seguro Médico:</span>
+                                        <span className="text-sm font-black text-[#1e3a8a] italic uppercase">{selectedAlumno.salud.seguro}</span>
+                                    </div>
                                 </div>
-
-                                <div className="grid grid-cols-1 gap-4">
-                                    <div className="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-2xl">
-                                        <div className="flex flex-col">
-                                            <span className="text-[9px] font-black text-slate-400 uppercase">Seguro Médico</span>
-                                            <span className="text-sm font-black text-[#1e3a8a] uppercase italic">{selectedAlumno.datosRolEspecifico.seguro_medico}</span>
-                                        </div>
-                                        <Info size={16} className="text-slate-300" />
+                                <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                                    <div className="flex items-center gap-2 mb-2 text-slate-400">
+                                        <FileText size={14} />
+                                        <p className="text-[9px] font-black uppercase italic">Historial Académico / Deportivo:</p>
                                     </div>
-                                    <div className="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-2xl">
-                                        <div className="flex flex-col">
-                                            <span className="text-[9px] font-black text-slate-400 uppercase">Tipo de Sangre</span>
-                                            <span className="text-sm font-black text-red-600">{selectedAlumno.datosRolEspecifico.grupo_sanguineo}</span>
-                                        </div>
-                                        <Heart size={16} className="text-red-200" />
-                                    </div>
+                                    <p className="text-[11px] font-medium text-slate-500 italic leading-relaxed">{selectedAlumno.salud.historial}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="space-y-6">
-                        <div className="bg-[#0f172a] p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group">
-                            <div className="absolute -right-4 -top-4 w-24 h-24 bg-orange-500/10 rounded-full blur-2xl group-hover:bg-orange-500/20 transition-all"></div>
-                            <h4 className="font-black uppercase italic tracking-tighter text-lg mb-6 flex items-center gap-2">
-                                <div className="w-1.5 h-6 bg-orange-500 rounded-full"></div>
-                                Resumen de Rol
-                            </h4>
+                    {/* Contacto S.O.S */}
+                    <div className="bg-red-50 rounded-[2.5rem] border border-red-100 p-8 relative overflow-hidden h-fit">
+                        <div className="absolute -right-4 -bottom-4 text-red-100 opacity-50">
+                            <ShieldAlert size={120} />
+                        </div>
+                        <div className="relative z-10 space-y-6">
+                            <div className="flex items-center gap-3 text-red-600">
+                                <Users size={24} />
+                                <span className="text-xs font-black uppercase tracking-widest italic">Contacto Emergencia</span>
+                            </div>
                             <div className="space-y-4">
-                                <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
-                                    <span className="text-[9px] font-black text-orange-400 uppercase tracking-widest">Rol del Sistema</span>
-                                    <p className="text-sm font-bold uppercase italic text-white/90">Deportista Académico</p>
+                                <div>
+                                    <p className="text-[9px] font-black text-red-400 uppercase mb-1">Responsable</p>
+                                    <p className="text-lg font-black text-red-900 leading-tight uppercase italic">{selectedAlumno.contactoEmergencia.nombre}</p>
+                                    <p className="text-[10px] font-bold text-red-600 uppercase italic mt-1">{selectedAlumno.contactoEmergencia.relacion}</p>
+                                </div>
+                                <div className="pt-4 border-t border-red-100 flex items-center justify-between">
+                                    <div>
+                                        <p className="text-[9px] font-black text-red-400 uppercase mb-1">Teléfono Directo</p>
+                                        <p className="text-xl font-black text-red-900 tracking-tighter">{selectedAlumno.contactoEmergencia.telefono}</p>
+                                    </div>
+                                    <a href={`tel:${selectedAlumno.contactoEmergencia.telefono}`} className="bg-red-600 text-white p-3 rounded-2xl shadow-lg shadow-red-200 hover:bg-red-700 transition-all active:scale-95">
+                                        <Phone size={20} />
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -266,140 +238,118 @@ const AdminStudentsManager = () => {
     }
 
     if (view === 'cambio_nivel' && selectedAlumno) {
-        return (
-            <ChangeLevelStudent
-                alumno={selectedAlumno}
-                onBack={() => setView('list')}
-            />
-        );
+        return <ChangeLevelStudent alumno={selectedAlumno} onBack={() => { setView('list'); fetchAlumnos(); }} />;
     }
 
+    // ==========================================
+    // 📋 LISTADO PRINCIPAL
+    // ==========================================
     return (
         <div className="space-y-6 animate-fade-in-up p-1">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <div className="flex items-center gap-2 mb-1">
-                        <div className="h-6 w-1 bg-orange-500 rounded-full"></div>
-                        <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tight">
-                            Base de <span className="text-[#1e3a8a]">Alumnos</span>
-                        </h1>
-                    </div>
-                    <p className="text-slate-500 text-sm font-medium">Consulta y supervisa la información de los deportistas.</p>
+                    <h1 className="text-3xl font-black text-slate-900 uppercase italic tracking-tighter leading-none">Gestión de <span className="text-[#1e3a8a]">Alumnos</span></h1>
+                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-2">Control Maestro de la Academia</p>
                 </div>
+                <select value={selectedSede} onChange={(e) => setSelectedSede(e.target.value)} className="bg-white border border-slate-200 rounded-xl px-4 py-3 text-[10px] font-black uppercase shadow-sm outline-none cursor-pointer focus:ring-2 focus:ring-blue-500">
+                    <option value="">TODAS LAS SEDES</option>
+                    {sedes.map(s => <option key={s.id} value={s.id}>SEDE {s.nombre}</option>)}
+                </select>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                <div className="relative group flex-1">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1e3a8a]" size={18} />
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="BUSCAR POR NOMBRE O DOCUMENTO..."
-                        className="w-full bg-white border border-slate-200 rounded-2xl pl-12 pr-4 py-3 text-xs font-bold uppercase tracking-widest outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm"
-                    />
-                </div>
-                <div className="relative min-w-[250px]">
-                    <select
-                        value={selectedSede}
-                        onChange={(e) => setSelectedSede(e.target.value)}
-                        className="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-xs font-bold uppercase tracking-widest text-slate-600 outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm appearance-none cursor-pointer"
-                    >
-                        <option value="">TODAS LAS SEDES</option>
-                        {sedes.map((sede) => (
-                            <option key={sede.id} value={sede.id}>
-                                SEDE {sede.nombre}
-                            </option>
-                        ))}
-                    </select>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                        <ChevronRight size={16} className="rotate-90" />
-                    </div>
-                </div>
+            <div className="relative group">
+                <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#1e3a8a] transition-colors" size={20} />
+                <input 
+                    type="text" 
+                    value={searchTerm} 
+                    onChange={(e) => setSearchTerm(e.target.value)} 
+                    placeholder="BUSCAR POR NOMBRE, APELLIDO O DNI..." 
+                    className="w-full bg-white border-2 border-slate-100 rounded-[1.8rem] pl-16 pr-8 py-5 font-black text-xs uppercase tracking-widest outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-[#1e3a8a] transition-all shadow-sm" 
+                />
             </div>
 
-            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden min-h-[300px]">
+            <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
+                    <table className="w-full text-left">
                         <thead>
-                            <tr className="bg-slate-50/50">
-                                <th className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Alumno</th>
-                                <th className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Documento</th>
-                                <th className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Teléfono</th>
-                                <th className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Acción</th>
+                            <tr className="bg-slate-50/50 border-b border-slate-100 font-black text-[10px] text-slate-400 uppercase tracking-[0.15em]">
+                                <th className="p-8">Alumno / Sede</th>
+                                <th className="p-8">Documentación</th>
+                                <th className="p-8 text-center">Nivel y Estado</th>
+                                <th className="p-8 text-center">Cumpleaños</th>
+                                <th className="p-8 text-right">Gestión</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100">
-                            {currentAlumnos.length > 0 ? currentAlumnos.map((alum) => (
-                                <tr key={alum.id} className="hover:bg-blue-50/30 transition-colors group">
-                                    <td className="p-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 bg-slate-100 text-[#1e3a8a] rounded-lg flex items-center justify-center font-black text-xs uppercase italic group-hover:bg-[#1e3a8a] group-hover:text-white transition-all">
+                        <tbody className="divide-y divide-slate-50">
+                            {currentAlumnos.map((alum) => (
+                                <tr key={alum.id} className="hover:bg-blue-50/30 transition-all group">
+                                    <td className="p-8">
+                                        <div className="flex items-center gap-5">
+                                            <div className="w-14 h-14 bg-[#1e3a8a] text-white rounded-[1.2rem] flex items-center justify-center font-black text-xl italic shadow-lg shadow-blue-100 transition-transform group-hover:scale-110">
                                                 {alum.nombres.charAt(0)}
                                             </div>
-                                            <span className="text-sm font-black text-slate-700 uppercase italic tracking-tighter">{alum.nombres} {alum.apellidos}</span>
+                                            <div className="space-y-1.5">
+                                                <p className="text-sm font-black text-slate-800 uppercase italic tracking-tighter leading-none">{alum.full_name}</p>
+                                                <div className="flex flex-wrap gap-1.5">
+                                                    {alum.sedes.map((s, idx) => (
+                                                        <span key={idx} className="flex items-center gap-1 text-[8px] font-black text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md uppercase border border-orange-100 italic">
+                                                            <MapPin size={8}/> {s}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
-                                    <td className="p-4 text-xs font-bold text-slate-500">{alum.numero_documento}</td>
-                                    <td className="p-4 text-xs font-bold text-slate-500">{alum.telefono_personal}</td>
-                                    <td className="p-4 text-right">
-                                        <div className="inline-flex gap-2">
-                                            <button
-                                                onClick={() => handleViewDetails(alum)}
-                                                className="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-orange-500 hover:text-white text-slate-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm"
+                                    <td className="p-8">
+                                        <div className="space-y-2">
+                                            <div className="flex items-center gap-2 text-slate-400 font-black text-[9px] uppercase tracking-widest"><Fingerprint size={14} className="text-slate-300"/> {alum.dni}</div>
+                                            <div className="flex items-center gap-2 text-[#1e3a8a] font-bold text-xs italic"><Phone size={14} className="text-blue-300"/> {alum.telefono}</div>
+                                        </div>
+                                    </td>
+                                    <td className="p-8 text-center">
+                                        <div className="inline-flex flex-col gap-2">
+                                            <div className="flex justify-center flex-wrap gap-1">
+                                                {alum.niveles.map((n, idx) => (
+                                                    <span key={idx} className="bg-blue-100 text-[#1e3a8a] text-[8px] font-black px-3 py-1 rounded-lg uppercase italic border border-blue-200">{n}</span>
+                                                ))}
+                                            </div>
+                                            <div className={`flex items-center justify-center gap-1.5 text-[9px] font-black uppercase italic ${alum.estaVencido ? 'text-red-500 animate-pulse' : 'text-emerald-600'}`}>
+                                                <Zap size={10} fill="currentColor" /> {alum.estaVencido ? 'VENCIDO' : 'CORTE'}: {alum.fechaCorte ? format(alum.fechaCorte, "dd/MM/yy") : '---'}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="p-8 text-center">
+                                        <div className="flex flex-col items-center gap-1.5">
+                                            <div className={`p-2.5 rounded-2xl transition-colors ${alum.cumpleanos !== 'S/D' ? 'bg-pink-50 text-pink-500' : 'bg-slate-50 text-slate-300'}`}>
+                                                <Heart size={16} fill={alum.cumpleanos !== 'S/D' ? "currentColor" : "none"} />
+                                            </div>
+                                            <span className="text-[10px] font-black text-slate-600 uppercase italic tracking-tighter">{alum.cumpleanos}</span>
+                                        </div>
+                                    </td>
+                                    <td className="p-8 text-right">
+                                        <div className="flex justify-end gap-3">
+                                            <button 
+                                                onClick={() => { setSelectedAlumno(alum); setView('details'); }}
+                                                className="w-11 h-11 bg-slate-100 text-slate-500 rounded-xl hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center shadow-sm"
+                                                title="Ver Expediente"
                                             >
-                                                Ver Perfil
-                                                <ChevronRight size={14} />
+                                                <Eye size={18} />
                                             </button>
-                                            <button
-                                                onClick={() => {
-                                                    setSelectedAlumno(alum);
-                                                    setView('cambio_nivel');
-                                                }}
-                                                className="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-orange-500 hover:text-white text-slate-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm"
+                                            <button 
+                                                onClick={() => { setSelectedAlumno(alum); setView('cambio_nivel'); }}
+                                                className="flex items-center gap-2 bg-[#1e3a8a] text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase italic hover:bg-orange-600 shadow-lg shadow-blue-100 transition-all active:scale-95"
                                             >
-                                                Cambiar Horario
-                                                <ChevronRight size={14} />
+                                                <RefreshCw size={14} className="group-hover:rotate-180 transition-transform duration-500" /> 
+                                                <span className="hidden md:inline">Horario</span>
                                             </button>
                                         </div>
                                     </td>
                                 </tr>
-                            )) : (
-                                <tr>
-                                    <td colSpan="4" className="p-20 text-center text-slate-400 font-bold italic">
-                                        No se encontraron alumnos con esos criterios.
-                                    </td>
-                                </tr>
-                            )}
+                            ))}
                         </tbody>
                     </table>
                 </div>
             </div>
-
-            {/* Paginación */}
-            {totalPages > 1 && (
-                <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 mt-4 shadow-sm">
-                    <span className="text-xs font-bold text-slate-500 uppercase">
-                        Mostrando {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredAlumnos.length)} de {filteredAlumnos.length}
-                    </span>
-                    <div className="flex gap-2">
-                        <button
-                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                            disabled={currentPage === 1}
-                            className="px-4 py-2 rounded-xl text-xs font-bold uppercase transition-all bg-slate-100 text-slate-600 hover:bg-[#1e3a8a] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            Anterior
-                        </button>
-                        <button
-                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                            disabled={currentPage === totalPages}
-                            className="px-4 py-2 rounded-xl text-xs font-bold uppercase transition-all bg-slate-100 text-slate-600 hover:bg-[#1e3a8a] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            Siguiente
-                        </button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

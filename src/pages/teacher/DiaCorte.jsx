@@ -1,15 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-    Search, 
-    Calendar, 
-    AlertCircle, 
-    Loader2,
-    Info,
-    UserCircle
-} from 'lucide-react';
+import { Search, AlertCircle, Loader2, Info, UserCircle } from 'lucide-react';
 import { apiFetch } from "../../interceptors/api";
 import { API_ROUTES } from "../../constants/apiRoutes";
-import { format, isPast, isToday, addDays } from 'date-fns';
+import { format, isPast, isToday } from 'date-fns';
 import { es } from 'date-fns/locale';
 import toast from 'react-hot-toast';
 
@@ -26,7 +19,7 @@ const DiaCorte = () => {
     const fetchAlumnosCorte = async () => {
         try {
             setLoading(true);
-            const response = await apiFetch.get(API_ROUTES.ALUMNOS.DIA_CORTE);
+            const response = await apiFetch.get(API_ROUTES.ALUMNOS.DIA_CORTE_COORDINADOR);
             const json = await response.json();
             setAlumnos(json.data || []);
         } catch (error) {
@@ -36,26 +29,22 @@ const DiaCorte = () => {
         }
     };
 
-    // 🔍 LÓGICA DE BÚSQUEDA AVANZADA (Protegida contra valores null)
     const filteredAlumnos = useMemo(() => {
         const searchClean = searchTerm.trim().toLowerCase();
         
         return alumnos.filter(alumno => {
-            // 🛡️ Agregamos fallback "" por si el ETL dejó campos null
             const nombreCompleto = (alumno.nombre_completo || "").toLowerCase();
-            const dni = (alumno.dni || "").toString(); // Aseguramos que sea string
-
+            const dni = (alumno.dni || "").toString();
             const palabrasBusqueda = searchClean.split(/\s+/); 
 
-            // Verificamos coincidencia protegiendo el includes
             const coincideBusqueda = palabrasBusqueda.every(palabra => 
                 nombreCompleto.includes(palabra) || dni.includes(palabra)
             );
 
-            // Lógica de fechas (protegemos también la lectura de contratos)
-            const inscripcionRaw = alumno.contratos?.[0]?.fecha_inicio;
-            const fechaInscripcion = inscripcionRaw ? new Date(inscripcionRaw) : null;
-            const fechaCorte = fechaInscripcion ? addDays(fechaInscripcion, 30) : null;
+            // 🛡️ REGLA DE ORO: Usamos la fecha que viene del BACKEND
+            // Tomamos la fecha_corte de la inscripción principal enviada por el service
+            const fechaCorteRaw = alumno.fecha_corte_principal;
+            const fechaCorte = fechaCorteRaw ? new Date(fechaCorteRaw) : null;
             
             const vencido = fechaCorte && isPast(fechaCorte) && !isToday(fechaCorte);
             const esHoy = fechaCorte && isToday(fechaCorte);
@@ -70,13 +59,13 @@ const DiaCorte = () => {
 
     if (loading) return (
         <div className="flex h-96 items-center justify-center">
-            <Loader2 className="animate-spin text-slate-900" size={40} />
+            <Loader2 className="animate-spin text-blue-600" size={40} />
         </div>
     );
 
     return (
         <div className="p-6 space-y-6 max-w-[98%] mx-auto animate-in fade-in duration-500">
-            {/* Header y Buscador Inteligente */}
+            {/* Header */}
             <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
                 <div className="flex items-center gap-4">
                     <div className="bg-blue-600 p-4 rounded-[1.5rem] text-white shadow-lg shadow-blue-100">
@@ -84,7 +73,7 @@ const DiaCorte = () => {
                     </div>
                     <div>
                         <h1 className="text-2xl font-black text-slate-800 uppercase italic tracking-tighter">Gestión de Alumnos</h1>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Corte de ciclo: 30 días sin prórroga</p>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Corte de ciclo: 30 días (Sincronizado con Servidor)</p>
                     </div>
                 </div>
 
@@ -111,15 +100,15 @@ const DiaCorte = () => {
                 </div>
             </div>
 
-            {/* Banner de Regla de Negocio */}
+            {/* Banner Informativo */}
             <div className="bg-amber-50 border border-amber-100 p-4 rounded-2xl flex items-center gap-3">
                 <Info size={18} className="text-amber-600 shrink-0" />
                 <p className="text-[10px] font-black text-amber-800 uppercase tracking-widest">
-                    Nota: El sistema no considera días de gracia. La fecha de corte es el límite estricto de pago.
+                    Nota: El sistema no considera días de gracia. Los cortes son procesados automáticamente cada 30 días.
                 </p>
             </div>
 
-            {/* Tabla de Gestión */}
+            {/* Tabla */}
             <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/40 border border-slate-100 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
@@ -127,17 +116,16 @@ const DiaCorte = () => {
                             <tr className="bg-slate-50/50 border-b border-slate-100">
                                 <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">Datos del Alumno</th>
                                 <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] text-center">Nro Documento</th>
-                                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] text-center">Inscripción</th>
-                                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] text-center">Fecha Corte (+30d)</th>
+                                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] text-center">Sede / Horario</th>
+                                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] text-center">Fecha Corte</th>
                                 <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] text-center">Estado de Ciclo</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
                             {filteredAlumnos.map((alumno) => {
-                                const inscripcionRaw = alumno.contratos?.[0]?.fecha_inicio;
-                                const fechaInscripcion = inscripcionRaw ? new Date(inscripcionRaw) : null;
-                                const fechaCorte = fechaInscripcion ? addDays(fechaInscripcion, 30) : null;
-                                
+                                // Usamos los datos procesados que vienen del mapeo del Service
+                                const principal = alumno.contratos?.[0];
+                                const fechaCorte = alumno.fecha_corte_principal ? new Date(alumno.fecha_corte_principal) : null;
                                 const vencido = fechaCorte && isPast(fechaCorte) && !isToday(fechaCorte);
                                 const esHoy = fechaCorte && isToday(fechaCorte);
 
@@ -155,10 +143,12 @@ const DiaCorte = () => {
                                         </td>
                                         <td className="px-8 py-6">
                                             <div className="flex flex-col items-center">
-                                                <span className="text-[11px] font-bold text-slate-600">
-                                                    {fechaInscripcion ? format(fechaInscripcion, 'dd/MM/yyyy') : '---'}
+                                                <span className="text-[10px] font-black text-slate-600 uppercase">
+                                                    {principal?.sede || 'Sin Sede'}
                                                 </span>
-                                                <span className="text-[8px] text-slate-400 uppercase font-bold">Fecha de Inicio</span>
+                                                <span className="text-[8px] text-slate-400 uppercase font-bold">
+                                                    {principal?.horario || 'Sin Horario'}
+                                                </span>
                                             </div>
                                         </td>
                                         <td className="px-8 py-6">
@@ -185,7 +175,6 @@ const DiaCorte = () => {
                 </div>
             </div>
 
-            {/* Empty State */}
             {filteredAlumnos.length === 0 && (
                 <div className="text-center py-24 bg-white rounded-[3rem] border-2 border-dashed border-slate-100">
                     <AlertCircle className="mx-auto text-slate-200 mb-4" size={56} />

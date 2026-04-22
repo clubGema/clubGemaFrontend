@@ -29,6 +29,8 @@ export const API_ROUTES = {
   },
   INSCRIPCIONES: {
     BASE: "/inscripciones",
+    SEPARAR_FINALIZAR: (id) => `/inscripciones/${id}/separar-finalizar`,
+    ACTUALIZAR_FECHA_PAQUETE: (cuentaId) => `/inscripciones/paquete/fecha/${cuentaId}`,
   },
   PAGOS: {
     BASE: "/pagos",
@@ -36,6 +38,7 @@ export const API_ROUTES = {
     ALUMNO_HISTORIAL: (id) => `/pagos/alumno/${id}`,
     REPORTAR: "/pagos/reportar",
     VALIDAR: "/pagos/validar",
+    DETALLE_MAESTRO: (id) => `/pagos/detalle-maestro/${id}`,
   },
   SEDES: {
     BASE: "/sedes",
@@ -47,6 +50,8 @@ export const API_ROUTES = {
     BASE: "/recuperaciones",
     HISTORIAL: "/recuperaciones/historial",
     ALUMNO_HISTORIAL: (id) => `/recuperaciones/alumno/${id}`,
+    ELIMINAR: (id) => `/recuperaciones/${id}`,
+    LISTAR_DEPURACION: "/recuperaciones/depuracion",
   },
   CANCHAS: {
     BASE: "/canchas",
@@ -73,6 +78,8 @@ export const API_ROUTES = {
   CUENTAS_POR_COBRAR: {
     BASE: "/cuentas-por-cobrar",
     HISTORIAL: (id) => `/cuentas-por-cobrar/historial/${id}`,
+    SUGERIR_FECHA: (id) => `/cuentas-por-cobrar/renovacion-sugerida/${id}`,
+    GENERAR_ADELANTADO: (id) => `/cuentas-por-cobrar/generar-adelantado/${id}`,
   },
   CLASES: {
     BASE: "/clases",
@@ -108,6 +115,7 @@ export const API_ROUTES = {
     BASE: "/alumnos",
     MI_PERFIL: "/alumno/mi-perfil",
     DIA_CORTE : "/alumno/gestion/resumen-cortes",
+    DIA_CORTE_COORDINADOR: "/alumno/gestion/cortes-alumnos",
   },
   PUBLICACIONES: {
     BASE: "/publicaciones",
@@ -127,5 +135,9 @@ export const API_ROUTES = {
   FERIADOS: {
     BASE: "/feriados",
     BY_ID: (id) => `/feriados/${id}`,
+  },
+  ANUNCIOS_BENEFICIOS: {
+    BASE: '/anuncios-beneficios',
+    ACTIVOS: '/anuncios-beneficios/activos'
   },
 };

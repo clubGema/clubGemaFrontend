@@ -45,6 +45,8 @@ import AdminCreateBenefits from "./pages/admin/AdminCreateBenefits";
 import AdminPublications from "./pages/admin/AdminPublications";
 import AdminGuestPasses from "./pages/admin/AdminGuestPasses";
 import AdminReprogramaciones from "./pages/admin/AdminReprogramaciones";
+import AdminDeleteMakeups from "./pages/admin/AdminDeleteMakeups";
+import AdminCreateBenefitsAnuncio from "./pages/admin/AdminCreateBenefitsAnuncio";
 // 5. Nuevas Páginas de Estudiante
 import Payments from "./pages/student/Payments";
 import Profile from "./pages/student/Profile";
@@ -160,6 +162,7 @@ function App() {
               {/* Gestión CRUD */}
               <Route path="admin/students" element={<AdminStudentsManager />} />
               <Route path="admin/teachers" element={<AdminTeachersManager />} />
+              <Route path="admin/delete-makeups" element={<AdminDeleteMakeups />} />
               <Route path="admin/benefits" element={<AdminBenefits />} />
               <Route path="admin/CreateBenefits" element={<AdminCreateBenefits />} />
               <Route path="admin/schedule" element={<AdminSchedulesManager />} />
@@ -169,6 +172,7 @@ function App() {
               <Route path="admin/locations" element={<AdminLocationsManager />} />
               <Route path="admin/injuries" element={<AdminInjuriesManager />} />
               <Route path="admin/publications" element={<AdminPublications />} />
+              <Route path="admin/anuncios-beneficios" element={<AdminCreateBenefitsAnuncio />} />
               <Route path="admin/payment-validation" element={<AdminPaymentManager />} />
               <Route path="admin/guest-passes" element={<AdminGuestPasses />} />
 

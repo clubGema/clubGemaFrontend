@@ -24,12 +24,30 @@ const AdminPaymentManager = () => {
     const fetchPayments = async () => {
         try {
             setLoading(true);
-            // 🔥 CAMBIO CLAVE: Ahora usamos la ruta de gestión administrativa optimizada
             const response = await apiFetch.get(API_ROUTES.PAGOS.BASEADMIN);
             const result = await response.json();
             if (response.ok) setPayments(result.data || []);
         } catch (error) {
             toast.error("Error al sincronizar ingresos");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // 🔥 NUEVA FUNCIÓN: Obtener detalle profundo antes de abrir el modal
+    const handleSelectPayment = async (pagoSimple) => {
+        setLoading(true);
+        try {
+            const response = await apiFetch.get(API_ROUTES.PAGOS.DETALLE_MAESTRO(pagoSimple.id));
+            const result = await response.json();
+            if (response.ok) {
+                setSelectedPayment(result.data);
+                setView('detail');
+            } else {
+                toast.error("No se pudo cargar el detalle del paquete");
+            }
+        } catch (e) {
+            toast.error("Error de conexión al obtener detalles");
         } finally {
             setLoading(false);
         }
@@ -174,7 +192,6 @@ const AdminPaymentManager = () => {
                     <AnimatePresence>
                         {filteredPayments.map((p) => {
                             const usuario = p.cuentas_por_cobrar?.alumnos?.usuarios;
-                            // 🔥 Lógica de Bloqueo
                             const estaBloqueado = p.bloqueado_por_asistencia;
 
                             return (
@@ -184,14 +201,14 @@ const AdminPaymentManager = () => {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
                                 key={p.id}
-                                onClick={() => { setSelectedPayment(p); setView('detail'); }}
+                                // 🔥 CAMBIO: Ahora llama a la función de carga profunda
+                                onClick={() => handleSelectPayment(p)}
                                 className={`bg-white rounded-[2.5rem] border-2 p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer group relative overflow-hidden ${
                                     estaBloqueado 
                                     ? 'border-orange-500 shadow-[0_0_20px_rgba(249,115,22,0.15)] bg-orange-50/30' 
                                     : 'border-slate-200 hover:border-blue-300'
                                 }`}
                             >
-                                {/* Indicador de Bloqueo Superior */}
                                 {estaBloqueado && (
                                     <div className="absolute top-0 left-0 w-full bg-orange-500 text-white text-[8px] font-black uppercase py-1 text-center flex items-center justify-center gap-1 italic tracking-widest">
                                         <ShieldAlert size={10} /> BLOQUEADO POR ASISTENCIA (RECUPERACIONES)
@@ -227,10 +244,6 @@ const AdminPaymentManager = () => {
                                                     <Mail size={12} className="text-slate-400 shrink-0"/>
                                                     <span className="truncate">{usuario?.email || 'Sin correo'}</span>
                                                 </div>
-                                                <div className="flex items-center gap-1.5 text-[10px] text-slate-500 font-bold uppercase">
-                                                    <Phone size={12} className="text-slate-400"/>
-                                                    <span>{usuario?.telefono_personal || 'Sin teléfono'}</span>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -246,13 +259,6 @@ const AdminPaymentManager = () => {
                                             </h3>
                                         </div>
                                     </div>
-
-                                    <div className="pt-4 border-t border-slate-100 flex justify-between items-center text-[9px] font-bold text-slate-400">
-                                        <span className={`px-2 py-1 rounded-lg uppercase italic font-black ${estaBloqueado ? 'bg-orange-200 text-orange-800' : 'bg-slate-100 text-[#1e3a8a]'}`}>
-                                            {p.metodos_pago?.nombre}
-                                        </span>
-                                        <span>{new Date(p.fecha_pago).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
-                                    </div>
                                 </div>
                                 {estaBloqueado ? (
                                     <ShieldAlert className="absolute -right-8 -bottom-8 text-orange-500/10" size={140} />
@@ -263,12 +269,6 @@ const AdminPaymentManager = () => {
                             );
                         })}
                     </AnimatePresence>
-                </div>
-            )}
-
-            {filteredPayments.length === 0 && !loading && (
-                <div className="text-center py-20 bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200">
-                    <p className="text-xs font-black text-slate-400 uppercase italic">No se encontraron pagos para este filtro</p>
                 </div>
             )}
         </div>

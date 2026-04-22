@@ -41,19 +41,35 @@ const StudentRecoveries = () => {
     const loadData = async () => {
         try {
             setLoading(true);
+            
+            // 🔥 FIX: Blindamos cada petición individualmente para que un 404 no rompa toda la página
             const [ticketsData, horariosData, historialData] = await Promise.all([
-                recuperacionService.obtenerPendientes(),
-                horarioService.obtenerDisponiblesPorNivel(),
-                recuperacionService.obtenerHistorial()
+                recuperacionService.obtenerPendientes().catch(e => {
+                    console.warn("No se pudieron cargar tickets:", e);
+                    return { stats: {}, data: [] }; // Estructura de fallback
+                }),
+                // 🛡️ ESCUDO AQUÍ: Si no tiene inscripción vigente, devolvemos [] y la app sobrevive
+                horarioService.obtenerDisponiblesPorNivel().catch(err => {
+                    console.warn("Aviso: El alumno no tiene inscripción vigente para buscar nivel.", err);
+                    return []; 
+                }),
+                recuperacionService.obtenerHistorial().catch(e => {
+                    console.warn("No se pudo cargar el historial:", e);
+                    return [];
+                })
             ]);
-            setTickets(ticketsData);
-            setHorariosPatron(horariosData);
-            setHistorial(historialData);
 
-            setStats(ticketsData.stats);
+            // Asignamos la data (asegurando que si viene undefined, sea un array)
+            setTickets(ticketsData.data || ticketsData || []);
+            setHorariosPatron(horariosData || []);
+            setHistorial(historialData || []);
+
+            if (ticketsData.stats) {
+                setStats(ticketsData.stats);
+            }
 
         } catch (error) {
-            toast.error("Error cargando información de recuperaciones");
+            toast.error("Error crítico cargando información de recuperaciones");
             console.error(error);
         } finally {
             setLoading(false);
@@ -75,11 +91,11 @@ const StudentRecoveries = () => {
             const slotsLimpios = rawSlots.filter(slot => {
                 const fechaSlotTexto = slot.fecha.split('T')[0];
                 const slotDate = new Date(slot.fecha);
+                
                 // Buscamos si el alumno ya tiene algo agendado ('PROGRAMADA') en este mismo día y a esta misma hora
                 const yaLoTieneOcupado = historial.some(ticket => {
                     if (ticket.estado !== 'PROGRAMADA') return false;
 
-                    // Comparamos si las fechas y el horario coinciden
                     const fechaTicketTexto = ticket.fecha_programada.split('T')[0];
                     const mismaFecha = fechaTicketTexto === fechaSlotTexto;
                     const mismoHorario = ticket.horario_destino_id === slot.horarioData.id;
@@ -87,25 +103,17 @@ const StudentRecoveries = () => {
                     return mismaFecha && mismoHorario;
                 });
 
-                //Verificamos ahora con el horario regular del alumno.
                 let esHorarioRegularProtegido = false;
 
                 // Si el ticket seleccionado NO es por lesión, aplicamos la regla de los 30 días
                 if (stats.fin_ciclo_regular && stats.horarios_regulares) {
                     const finCicloDate = new Date(stats.fin_ciclo_regular);
 
-                    // Si el slot que está viendo cae dentro de sus primeros 30 días
                     if (slotDate <= finCicloDate) {
-
-                        // const indiceDiaSlot = (slotDate.getUTCDay() === 0) ? 7 : slotDate.getUTCDay();
-
-                        // Comprobamos si el turno seleccionado corresponde con uno de sus horarios regulares.
                         esHorarioRegularProtegido = stats.horarios_regulares.includes(slot.horarioData.id);
                     }
                 }
 
-
-                // Si no lo tiene ocupado y no es parte de su horario regular, lo dejamos en la lista disponible
                 return !yaLoTieneOcupado && !esHorarioRegularProtegido;
             });
 
@@ -172,7 +180,6 @@ const StudentRecoveries = () => {
                 error: (err) => err.message || "Error al agendar"
             });
 
-            // Resetear y recargar
             setSelectedTicket(null);
             loadData();
         } catch (error) {
@@ -180,14 +187,11 @@ const StudentRecoveries = () => {
         }
     };
 
-    // 3. Manejar el canje
     const handleSlotClick = async (slot) => {
         if (!selectedTicket) return;
-
         confirmarRecuperacion(slot);
     };
 
-    // Manejar la cancelación
     const handleCancelRecovery = async (recuperacionId) => {
         if (!window.confirm("¿Estás seguro de cancelar esta recuperación? El ticket volverá a tus pendientes.")) {
             return;
@@ -208,7 +212,6 @@ const StudentRecoveries = () => {
         }
     };
 
-    // Helper para saber si ya llegó al límite visualmente
     const alLimite = stats.recuperacion_usadas >= stats.limite_permitido;
 
     const sedesUnicas = [...new Set(availableSlots.map(slot => slot.horarioData?.cancha?.sede?.nombre).filter(Boolean))].sort((a, b) => a.localeCompare(b));
@@ -224,7 +227,7 @@ const StudentRecoveries = () => {
             <Link to="/dashboard/student" className="inline-flex items-center gap-2 text-slate-400 hover:text-[#1e3a8a] transition-all mb-4 text-[10px] font-black uppercase tracking-widest italic">
                 <ArrowLeft size={14} /> Volver
             </Link>
-            {/* Header */}
+            
             <div className="mb-8">
                 <div className="flex justify-between items-end">
                     <div>
@@ -232,15 +235,13 @@ const StudentRecoveries = () => {
                             Centro de <span className="text-orange-500">Recuperación</span>
                         </h1>
                     </div>
-                    <button onClick={loadData} className="p-3 bg-white/5 hover:bg-white/10 rounded-xl text-white transition-colors">
+                    <button onClick={loadData} className="p-3 bg-white/5 hover:bg-white/10 rounded-xl text-white transition-colors border border-slate-200 text-slate-400">
                         <RefreshCw size={20} className={loading ? "animate-spin" : ""} />
                     </button>
                 </div>
             </div>
 
-            {/* Tarjetas de Estadísticas del Ciclo Actual */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                {/* Tarjeta Normales */}
                 <div className={`p-5 rounded-3xl border flex items-center justify-between ${alLimite ? 'bg-orange-50 border-orange-200' : 'bg-white border-gray-200 shadow-sm'}`}>
                     <div className="flex items-center gap-4">
                         <div className={`p-3 rounded-2xl ${alLimite ? 'bg-orange-100 text-orange-600' : 'bg-blue-50 text-blue-600'}`}>
@@ -250,9 +251,9 @@ const StudentRecoveries = () => {
                             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Recuperaciones Normales</p>
                             <div className="flex items-baseline gap-2">
                                 <span className={`text-2xl font-black ${alLimite ? 'text-orange-600' : 'text-slate-800'}`}>
-                                    {stats.recuperacion_usadas}
+                                    {stats.recuperacion_usadas || 0}
                                 </span>
-                                <span className="text-sm font-bold text-slate-400">/ {stats.limite_permitido} usadas</span>
+                                <span className="text-sm font-bold text-slate-400">/ {stats.limite_permitido || 2} usadas</span>
                             </div>
                         </div>
                     </div>
@@ -261,7 +262,6 @@ const StudentRecoveries = () => {
                     )}
                 </div>
 
-                {/* Tarjeta Lesiones */}
                 <div className="bg-white border border-gray-200 shadow-sm p-5 rounded-3xl flex items-center gap-4">
                     <div className="p-3 rounded-2xl bg-emerald-50 text-emerald-600">
                         <ShieldPlus size={24} />
@@ -275,7 +275,6 @@ const StudentRecoveries = () => {
                 </div>
             </div>
 
-            {/* TABS */}
             <div className="flex gap-4 mb-8 border-b border-gray-200 pb-px">
                 <button
                     onClick={() => setActiveTab('agendar')}
@@ -297,34 +296,44 @@ const StudentRecoveries = () => {
                 </button>
             </div>
 
-            {/* Sección 1: Tus Tickets */}
             {activeTab === 'agendar' ? (
                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    
+                    {/* Alerta si no hay paquete activo */}
+                    {horariosPatron.length === 0 && !loading && (
+                        <div className="mb-8 p-6 bg-orange-50 border border-orange-200 rounded-[2rem] flex items-center gap-4">
+                            <AlertCircle className="text-orange-500 shrink-0" size={32} />
+                            <div>
+                                <h4 className="text-orange-800 font-black uppercase italic text-sm tracking-widest">Atención</h4>
+                                <p className="text-orange-700 font-medium text-xs">No tienes una inscripción vigente. Para agendar una recuperación, necesitas tener un paquete activo.</p>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="mb-10">
                         <h3 className="text-blue-500 font-bold uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
                             1. Selecciona una falta pendiente
                         </h3>
                         <RecoveryTicketList
-                            tickets={tickets}
+                            tickets={tickets.data || tickets} // Manejo seguro
                             selectedTicket={selectedTicket}
                             onSelect={setSelectedTicket}
                         />
                     </div>
 
-                    {/* Sección 2: Calendario de Disponibilidad */}
-                    {selectedTicket && (
+                    {selectedTicket && horariosPatron.length > 0 && (
                         <div className="animate-in fade-in slide-in-from-bottom-8 duration-500">
-                            <div className="flex items-center justify-between mb-4 border-t border-white/10 pt-8">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 border-t border-slate-200 pt-8 gap-4">
                                 <h3 className="text-emerald-500 font-bold uppercase tracking-widest text-xs flex items-center gap-2">
                                     2. Elige tu nueva clase
                                 </h3>
                                 {availableSlots.length > 0 && (
-                                    <div className="flex items-center gap-2 bg-slate-200 px-3 py-2 rounded-xl border border-slate-100">
+                                    <div className="flex items-center gap-2 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200">
                                         <Filter size={14} className="text-slate-400" />
                                         <select
                                             value={filtroSede}
                                             onChange={(e) => setFiltroSede(e.target.value)}
-                                            className="bg-transparent border-none text-slate-600 text-[10px] font-bold uppercase tracking-widest outline-none cursor-pointer"
+                                            className="bg-transparent border-none text-[#1e3a8a] text-[10px] font-black uppercase tracking-widest outline-none cursor-pointer"
                                         >
                                             <option value="">TODAS LAS SEDES</option>
                                             {sedesUnicas.map((sede, idx) => (
@@ -342,22 +351,22 @@ const StudentRecoveries = () => {
                                     loading={false}
                                 />
                             ) : (
-                                <div className="p-8 rounded-2xl border border-dashed border-slate-200 text-center text-slate-400 text-sm font-bold uppercase tracking-widest">
-                                    No hay horarios disponibles en esta sede.
+                                <div className="p-8 rounded-3xl border border-dashed border-slate-300 text-center text-slate-400 text-[10px] font-black uppercase tracking-widest italic bg-white">
+                                    No hay horarios disponibles en esta sede o nivel.
                                 </div>
                             )}
                         </div>
                     )}
 
-                    {!selectedTicket && tickets.length > 0 && (
-                        <div className="mt-8 p-6 rounded-2xl border border-dashed border-white/10 text-center text-gray-500">
-                            <AlertCircle className="mx-auto mb-2 opacity-50" />
-                            Selecciona un ticket arriba para ver dónde puedes recuperar.
+                    {!selectedTicket && (tickets.data?.length > 0 || tickets.length > 0) && horariosPatron.length > 0 && (
+                        <div className="mt-8 p-6 rounded-3xl border border-dashed border-slate-300 text-center text-slate-400 bg-white">
+                            <AlertCircle className="mx-auto mb-3 opacity-50" size={32} />
+                            <span className="text-[10px] font-black uppercase tracking-widest italic">Selecciona un ticket arriba para ver dónde puedes recuperar.</span>
                         </div>
                     )}
                 </div>
             ) : (
-                < div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <RecoveryHistoryList
                         historial={historial}
                         onCancel={handleCancelRecovery}
