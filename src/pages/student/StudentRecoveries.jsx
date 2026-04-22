@@ -163,7 +163,7 @@ const StudentRecoveries = () => {
                 alumnoId: userId,
                 recuperacionId: selectedTicket.id,
                 horarioDestinoId: slot.horarioData.id,
-                fechaProgramada: slot.fecha
+                fechaProgramada: new Date(slot.fecha).toISOString(),
             });
 
             await toast.promise(promise, {
