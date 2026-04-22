@@ -93,6 +93,7 @@ const StudentRecoveries = () => {
                 // Si el ticket seleccionado NO es por lesión, aplicamos la regla de los 30 días
                 if (stats.fin_ciclo_regular && stats.horarios_regulares) {
                     const finCicloDate = new Date(stats.fin_ciclo_regular);
+                    finCicloDate.setHours(23, 59, 59);
 
                     // Si el slot que está viendo cae dentro de sus primeros 30 días
                     if (slotDate <= finCicloDate) {
