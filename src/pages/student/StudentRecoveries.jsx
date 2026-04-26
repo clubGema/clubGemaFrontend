@@ -105,21 +105,6 @@ const StudentRecoveries = () => {
 
                 let esHorarioRegularProtegido = false;
 
-                // // Si el ticket seleccionado NO es por lesión, aplicamos la regla de los 30 días
-                // if (stats.fin_ciclo_regular && stats.horarios_regulares) {
-                //     const finCicloDate = new Date(stats.fin_ciclo_regular);
-                //     finCicloDate.setHours(23, 59, 59);
-
-                //     // Si el slot que está viendo cae dentro de sus primeros 30 días
-                //     if (slotDate <= finCicloDate) {
-
-                //         // const indiceDiaSlot = (slotDate.getUTCDay() === 0) ? 7 : slotDate.getUTCDay();
-
-                //         // Comprobamos si el turno seleccionado corresponde con uno de sus horarios regulares.
-                //         esHorarioRegularProtegido = stats.horarios_regulares.includes(slot.horarioData.id);
-                //     }
-                // }
-
                 esHorarioRegularProtegido = stats.fechas_clases_regulares.some(f => f.fecha_clase === slot.fecha && f.id_horario === slot.horarioData.id)
 
                 return !yaLoTieneOcupado && !esHorarioRegularProtegido;
