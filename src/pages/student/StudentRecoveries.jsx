@@ -41,7 +41,7 @@ const StudentRecoveries = () => {
     const loadData = async () => {
         try {
             setLoading(true);
-            
+
             // 🔥 FIX: Blindamos cada petición individualmente para que un 404 no rompa toda la página
             const [ticketsData, horariosData, historialData] = await Promise.all([
                 recuperacionService.obtenerPendientes().catch(e => {
@@ -51,7 +51,7 @@ const StudentRecoveries = () => {
                 // 🛡️ ESCUDO AQUÍ: Si no tiene inscripción vigente, devolvemos [] y la app sobrevive
                 horarioService.obtenerDisponiblesPorNivel().catch(err => {
                     console.warn("Aviso: El alumno no tiene inscripción vigente para buscar nivel.", err);
-                    return []; 
+                    return [];
                 }),
                 recuperacionService.obtenerHistorial().catch(e => {
                     console.warn("No se pudo cargar el historial:", e);
@@ -91,7 +91,7 @@ const StudentRecoveries = () => {
             const slotsLimpios = rawSlots.filter(slot => {
                 const fechaSlotTexto = slot.fecha.split('T')[0];
                 const slotDate = new Date(slot.fecha);
-                
+
                 // Buscamos si el alumno ya tiene algo agendado ('PROGRAMADA') en este mismo día y a esta misma hora
                 const yaLoTieneOcupado = historial.some(ticket => {
                     if (ticket.estado !== 'PROGRAMADA') return false;
@@ -105,15 +105,22 @@ const StudentRecoveries = () => {
 
                 let esHorarioRegularProtegido = false;
 
-                // Si el ticket seleccionado NO es por lesión, aplicamos la regla de los 30 días
-                if (stats.fin_ciclo_regular && stats.horarios_regulares) {
-                    const finCicloDate = new Date(stats.fin_ciclo_regular);
-                    finCicloDate.setHours(23, 59, 59);
+                // // Si el ticket seleccionado NO es por lesión, aplicamos la regla de los 30 días
+                // if (stats.fin_ciclo_regular && stats.horarios_regulares) {
+                //     const finCicloDate = new Date(stats.fin_ciclo_regular);
+                //     finCicloDate.setHours(23, 59, 59);
 
-                    if (slotDate <= finCicloDate) {
-                        esHorarioRegularProtegido = stats.horarios_regulares.includes(slot.horarioData.id);
-                    }
-                }
+                //     // Si el slot que está viendo cae dentro de sus primeros 30 días
+                //     if (slotDate <= finCicloDate) {
+
+                //         // const indiceDiaSlot = (slotDate.getUTCDay() === 0) ? 7 : slotDate.getUTCDay();
+
+                //         // Comprobamos si el turno seleccionado corresponde con uno de sus horarios regulares.
+                //         esHorarioRegularProtegido = stats.horarios_regulares.includes(slot.horarioData.id);
+                //     }
+                // }
+
+                esHorarioRegularProtegido = stats.fechas_clases_regulares.some(f => f.fecha_clase === slot.fecha && f.id_horario === slot.horarioData.id)
 
                 return !yaLoTieneOcupado && !esHorarioRegularProtegido;
             });
@@ -228,7 +235,7 @@ const StudentRecoveries = () => {
             <Link to="/dashboard/student" className="inline-flex items-center gap-2 text-slate-400 hover:text-[#1e3a8a] transition-all mb-4 text-[10px] font-black uppercase tracking-widest italic">
                 <ArrowLeft size={14} /> Volver
             </Link>
-            
+
             <div className="mb-8">
                 <div className="flex justify-between items-end">
                     <div>
@@ -299,7 +306,7 @@ const StudentRecoveries = () => {
 
             {activeTab === 'agendar' ? (
                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    
+
                     {/* Alerta si no hay paquete activo */}
                     {horariosPatron.length === 0 && !loading && (
                         <div className="mb-8 p-6 bg-orange-50 border border-orange-200 rounded-[2rem] flex items-center gap-4">
