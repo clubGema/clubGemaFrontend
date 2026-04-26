@@ -31,7 +31,7 @@ function Login() {
       const { rol, nombres, debeCompletarEmail } = data.user;
       toast.success(`¡Bienvenido, ${nombres}!`, { id: toastId });
       const routes = {
-        'Administrador': '/dashboard/admin',
+        'Administrador': '/dashboard/admin/payment-validation',
         'Coordinador': '/dashboard/teacher',
         'Alumno': '/dashboard/student'
       };

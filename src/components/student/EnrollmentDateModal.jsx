@@ -6,19 +6,23 @@ const EnrollmentDateModal = ({ isOpen, onClose, previewData, onConfirm }) => {
   if (!isOpen || !previewData) return null;
 
   const fechasOpciones = useMemo(() => {
+    // 1. Extraemos las fechas base
     const inmediatas = previewData.map(grupo => grupo[0]); 
     const siguientes = previewData.map(grupo => grupo[1]); 
     
+    // 2. Función de ordenamiento cronológico (Asegura que el 22 vaya antes que el 27)
+    const sorter = (a, b) => (a > b ? 1 : -1);
+
     return {
-      inmediatas: [...new Set(inmediatas)].sort(),
-      siguientes: [...new Set(siguientes)].sort()
+      // Aplicamos Set para no repetir fechas y luego ordenamos explícitamente
+      inmediatas: [...new Set(inmediatas)].sort(sorter),
+      siguientes: [...new Set(siguientes)].sort(sorter)
     };
   }, [previewData]);
 
   const formatDateDetail = (dateStr) => {
     const d = dayjs(dateStr);
-    // 🧠 Detectamos si la fecha sugerida está inusualmente lejos (más de 7 días)
-    // Esto significa que el backend la "enganchó" a una clase futura
+    // 🧠 Si la fecha es a más de 7 días, es un "enganche" (continuación)
     const isContinuacion = d.isAfter(dayjs().add(7, 'day')); 
     
     return {
@@ -73,7 +77,6 @@ const EnrollmentDateModal = ({ isOpen, onClose, previewData, onConfirm }) => {
                       <div className="text-left">
                         <p className="text-xs font-black text-[#1e3a8a] uppercase italic">{f.diaNom}</p>
                         
-                        {/* 🌟 BADGE DINÁMICO DE CONTINUACIÓN */}
                         {f.isContinuacion ? (
                            <div className="flex items-center gap-1 mt-0.5">
                              <RefreshCw size={10} className="text-green-600" />
@@ -82,7 +85,6 @@ const EnrollmentDateModal = ({ isOpen, onClose, previewData, onConfirm }) => {
                         ) : (
                            <p className="text-[9px] font-bold text-slate-400 uppercase">Empezar esta semana</p>
                         )}
-
                       </div>
                     </div>
                     <ArrowRight size={18} className="text-slate-300 group-hover:translate-x-1 group-hover:text-orange-500 transition-all" />

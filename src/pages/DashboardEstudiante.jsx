@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import {
   Calendar, Filter, Loader2, Sparkles,
   ChevronRight, ChevronLeft, RefreshCcw,
-  Users, Gift, HeartPulse, BellOff, Zap, Star, Trophy
+  Users, Gift, HeartPulse, BellOff, Zap, Star, Trophy, Eye, EyeOff
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { apiFetch } from "../interceptors/api";
@@ -112,13 +112,23 @@ const DashboardEstudiante = () => {
   const [benefits, setBenefits] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // 🚩 ESTADO PARA CONTROLAR EL CALENDARIO MENSUAL
+  const [showCalendar, setShowCalendar] = useState(false);
+
   const [notifications, setNotifications] = useState([]);
   const [showNotifList, setShowNotifList] = useState(false);
   const [unreadCountDB, setUnreadCountDB] = useState(0);
 
   const [filtroMes, setFiltroMes] = useState("TODOS");
   const [filtroAnio, setFiltroAnio] = useState(new Date().getFullYear().toString());
+  
   const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+  
+  // 🚩 Opciones dinámicas para el año (Año anterior, actual, próximo)
+  const aniosOpciones = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    return [(currentYear - 1).toString(), currentYear.toString(), (currentYear + 1).toString()];
+  }, []);
 
   const fetchNotifications = async () => {
     try {
@@ -136,27 +146,37 @@ const DashboardEstudiante = () => {
     const loadDashboardData = async () => {
       try {
         setLoading(true);
-        // 🛡️ Escudo Anti-Colapso: Cada petición tiene su catch por si el alumno es nuevo
-        const [resAsist, resRecu, resDebts, resPay, resBen] = await Promise.all([
-          apiFetch.get(API_ROUTES.ASISTENCIAS.ALUMNO_HISTORIAL(userId)).catch(() => ({ json: () => ({ data: [] }) })),
-          apiFetch.get(API_ROUTES.RECUPERACIONES.HISTORIAL).catch(() => ({ json: () => ({ data: [] }) })),
-          apiFetch.get(API_ROUTES.CUENTAS_POR_COBRAR.BASE).catch(() => ({ json: () => ({ data: [] }) })),
-          apiFetch.get(API_ROUTES.PAGOS.BASE).catch(() => ({ json: () => ({ data: [] }) })),
-          apiFetch.get(API_ROUTES.ANUNCIOS_BENEFICIOS.ACTIVOS).catch(() => ({ json: () => ({ data: [] }) }))
+
+        // 🛡️ CHALECO ANTIBALAS: Función segura que evita el error "Unexpected token '<'"
+        const fetchSafe = async (url) => {
+          try {
+            const res = await apiFetch.get(url);
+            // Si la respuesta no es 200 OK (ej. 404), no intentamos parsear HTML
+            if (!res.ok) return { data: [] }; 
+            return await res.json();
+          } catch (error) {
+            // Si el servidor se cae por completo, devolvemos data vacía
+            return { data: [] }; 
+          }
+        };
+
+        // Pedimos todo en paralelo usando nuestro fetch seguro
+        const [dataAsist, dataRecu, dataDebts, dataPay, dataBen] = await Promise.all([
+          fetchSafe(API_ROUTES.ASISTENCIAS.ALUMNO_HISTORIAL(userId)),
+          // ⚠️ Revertido a HISTORIAL (El backend seguro lee el Token de aquí)
+          fetchSafe(API_ROUTES.RECUPERACIONES.HISTORIAL), 
+          fetchSafe(API_ROUTES.CUENTAS_POR_COBRAR.HISTORIAL(userId)),
+          fetchSafe(API_ROUTES.PAGOS.ALUMNO_HISTORIAL(userId)),
+          fetchSafe(API_ROUTES.ANUNCIOS_BENEFICIOS.ACTIVOS)
         ]);
 
-        const dataAsist = await resAsist.json();
-        const dataRecu = await resRecu.json();
-        const dataDebts = await resDebts.json();
-        const dataPay = await resPay.json();
-        const dataBen = await resBen.json();
-
         setAttendance([...(dataAsist.data || []), ...(dataRecu.data?.map(r => ({ ...r, isRecuperacion: true })) || [])]);
-        setDebts((dataDebts.data || []).filter((d) => d.alumno_id === userId));
-        setPayments((dataPay.data || []).filter((p) => p.cuentas_por_cobrar?.alumno_id === userId));
+        setDebts(dataDebts.data || []);
+        setPayments(dataPay.data || []);
         setBenefits(dataBen.data || []);
+        
       } catch (error) {
-        console.error("Error en Dashboard:", error);
+        console.error("Error crítico en Dashboard:", error);
       } finally {
         setLoading(false);
       }
@@ -246,45 +266,66 @@ const DashboardEstudiante = () => {
         {/* 2. CARRUSEL DINÁMICO */}
         <StudentAnnouncements anuncios={benefits} />
 
-        {/* 3. CALENDARIO SEMANAL VISUAL (Prioridad #1) */}
+        {/* 3. CALENDARIO SEMANAL VISUAL (Con Botón Toggle) */}
         <div className="mb-8 relative z-0">
-          <div className="flex items-center gap-2 mb-3 px-1">
+          <div className="flex items-center justify-between mb-4 px-1">
             <h2 className="font-black uppercase tracking-widest text-[9px] italic text-slate-500">Mi Agenda de la Semana</h2>
+            <button 
+              onClick={() => setShowCalendar(!showCalendar)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${showCalendar ? 'bg-orange-500 text-white' : 'bg-white text-[#1e3a8a] shadow-sm border border-slate-100'}`}
+            >
+              {showCalendar ? (
+                <><EyeOff size={14} /> Ocultar Calendario</>
+              ) : (
+                <><Eye size={14} /> Ver Calendario Completo</>
+              )}
+            </button>
           </div>
-          <MonthlyCalendarDashboard />
+          
+          {/* Renderizado Condicional del Calendario */}
+          {showCalendar && (
+            <div className="animate-in fade-in zoom-in-95 duration-300">
+              <MonthlyCalendarDashboard />
+            </div>
+          )}
         </div>
 
-        {/* 4. GRID: CLASES Y PAGOS */}
+        {/* 4. GRID: CLASES Y PAGOS (REORDENADO CON CSS ORDER) */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           
-          <div className="lg:col-span-2 space-y-4">
-            {/* Filtros Compactos */}
-            <div className="flex items-center justify-between bg-white p-3 rounded-[1.5rem] border border-slate-100 shadow-sm">
+          {/* 🥇 SECCIÓN PAGOS: Aparece PRIMERO en celular (order-1), a la DERECHA en PC (lg:order-2) */}
+          <div className="space-y-4 order-1 lg:order-2">
+            <div className="bg-white p-5 rounded-[2rem] shadow-xl shadow-blue-900/5 border-2 border-white overflow-hidden relative">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-1 h-3 bg-orange-500 rounded-full"></div>
+                <h2 className="font-black text-[#1e3a8a] uppercase tracking-widest italic text-[10px]">Mis Finanzas 💎</h2>
+              </div>
+              <StudentPayments debts={debts} payments={payments} />
+            </div>
+          </div>
+
+          {/* 🥈 SECCIÓN CLASES: Aparece SEGUNDO en celular (order-2), a la IZQUIERDA en PC (lg:order-1) */}
+          <div className="lg:col-span-2 space-y-4 order-2 lg:order-1">
+            {/* Filtros Compactos con Menú de Año Mejorado */}
+            <div className="flex items-center justify-between bg-white p-3 rounded-[1.5rem] border border-slate-100 shadow-sm flex-wrap gap-3">
               <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100">
                 <Filter size={12} className="text-orange-500" />
-                <select value={filtroMes} onChange={(e) => setFiltroMes(e.target.value)} className="text-[9px] font-black uppercase tracking-widest text-[#1e3a8a] outline-none bg-transparent">
+                <select value={filtroMes} onChange={(e) => setFiltroMes(e.target.value)} className="text-[9px] font-black uppercase tracking-widest text-[#1e3a8a] outline-none bg-transparent cursor-pointer">
                   <option value="TODOS">TODO EL AÑO</option>
                   {meses.map((mes, idx) => <option key={idx} value={idx.toString()}>{mes.toUpperCase()}</option>)}
                 </select>
               </div>
-              <div className="flex items-center gap-1.5 px-3 font-black text-[9px] text-slate-400 italic uppercase">
-                <Calendar size={12} className="text-blue-500" /> Ciclo {filtroAnio}
+              
+              <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100">
+                <Calendar size={12} className="text-blue-500" />
+                <select value={filtroAnio} onChange={(e) => setFiltroAnio(e.target.value)} className="text-[9px] font-black uppercase tracking-widest text-slate-500 outline-none bg-transparent cursor-pointer">
+                  {aniosOpciones.map(anio => <option key={anio} value={anio}>CICLO {anio}</option>)}
+                </select>
               </div>
             </div>
 
             <div className="bg-white rounded-[2rem] shadow-lg shadow-slate-200/50 overflow-hidden border border-slate-100">
                <StudentSchedule attendance={attendance} filtroMes={filtroMes} filtroAnio={filtroAnio} />
-            </div>
-          </div>
-
-          {/* SECCIÓN PAGOS */}
-          <div className="space-y-4">
-            <div className="bg-white p-5 rounded-[2rem] shadow-lg shadow-slate-200/50 border border-slate-100">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-1 h-3 bg-orange-500 rounded-full"></div>
-                <h2 className="font-black text-[#1e3a8a] uppercase tracking-widest italic text-[9px]">Estado de Cuenta</h2>
-              </div>
-              <StudentPayments debts={debts} payments={payments} />
             </div>
           </div>
 
