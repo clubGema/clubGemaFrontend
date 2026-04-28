@@ -206,19 +206,25 @@ const Dashboard = ({ role = 'student' }) => {
             setIsExporting(true);
             const response = await apiFetch.get(API_ROUTES.USUARIOS.REPORTE);
             const result = await response.json();
+
             if (!response.ok) throw new Error(result.message || "Error al obtener reporte");
 
-            const reportData = result.data;
+            const reportData = Array.isArray(result.data) ? result.data : (result.data.reporte || []);
+
+            if (reportData.length === 0) {
+                toast.info("No hay datos disponibles para exportar");
+                return;
+            }
+
             const workbook = XLSX.utils.book_new();
 
             const applyStyles = (ws, range) => {
-                // Style Headers (Row 0)
                 for (let C = range.s.c; C <= range.e.c; ++C) {
                     const address = XLSX.utils.encode_cell({ r: 0, c: C });
                     if (!ws[address]) continue;
                     ws[address].s = {
                         font: { bold: true, color: { rgb: "FFFFFF" } },
-                        fill: { fgColor: { rgb: "1E3A8A" } }, // Gema Blue
+                        fill: { fgColor: { rgb: "1E3A8A" } },
                         alignment: { horizontal: "center", vertical: "center" },
                         border: {
                             top: { style: "thin", color: { rgb: "cbd5e1" } },
@@ -229,7 +235,6 @@ const Dashboard = ({ role = 'student' }) => {
                     };
                 }
 
-                // Style Body cells
                 for (let R = 1; R <= range.e.r; ++R) {
                     for (let C = range.s.c; C <= range.e.c; ++C) {
                         const address = XLSX.utils.encode_cell({ r: R, c: C });
@@ -242,40 +247,32 @@ const Dashboard = ({ role = 'student' }) => {
                         };
                     }
                 }
-
                 return ws;
             };
 
-            const addSheet = (dataArray, sheetName, cols) => {
-                const ws = XLSX.utils.json_to_sheet(dataArray);
-                const range = XLSX.utils.decode_range(ws['!ref']);
-                ws['!cols'] = cols;
-                applyStyles(ws, range);
-                XLSX.utils.book_append_sheet(workbook, ws, sheetName);
-            };
+            const ws = XLSX.utils.json_to_sheet(reportData);
+            const range = XLSX.utils.decode_range(ws['!ref']);
 
-            addSheet(reportData.alumnos, "Directorio_Alumnos", [
-                { wch: 10 }, { wch: 15 }, { wch: 25 }, { wch: 25 }, { wch: 15 }, { wch: 10 },
-                { wch: 10 }, { wch: 15 }, { wch: 30 }, { wch: 20 }, { wch: 15 }, { wch: 10 },
-                { wch: 30 }, { wch: 15 }, { wch: 20 }
-            ]);
+            ws['!cols'] = [
+                { wch: 20 },
+                { wch: 15 },
+                { wch: 20 },
+                { wch: 25 },
+                { wch: 20 },
+                { wch: 20 },
+                { wch: 15 },
+                { wch: 18 },
+                { wch: 15 },
+                { wch: 25 },
+            ];
 
-            addSheet(reportData.inscripciones, "Inscripciones_Activas", [
-                { wch: 35 }, { wch: 15 }, { wch: 20 }, { wch: 20 }, { wch: 25 },
-                { wch: 15 }, { wch: 25 }, { wch: 15 }
-            ]);
+            applyStyles(ws, range);
+            XLSX.utils.book_append_sheet(workbook, ws, "Reporte_General");
 
-            addSheet(reportData.pagos, "Historial_Pagos", [
-                { wch: 15 }, { wch: 35 }, { wch: 30 }, { wch: 15 }, { wch: 15 }, { wch: 20 }, { wch: 15 }
-            ]);
-
-            addSheet(reportData.deudas, "Cuentas_Pendientes", [
-                { wch: 35 }, { wch: 15 }, { wch: 35 }, { wch: 15 }, { wch: 15 }, { wch: 15 }
-            ]);
-
-            XLSX.writeFile(workbook, `Reporte_Inteligencia_Gema_${new Date().toISOString().split('T')[0]}.xlsx`);
+            XLSX.writeFile(workbook, `Reporte_Gema_Unificado_${new Date().toISOString().split('T')[0]}.xlsx`);
 
         } catch (error) {
+            console.error("Error al exportar:", error);
             toast.error(error.message);
         } finally {
             setIsExporting(false);
