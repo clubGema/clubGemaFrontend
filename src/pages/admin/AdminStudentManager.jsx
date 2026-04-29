@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { 
-    Search, Phone, ShieldAlert, ChevronRight, ArrowLeft, Heart, Mail, 
-    Calendar, User, Fingerprint, Activity, Info, FileText, Loader2, 
+import {
+    Search, Phone, ShieldAlert, ChevronRight, ArrowLeft, Heart, Mail,
+    Calendar, User, Fingerprint, Activity, Info, FileText, Loader2,
     MapPin, Zap, RefreshCw, Eye, Stethoscope, Users
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -36,10 +36,10 @@ const AdminStudentsManager = () => {
                     const contacto = alumnoData.alumnos_contactos?.[0] || {};
                     const inscripciones = alumnoData.inscripciones || [];
                     const dir = alumnoData.direcciones || {};
-                    
+
                     const sedesNombres = [...new Set(inscripciones.map(i => i.horarios_clases?.canchas?.sedes?.nombre).filter(Boolean))];
                     const nivelesNombres = [...new Set(inscripciones.map(i => i.horarios_clases?.niveles_entrenamiento?.nombre).filter(Boolean))];
-                    
+
                     const ultimaInsc = inscripciones[0];
                     const fCorte = ultimaInsc?.fecha_inscripcion ? addDays(new Date(ultimaInsc.fecha_inscripcion), 30) : null;
 
@@ -81,7 +81,13 @@ const AdminStudentsManager = () => {
         }
     };
 
-    useEffect(() => { fetchAlumnos(); }, [selectedSede]);
+    useEffect(() => { 
+        fetchAlumnos(); 
+    }, [selectedSede]);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, selectedSede]);
 
     useEffect(() => {
         const loadSedes = async () => {
@@ -139,19 +145,19 @@ const AdminStudentsManager = () => {
                                         ))}
                                     </div>
                                 </div>
-                                
+
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-slate-50 pt-4">
                                     <div className="flex items-center gap-2 text-slate-500 text-sm font-bold uppercase tracking-tighter">
-                                        <Fingerprint size={16} className="text-blue-500"/> {selectedAlumno.dni}
+                                        <Fingerprint size={16} className="text-blue-500" /> {selectedAlumno.dni}
                                     </div>
                                     <div className="flex items-center gap-2 text-slate-500 text-sm font-bold lowercase">
-                                        <Mail size={16} className="text-blue-500"/> {selectedAlumno.email}
+                                        <Mail size={16} className="text-blue-500" /> {selectedAlumno.email}
                                     </div>
                                     <div className="flex items-center gap-2 text-slate-500 text-sm font-bold uppercase tracking-tighter">
-                                        <Calendar size={16} className="text-blue-500"/> {selectedAlumno.cumpleanos}
+                                        <Calendar size={16} className="text-blue-500" /> {selectedAlumno.cumpleanos}
                                     </div>
                                     <div className="flex items-center gap-2 text-slate-500 text-sm font-bold uppercase tracking-tighter">
-                                        <Phone size={16} className="text-blue-500"/> {selectedAlumno.telefono}
+                                        <Phone size={16} className="text-blue-500" /> {selectedAlumno.telefono}
                                     </div>
                                 </div>
 
@@ -259,12 +265,12 @@ const AdminStudentsManager = () => {
 
             <div className="relative group">
                 <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#1e3a8a] transition-colors" size={20} />
-                <input 
-                    type="text" 
-                    value={searchTerm} 
-                    onChange={(e) => setSearchTerm(e.target.value)} 
-                    placeholder="BUSCAR POR NOMBRE, APELLIDO O DNI..." 
-                    className="w-full bg-white border-2 border-slate-100 rounded-[1.8rem] pl-16 pr-8 py-5 font-black text-xs uppercase tracking-widest outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-[#1e3a8a] transition-all shadow-sm" 
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="BUSCAR POR NOMBRE, APELLIDO O DNI..."
+                    className="w-full bg-white border-2 border-slate-100 rounded-[1.8rem] pl-16 pr-8 py-5 font-black text-xs uppercase tracking-widest outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-[#1e3a8a] transition-all shadow-sm"
                 />
             </div>
 
@@ -293,7 +299,7 @@ const AdminStudentsManager = () => {
                                                 <div className="flex flex-wrap gap-1.5">
                                                     {alum.sedes.map((s, idx) => (
                                                         <span key={idx} className="flex items-center gap-1 text-[8px] font-black text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md uppercase border border-orange-100 italic">
-                                                            <MapPin size={8}/> {s}
+                                                            <MapPin size={8} /> {s}
                                                         </span>
                                                     ))}
                                                 </div>
@@ -302,8 +308,8 @@ const AdminStudentsManager = () => {
                                     </td>
                                     <td className="p-8">
                                         <div className="space-y-2">
-                                            <div className="flex items-center gap-2 text-slate-400 font-black text-[9px] uppercase tracking-widest"><Fingerprint size={14} className="text-slate-300"/> {alum.dni}</div>
-                                            <div className="flex items-center gap-2 text-[#1e3a8a] font-bold text-xs italic"><Phone size={14} className="text-blue-300"/> {alum.telefono}</div>
+                                            <div className="flex items-center gap-2 text-slate-400 font-black text-[9px] uppercase tracking-widest"><Fingerprint size={14} className="text-slate-300" /> {alum.dni}</div>
+                                            <div className="flex items-center gap-2 text-[#1e3a8a] font-bold text-xs italic"><Phone size={14} className="text-blue-300" /> {alum.telefono}</div>
                                         </div>
                                     </td>
                                     <td className="p-8 text-center">
@@ -328,18 +334,18 @@ const AdminStudentsManager = () => {
                                     </td>
                                     <td className="p-8 text-right">
                                         <div className="flex justify-end gap-3">
-                                            <button 
+                                            <button
                                                 onClick={() => { setSelectedAlumno(alum); setView('details'); }}
                                                 className="w-11 h-11 bg-slate-100 text-slate-500 rounded-xl hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center shadow-sm"
                                                 title="Ver Expediente"
                                             >
                                                 <Eye size={18} />
                                             </button>
-                                            <button 
+                                            <button
                                                 onClick={() => { setSelectedAlumno(alum); setView('cambio_nivel'); }}
                                                 className="flex items-center gap-2 bg-[#1e3a8a] text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase italic hover:bg-orange-600 shadow-lg shadow-blue-100 transition-all active:scale-95"
                                             >
-                                                <RefreshCw size={14} className="group-hover:rotate-180 transition-transform duration-500" /> 
+                                                <RefreshCw size={14} className="group-hover:rotate-180 transition-transform duration-500" />
                                                 <span className="hidden md:inline">Horario</span>
                                             </button>
                                         </div>
@@ -348,6 +354,53 @@ const AdminStudentsManager = () => {
                             ))}
                         </tbody>
                     </table>
+                </div>
+
+                {/* --- CONTROLES DE PAGINACIÓN --- */}
+                <div className="bg-slate-50/50 border-t border-slate-100 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        Mostrando <span className="text-[#1e3a8a]">{currentAlumnos.length}</span> de <span className="text-slate-600">{filteredAlumnos.length}</span> alumnos
+                    </p>
+
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}
+                            className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1e3a8a] hover:text-white transition-all shadow-sm"
+                        >
+                            <ArrowLeft size={18} />
+                        </button>
+
+                        <div className="flex items-center gap-1">
+                            {[...Array(totalPages)].map((_, i) => {
+                                // Lógica para no mostrar demasiados números si hay muchas páginas
+                                if (totalPages > 5 && Math.abs(i + 1 - currentPage) > 1 && i !== 0 && i !== totalPages - 1) {
+                                    if (Math.abs(i + 1 - currentPage) === 2) return <span key={i} className="text-slate-300 px-1">...</span>;
+                                    return null;
+                                }
+                                return (
+                                    <button
+                                        key={i}
+                                        onClick={() => setCurrentPage(i + 1)}
+                                        className={`w-10 h-10 rounded-xl text-[10px] font-black transition-all ${currentPage === i + 1
+                                            ? 'bg-[#1e3a8a] text-white shadow-lg shadow-blue-100'
+                                            : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                                            }`}
+                                    >
+                                        {i + 1}
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        <button
+                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage === totalPages}
+                            className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1e3a8a] hover:text-white transition-all shadow-sm"
+                        >
+                            <ChevronRight size={18} />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
