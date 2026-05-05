@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom'; // 👈 IMPORTANTE: Agregado para el botón del Empty State
-import { 
-  Clock, Trash2, Loader2, Calendar, Trophy, Receipt, 
-  Zap, History, ChevronDown, Dumbbell, MapPin, Activity, 
-  ArrowRight as ArrowIcon, AlertTriangle, CalendarSearch, Rocket 
+import {
+  Clock, Trash2, Loader2, Calendar, Trophy, Receipt,
+  Zap, History, ChevronDown, Dumbbell, MapPin, Activity,
+  ArrowRight as ArrowIcon, AlertTriangle, CalendarSearch, Rocket
 } from 'lucide-react';
 import apiFetch from '../../interceptors/api.js';
 import { API_ROUTES } from '../../constants/apiRoutes';
@@ -62,7 +62,7 @@ const MyRegistrations = () => {
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showHistory, setShowHistory] = useState(false);
-  
+
   const [pendingPayment, setPendingPayment] = useState(null);
   const [isPayModalOpen, setIsPayModalOpen] = useState(false);
   const [selectedDebtForPay, setSelectedDebtForPay] = useState(null);
@@ -75,7 +75,7 @@ const MyRegistrations = () => {
   }, []);
 
   const fetchInitialData = useCallback(async () => {
-    if (!userId) return; 
+    if (!userId) return;
     try {
       setLoading(true);
       const [resI, resC] = await Promise.all([
@@ -87,12 +87,12 @@ const MyRegistrations = () => {
 
       if (resI.ok) setRegistrations(dataI.data || []);
       if (resC.ok) {
-        const deuda = dataC.data?.find(c => 
+        const deuda = dataC.data?.find(c =>
           c.alumno_id == userId && (c.estado === 'PENDIENTE' || c.estado === 'PARCIAL')
         );
         setPendingPayment(deuda);
       }
-    } catch (error) { toast.error("Error de sincronización"); } 
+    } catch (error) { toast.error("Error de sincronización"); }
     finally { setLoading(false); }
   }, [userId]);
 
@@ -168,7 +168,7 @@ const MyRegistrations = () => {
 
   return (
     <div className="relative min-h-screen bg-[#f8fafc]">
-      
+
       {/* 🛡️ BANNER DE DEUDA ULTRA EVIDENTE (STICKY) */}
       {pendingPayment && (
         <div className="w-full bg-slate-900 py-4 border-b-4 border-orange-500 shadow-2xl sticky top-0 z-[100] animate-in slide-in-from-top duration-500">
@@ -193,10 +193,10 @@ const MyRegistrations = () => {
             </p>
           </div>
           <div className="bg-white px-5 py-3 rounded-[1.5rem] border border-slate-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
-            <Trophy size={16} className="text-orange-500"/>
+            <Trophy size={16} className="text-orange-500" />
             <div className="flex flex-col items-end">
-               <p className="text-2xl font-black text-[#1e3a8a] italic leading-none">{currentPackages.length}</p>
-               <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Paquetes Activos</p>
+              <p className="text-2xl font-black text-[#1e3a8a] italic leading-none">{currentPackages.length}</p>
+              <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Paquetes Activos</p>
             </div>
           </div>
         </header>
@@ -211,11 +211,11 @@ const MyRegistrations = () => {
             <p className="text-slate-400 text-[12px] font-bold uppercase tracking-[0.2em] max-w-md mb-8 leading-relaxed">
               No tienes paquetes de clases activos en este momento. Dale play a tu entrenamiento y reserva tu horario.
             </p>
-            <Link 
+            <Link
               to="/dashboard/student/enrollment" // 👈 Asegúrate que esta ruta es la correcta
               className="bg-orange-500 text-white px-10 py-5 rounded-full font-black uppercase italic tracking-widest text-[12px] hover:bg-orange-600 hover:scale-105 transition-all shadow-xl shadow-orange-500/20 flex items-center gap-3 active:scale-95 group"
             >
-              <Rocket size={18} fill="currentColor" className="group-hover:-translate-y-1 transition-transform" /> 
+              <Rocket size={18} fill="currentColor" className="group-hover:-translate-y-1 transition-transform" />
               Matricularme Ahora
             </Link>
           </div>
@@ -226,14 +226,20 @@ const MyRegistrations = () => {
           {currentPackages.map((pkg) => (
             <div key={pkg.id} className="bg-white rounded-[3.5rem] border border-slate-100 shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow duration-500">
               <div className="p-5 bg-slate-50/50 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 px-8">
-                 <div className="flex items-center gap-3">
-                    <Receipt size={16} className="text-orange-500" />
-                    <span className="text-[11px] font-black text-[#1e3a8a] uppercase italic tracking-tighter">CONTRATO: {pkg.id.slice(0, 10)}...</span>
-                 </div>
-                 <span className="text-[10px] font-bold text-slate-500 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm flex items-center gap-2">
-                    <Calendar size={12} className="text-blue-500"/>
-                    Inicio: {dayjs(pkg.fecha_inicio).format('DD MMM, YYYY')}
-                 </span>
+                <div className="flex items-center gap-3">
+                  <Receipt size={16} className="text-orange-500" />
+                  <span className="text-[11px] font-black text-[#1e3a8a] uppercase italic tracking-tighter">CONTRATO: {pkg.id.slice(0, 10)}...</span>
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-slate-500 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm flex items-center gap-2">
+                    <Calendar size={12} className="text-blue-500" />
+                    Inicio: {dayjs(pkg.fecha_inicio).add(5, 'hour').format('DD MMM, YYYY')}
+                  </span>
+                  <span className="text-[10px] font-bold text-slate-500 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm flex items-center gap-2 mt-1">
+                    <Calendar size={12} className="text-blue-500" />
+                    Fin: {dayjs(pkg.fecha_inicio).add(29, 'day').add(5, 'hour').format('DD MMM, YYYY')}
+                  </span>
+                </div>
               </div>
 
               <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 bg-white">
@@ -246,7 +252,7 @@ const MyRegistrations = () => {
                         <div>
                           <h4 className="text-2xl font-black text-[#1e3a8a] uppercase italic leading-none">{DIAS_NOMBRES[reg.horarios_clases?.dia_semana]}</h4>
                           <p className="text-[11px] font-bold text-slate-500 mt-2 flex items-center gap-1.5 uppercase bg-white w-fit px-2 py-0.5 rounded-md border border-slate-200">
-                            <Clock size={12} className="text-orange-500"/> {formatTimeSafe(reg.horarios_clases?.hora_inicio)} - {formatTimeSafe(reg.horarios_clases?.hora_fin)}
+                            <Clock size={12} className="text-orange-500" /> {formatTimeSafe(reg.horarios_clases?.hora_inicio)} - {formatTimeSafe(reg.horarios_clases?.hora_fin)}
                           </p>
                         </div>
                       </div>
@@ -256,28 +262,28 @@ const MyRegistrations = () => {
                     </div>
 
                     <div className="flex flex-col gap-3 pt-4 border-t border-slate-200/60 relative z-10">
-                       <div className="flex items-center gap-2 text-slate-500 bg-white px-3 py-2 rounded-xl border border-slate-100">
-                          <MapPin size={14} className="text-orange-500 shrink-0" />
-                          <span className="text-[10px] font-black uppercase italic truncate">{reg.horarios_clases?.canchas?.sedes?.nombre}</span>
-                       </div>
-                       <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-slate-100 shadow-sm">
-                             <Activity size={12} className="text-blue-500" />
-                             <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">{reg.horarios_clases?.niveles_entrenamiento?.nombre}</span>
-                          </div>
-                          <button onClick={() => handleAction(reg)} className="p-3 text-rose-500 bg-white border border-rose-100 hover:bg-rose-500 hover:text-white rounded-xl transition-all active:scale-90 shadow-sm hover:shadow-rose-500/30">
-                             <Trash2 size={18} />
-                          </button>
-                       </div>
+                      <div className="flex items-center gap-2 text-slate-500 bg-white px-3 py-2 rounded-xl border border-slate-100">
+                        <MapPin size={14} className="text-orange-500 shrink-0" />
+                        <span className="text-[10px] font-black uppercase italic truncate">{reg.horarios_clases?.canchas?.sedes?.nombre}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-slate-100 shadow-sm">
+                          <Activity size={12} className="text-blue-500" />
+                          <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">{reg.horarios_clases?.niveles_entrenamiento?.nombre}</span>
+                        </div>
+                        <button onClick={() => handleAction(reg)} className="p-3 text-rose-500 bg-white border border-rose-100 hover:bg-rose-500 hover:text-white rounded-xl transition-all active:scale-90 shadow-sm hover:shadow-rose-500/30">
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
-              
+
               <div className="p-6 bg-slate-50/80 flex justify-center border-t border-slate-100">
-                 <button onClick={() => handlePrepaymentGroup(pkg.id)} className="w-full max-w-md py-4 bg-[#1e3a8a] text-white rounded-2xl text-[11px] font-black uppercase italic hover:bg-orange-500 transition-all shadow-xl shadow-blue-900/20 flex items-center justify-center gap-3 active:scale-95">
-                   <Zap size={16} fill="white" /> Renovar Paquete Completo
-                 </button>
+                <button onClick={() => handlePrepaymentGroup(pkg.id)} className="w-full max-w-md py-4 bg-[#1e3a8a] text-white rounded-2xl text-[11px] font-black uppercase italic hover:bg-orange-500 transition-all shadow-xl shadow-blue-900/20 flex items-center justify-center gap-3 active:scale-95">
+                  <Zap size={16} fill="white" /> Renovar Paquete Completo
+                </button>
               </div>
             </div>
           ))}
@@ -298,7 +304,7 @@ const MyRegistrations = () => {
                 <ChevronDown size={24} className="text-slate-400" />
               </div>
             </button>
-            
+
             {showHistory && (
               <div className="mt-10 space-y-3 animate-in slide-in-from-top-4 duration-500">
                 {historyItems.map(item => (
@@ -307,7 +313,7 @@ const MyRegistrations = () => {
                       <span className="text-[13px] font-black text-[#1e3a8a] italic w-28 group-hover:text-orange-500 transition-colors">{DIAS_NOMBRES[item.horarios_clases?.dia_semana]}</span>
                       <div className="hidden md:block h-6 w-[2px] bg-slate-100 group-hover:bg-slate-700 transition-colors"></div>
                       <div className="flex items-center gap-2 text-slate-500 text-[11px] font-bold group-hover:text-slate-300 transition-colors bg-slate-50 group-hover:bg-slate-800 px-3 py-1.5 rounded-lg">
-                        <Clock size={12} className="text-orange-500 group-hover:text-white"/>
+                        <Clock size={12} className="text-orange-500 group-hover:text-white" />
                         <span>{formatTimeSafe(item.horarios_clases?.hora_inicio)} - {formatTimeSafe(item.horarios_clases?.hora_fin)}</span>
                       </div>
                     </div>
