@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-    Search, Loader2, User, ChevronRight, AlertCircle, Calendar, 
-    Filter, DollarSign, Mail, Phone, FileText, ShieldAlert 
+import {
+    Search, Loader2, User, ChevronRight, AlertCircle, Calendar,
+    Filter, DollarSign, Mail, Phone, FileText, ShieldAlert
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { apiFetch } from '../../interceptors/api';
 import AdminPaymentValidation from './AdminPaymentValidation';
-import AdminPaymentStats from './AdminPaymentStats'; 
+import AdminPaymentStats from './AdminPaymentStats';
 import toast from 'react-hot-toast';
 import { API_ROUTES } from '../../constants/apiRoutes';
 
@@ -95,8 +95,8 @@ const AdminPaymentManager = () => {
 
         return {
             chartData,
-            pendientes: pendientesTotalAno, 
-            maxRecaudacion: Math.max(...chartData.map(d => d.total), 1) 
+            pendientes: pendientesTotalAno,
+            maxRecaudacion: Math.max(...chartData.map(d => d.total), 1)
         };
     }, [payments, selectedYear]);
 
@@ -195,77 +195,86 @@ const AdminPaymentManager = () => {
                             const estaBloqueado = p.bloqueado_por_asistencia;
 
                             return (
-                            <motion.div
-                                layout
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                key={p.id}
-                                // 🔥 CAMBIO: Ahora llama a la función de carga profunda
-                                onClick={() => handleSelectPayment(p)}
-                                className={`bg-white rounded-[2.5rem] border-2 p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer group relative overflow-hidden ${
-                                    estaBloqueado 
-                                    ? 'border-orange-500 shadow-[0_0_20px_rgba(249,115,22,0.15)] bg-orange-50/30' 
-                                    : 'border-slate-200 hover:border-blue-300'
-                                }`}
-                            >
-                                {estaBloqueado && (
-                                    <div className="absolute top-0 left-0 w-full bg-orange-500 text-white text-[8px] font-black uppercase py-1 text-center flex items-center justify-center gap-1 italic tracking-widest">
-                                        <ShieldAlert size={10} /> BLOQUEADO POR ASISTENCIA (RECUPERACIONES)
-                                    </div>
-                                )}
-
-                                <div className={`flex justify-between items-start mb-6 ${estaBloqueado ? 'mt-4' : ''}`}>
-                                    <div className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase border shadow-sm ${getStatusStyle(p.estado_validacion)}`}>
-                                        {p.estado_validacion}
-                                    </div>
-                                    <div className={`p-2.5 rounded-2xl transition-all duration-300 ${estaBloqueado ? 'bg-orange-100 text-orange-600' : 'bg-slate-50 group-hover:bg-[#1e3a8a] group-hover:text-white'}`}>
-                                        <ChevronRight size={18} />
-                                    </div>
-                                </div>
-
-                                <div className="space-y-4">
-                                    <div className="flex items-start gap-4">
-                                        <div className={`p-3 rounded-2xl transition-colors duration-300 shrink-0 ${estaBloqueado ? 'bg-orange-200 text-orange-700' : 'bg-blue-50 text-[#1e3a8a] group-hover:bg-[#1e3a8a] group-hover:text-white'}`}>
-                                            <User size={22} />
+                                <motion.div
+                                    layout
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    key={p.id}
+                                    // 🔥 CAMBIO: Ahora llama a la función de carga profunda
+                                    onClick={() => handleSelectPayment(p)}
+                                    className={`bg-white rounded-[2.5rem] border-2 p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer group relative overflow-hidden ${estaBloqueado
+                                        ? 'border-orange-500 shadow-[0_0_20px_rgba(249,115,22,0.15)] bg-orange-50/30'
+                                        : 'border-slate-200 hover:border-blue-300'
+                                        }`}
+                                >
+                                    {estaBloqueado && (
+                                        <div className="absolute top-0 left-0 w-full bg-orange-500 text-white text-[8px] font-black uppercase py-1 text-center flex items-center justify-center gap-1 italic tracking-widest">
+                                            <ShieldAlert size={10} /> BLOQUEADO POR ASISTENCIA (RECUPERACIONES)
                                         </div>
-                                        <div className="min-w-0 flex-1">
-                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Alumno</p>
-                                            <h3 className="text-sm font-black text-slate-800 truncate uppercase tracking-tighter italic leading-tight">
-                                                {usuario?.nombres} {usuario?.apellidos}
-                                            </h3>
-                                            
-                                            <div className="mt-2 flex flex-col gap-1.5">
-                                                <div className="flex items-center gap-1.5 text-[10px] text-slate-500 font-bold uppercase">
-                                                    <FileText size={12} className="text-slate-400"/>
-                                                    <span>{usuario?.numero_documento || 'S/N'}</span>
-                                                </div>
-                                                <div className="flex items-center gap-1.5 text-[10px] text-slate-500 font-bold truncate">
-                                                    <Mail size={12} className="text-slate-400 shrink-0"/>
-                                                    <span className="truncate">{usuario?.email || 'Sin correo'}</span>
+                                    )}
+
+                                    <div className={`flex justify-between items-start mb-6 ${estaBloqueado ? 'mt-4' : ''}`}>
+                                        <div className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase border shadow-sm ${getStatusStyle(p.estado_validacion)}`}>
+                                            {p.estado_validacion}
+                                        </div>
+                                        <div className={`p-2.5 rounded-2xl transition-all duration-300 ${estaBloqueado ? 'bg-orange-100 text-orange-600' : 'bg-slate-50 group-hover:bg-[#1e3a8a] group-hover:text-white'}`}>
+                                            <ChevronRight size={18} />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <div className="flex items-start gap-4">
+                                            <div className={`p-3 rounded-2xl transition-colors duration-300 shrink-0 ${estaBloqueado ? 'bg-orange-200 text-orange-700' : 'bg-blue-50 text-[#1e3a8a] group-hover:bg-[#1e3a8a] group-hover:text-white'}`}>
+                                                <User size={22} />
+                                            </div>
+                                            <div className="min-w-0 flex-1">
+                                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Alumno</p>
+                                                <h3 className="text-sm font-black text-slate-800 truncate uppercase tracking-tighter italic leading-tight">
+                                                    {usuario?.nombres} {usuario?.apellidos}
+                                                </h3>
+
+                                                <div className="mt-2 flex flex-col gap-1.5">
+                                                    <div className="flex items-center gap-1.5 text-[10px] text-slate-500 font-bold uppercase">
+                                                        <FileText size={12} className="text-slate-400" />
+                                                        <span>{usuario?.numero_documento || 'S/N'}</span>
+                                                    </div>
+
+                                                    {/* TELÉFONO PERSONAL (Con mensaje de respaldo) */}
+                                                    <div className="flex items-center gap-1.5 text-[10px] font-black uppercase">
+                                                        <Phone size={12} className={`${usuario?.telefono_personal ? 'text-blue-400' : 'text-slate-300'} shrink-0`} />
+                                                        {usuario?.telefono_personal ? (
+                                                            <span className="text-[#1e3a8a]">{usuario.telefono_personal}</span>
+                                                        ) : (
+                                                            <span className="text-slate-400 italic">S/N REGISTRADO</span>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex items-center gap-1.5 text-[10px] text-slate-500 font-bold truncate">
+                                                        <Mail size={12} className="text-slate-400 shrink-0" />
+                                                        <span className="truncate">{usuario?.email || 'Sin correo'}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex items-center gap-4 pt-2">
-                                        <div className={`p-3 rounded-2xl shrink-0 ${estaBloqueado ? 'bg-orange-100 text-orange-600' : 'bg-orange-50 text-orange-600'}`}>
-                                            <DollarSign size={22} />
-                                        </div>
-                                        <div>
-                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Monto Confirmado</p>
-                                            <h3 className="text-xl font-black text-slate-900 italic tracking-tighter">
-                                                S/ {parseFloat(p.monto_pagado).toFixed(2)}
-                                            </h3>
+                                        <div className="flex items-center gap-4 pt-2">
+                                            <div className={`p-3 rounded-2xl shrink-0 ${estaBloqueado ? 'bg-orange-100 text-orange-600' : 'bg-orange-50 text-orange-600'}`}>
+                                                <DollarSign size={22} />
+                                            </div>
+                                            <div>
+                                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Monto Confirmado</p>
+                                                <h3 className="text-xl font-black text-slate-900 italic tracking-tighter">
+                                                    S/ {parseFloat(p.monto_pagado).toFixed(2)}
+                                                </h3>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                {estaBloqueado ? (
-                                    <ShieldAlert className="absolute -right-8 -bottom-8 text-orange-500/10" size={140} />
-                                ) : (
-                                    <AlertCircle className="absolute -right-8 -bottom-8 text-slate-50 group-hover:text-blue-50/30 transition-colors duration-500" size={140} />
-                                )}
-                            </motion.div>
+                                    {estaBloqueado ? (
+                                        <ShieldAlert className="absolute -right-8 -bottom-8 text-orange-500/10" size={140} />
+                                    ) : (
+                                        <AlertCircle className="absolute -right-8 -bottom-8 text-slate-50 group-hover:text-blue-50/30 transition-colors duration-500" size={140} />
+                                    )}
+                                </motion.div>
                             );
                         })}
                     </AnimatePresence>
