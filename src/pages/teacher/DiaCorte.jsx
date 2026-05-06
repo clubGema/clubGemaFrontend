@@ -31,13 +31,13 @@ const DiaCorte = () => {
 
     const filteredAlumnos = useMemo(() => {
         const searchClean = searchTerm.trim().toLowerCase();
-        
-        return alumnos.filter(alumno => {
+
+        const resultado = alumnos.filter(alumno => {
             const nombreCompleto = (alumno.nombre_completo || "").toLowerCase();
             const dni = (alumno.dni || "").toString();
-            const palabrasBusqueda = searchClean.split(/\s+/); 
+            const palabrasBusqueda = searchClean.split(/\s+/);
 
-            const coincideBusqueda = palabrasBusqueda.every(palabra => 
+            const coincideBusqueda = palabrasBusqueda.every(palabra =>
                 nombreCompleto.includes(palabra) || dni.includes(palabra)
             );
 
@@ -45,7 +45,7 @@ const DiaCorte = () => {
             // Tomamos la fecha_corte de la inscripción principal enviada por el service
             const fechaCorteRaw = alumno.fecha_corte_principal;
             const fechaCorte = fechaCorteRaw ? new Date(fechaCorteRaw) : null;
-            
+
             const vencido = fechaCorte && isPast(fechaCorte) && !isToday(fechaCorte);
             const esHoy = fechaCorte && isToday(fechaCorte);
 
@@ -55,6 +55,17 @@ const DiaCorte = () => {
 
             return coincideBusqueda && coincideEstado;
         });
+
+        return resultado.sort((a, b) => {
+            const fechaA = a.fecha_corte_principal ? new Date(a.fecha_corte_principal) : null;
+            const fechaB = b.fecha_corte_principal ? new Date(b.fecha_corte_principal) : null;
+
+            if (!fechaA) return 1;
+            if (!fechaB) return -1;
+
+            return fechaB - fechaA;
+        });
+
     }, [alumnos, searchTerm, filterStatus]);
 
     if (loading) return (
@@ -80,21 +91,21 @@ const DiaCorte = () => {
                 <div className="flex flex-1 max-w-4xl gap-3 w-full">
                     <div className="relative flex-1 group">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors" size={18} />
-                        <input 
-                            type="text" 
-                            placeholder="Buscar por DNI, Nombre o Apellido..." 
+                        <input
+                            type="text"
+                            placeholder="Buscar por DNI, Nombre o Apellido..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-xs font-bold focus:ring-2 focus:ring-blue-500/10 outline-none transition-all"
                         />
                     </div>
-                    <select 
+                    <select
                         value={filterStatus}
                         onChange={(e) => setFilterStatus(e.target.value)}
                         className="bg-slate-900 text-white px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest outline-none shadow-xl cursor-pointer hover:bg-slate-800 transition-all"
                     >
                         <option value="todos">Todos los Alumnos</option>
-                        <option value="vencidos">Alumnos con Deuda</option>
+                        <option value="vencidos">Ciclo Realizado</option>
                         <option value="hoy">Vencen Hoy</option>
                     </select>
                 </div>
@@ -142,29 +153,43 @@ const DiaCorte = () => {
                                             </span>
                                         </td>
                                         <td className="px-8 py-6">
-                                            <div className="flex flex-col items-center">
+                                            <div className="flex flex-col items-center gap-1">
                                                 <span className="text-[10px] font-black text-slate-600 uppercase">
                                                     {principal?.sede || 'Sin Sede'}
                                                 </span>
-                                                <span className="text-[8px] text-slate-400 uppercase font-bold">
-                                                    {principal?.horario || 'Sin Horario'}
-                                                </span>
+                                                {alumno.contratos && alumno.contratos.length > 0 ? (
+                                                    alumno.contratos
+                                                        .map(c => c.horario)
+                                                        .filter(Boolean)
+                                                        .filter((h, i, arr) => arr.indexOf(h) === i)
+                                                        .map((horario, index) => (
+                                                            <span
+                                                                key={index}
+                                                                className="text-[8px] text-slate-400 uppercase font-bold"
+                                                            >
+                                                                {horario}
+                                                            </span>
+                                                        ))
+                                                ) : (
+                                                    <span className="text-[8px] text-slate-400 uppercase font-bold">
+                                                        Sin Horario
+                                                    </span>
+                                                )}
                                             </div>
                                         </td>
                                         <td className="px-8 py-6">
-                                            <div className={`inline-flex flex-col items-center px-4 py-2 rounded-2xl border ${vencido ? 'border-red-100 bg-red-50' : 'border-slate-100 bg-slate-50'}`}>
-                                                <span className={`text-xs font-black ${vencido ? 'text-red-600' : 'text-slate-800'}`}>
+                                            <div className={`inline-flex flex-col items-center px-4 py-2 rounded-2xl border ${vencido ? 'border-slate-100 bg-slate-50' : 'border-emerald-100 bg-emerald-50'}`}>
+                                                <span className={`text-xs font-black ${vencido ? 'text-slate-800' : 'text-emerald-500'}`}>
                                                     {fechaCorte ? format(fechaCorte, "dd 'de' MMMM", { locale: es }) : '---'}
                                                 </span>
                                             </div>
                                         </td>
                                         <td className="px-8 py-6">
-                                            <span className={`text-[9px] font-black px-4 py-2 rounded-xl uppercase tracking-widest inline-block w-32 ${
-                                                vencido ? 'bg-red-500 text-white shadow-lg shadow-red-200 animate-pulse' : 
-                                                esHoy ? 'bg-orange-500 text-white shadow-lg shadow-orange-200' : 
-                                                'bg-emerald-500 text-white shadow-lg shadow-emerald-200'
-                                            }`}>
-                                                {vencido ? 'Ciclo Atrasado' : esHoy ? 'Vence Hoy' : 'Ciclo al día'}
+                                            <span className={`text-[9px] font-black px-4 py-2 rounded-xl uppercase tracking-widest inline-block w-32 ${vencido ? 'bg-slate-500 text-white shadow-lg shadow-slate-200' :
+                                                esHoy ? 'bg-orange-500 text-white shadow-lg shadow-orange-200' :
+                                                    'bg-emerald-500 text-white shadow-lg shadow-emerald-200'
+                                                }`}>
+                                                {vencido ? 'Ciclo Realizado' : esHoy ? 'Vence Hoy' : 'Ciclo al día'}
                                             </span>
                                         </td>
                                     </tr>

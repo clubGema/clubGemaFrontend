@@ -81,8 +81,8 @@ const AdminStudentsManager = () => {
         }
     };
 
-    useEffect(() => { 
-        fetchAlumnos(); 
+    useEffect(() => {
+        fetchAlumnos();
     }, [selectedSede]);
 
     useEffect(() => {
@@ -343,9 +343,15 @@ const AdminStudentsManager = () => {
                                             </button>
                                             <button
                                                 onClick={() => { setSelectedAlumno(alum); setView('cambio_nivel'); }}
-                                                className="flex items-center gap-2 bg-[#1e3a8a] text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase italic hover:bg-orange-600 shadow-lg shadow-blue-100 transition-all active:scale-95"
+                                                disabled={!alum.fechaCorte}
+                                                title={!alum.fechaCorte ? "Alumno sin inscripción activa" : "Cambiar horario"}
+                                                className={`flex items-center gap-2 px-6 py-3 rounded-xl text-[10px] font-black uppercase italic shadow-lg transition-all
+                                                    ${!alum.fechaCorte
+                                                        ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
+                                                        : 'bg-[#1e3a8a] text-white hover:bg-orange-600 shadow-blue-100 active:scale-95'
+                                                    }`}
                                             >
-                                                <RefreshCw size={14} className="group-hover:rotate-180 transition-transform duration-500" />
+                                                <RefreshCw size={14} className={`${alum.fechaCorte ? 'group-hover:rotate-180' : ''} transition-transform duration-500`} />
                                                 <span className="hidden md:inline">Horario</span>
                                             </button>
                                         </div>
