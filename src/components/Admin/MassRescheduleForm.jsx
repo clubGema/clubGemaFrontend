@@ -14,7 +14,7 @@ import {
 import apiFetch from '../../interceptors/api';
 import { API_ROUTES } from '../../constants/apiRoutes';
 import toast from 'react-hot-toast';
-import ConfirmModal from './ConfirmModal.jsx'; 
+import ConfirmModal from './ConfirmModal.jsx';
 
 const MassRescheduleForm = ({ onSuccess }) => {
     const [horarios, setHorarios] = useState([]);
@@ -22,7 +22,7 @@ const MassRescheduleForm = ({ onSuccess }) => {
     const [fechasDisponibles, setFechasDisponibles] = useState([]);
     const [isLoadingFechas, setIsLoadingFechas] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [modalStep, setModalStep] = useState(0); 
+    const [modalStep, setModalStep] = useState(0);
 
     const [formData, setFormData] = useState({
         horario_origen_id: '',
@@ -44,7 +44,7 @@ const MassRescheduleForm = ({ onSuccess }) => {
             setFechasDisponibles([]);
             setFormData(prev => ({ ...prev, fecha_origen: '' }));
         }
-    }, [formData.horario_origen_id, horarios]);
+    }, [formData.horario_origen_id]);
 
     const fetchHorarios = async () => {
         try {
@@ -59,12 +59,32 @@ const MassRescheduleForm = ({ onSuccess }) => {
     };
 
     const fetchFechasDisponibles = async (horarioId) => {
+        if (!horarioId || horarioId === "undefined" || horarioId === "") {
+            setFechasDisponibles([]);
+            return;
+        }
+
         setIsLoadingFechas(true);
         try {
             const response = await apiFetch.get(`/clases/${horarioId}/fechas-disponibles`);
+
             const json = await response.json();
-            setFechasDisponibles(json.data || json || []);
+
+            console.log("JSON EXTRAÍDO:", json);
+
+            let finalArray = [];
+
+            if (json && json.success && Array.isArray(json.data)) {
+                finalArray = json.data;
+            } else if (Array.isArray(json)) {
+                finalArray = json;
+            }
+
+            console.log("FECHAS RESULTANTES:", finalArray);
+            setFechasDisponibles(finalArray);
+
         } catch (error) {
+            console.error("Error cargando fechas:", error);
             setFechasDisponibles([]);
         } finally {
             setIsLoadingFechas(false);
@@ -73,7 +93,11 @@ const MassRescheduleForm = ({ onSuccess }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        if (name === "horario_origen_id") {
+            setFormData(prev => ({ ...prev, [name]: value, fecha_origen: '' }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleSubmit = (e) => {
@@ -82,7 +106,7 @@ const MassRescheduleForm = ({ onSuccess }) => {
             toast.error("Por favor completa todos los campos.");
             return;
         }
-        setModalStep(1); 
+        setModalStep(1);
     };
 
     const executeReschedule = async () => {
@@ -99,9 +123,9 @@ const MassRescheduleForm = ({ onSuccess }) => {
             if (response.ok) {
                 toast.success('Reprogramación masiva exitosa.', { duration: 5000, icon: '🚀' });
                 setFormData({ horario_origen_id: '', fecha_origen: '', motivo: '' });
-                
+
                 // 🔥 AQUÍ SE DISPARA LA MAGIA:
-                if (onSuccess) onSuccess(); 
+                if (onSuccess) onSuccess();
             } else {
                 throw new Error('Error al procesar.');
             }
@@ -124,7 +148,7 @@ const MassRescheduleForm = ({ onSuccess }) => {
     const filteredHorarios = horarios.filter(h => {
         const matchesDay = filterDay === '' || h.dia_semana.toString() === filterDay;
         const searchLower = searchTerm.toLowerCase();
-        return matchesDay && (searchTerm === '' || 
+        return matchesDay && (searchTerm === '' ||
             diasSemana[h.dia_semana].toLowerCase().includes(searchLower) ||
             h.nivel?.nombre?.toLowerCase().includes(searchLower) ||
             h.cancha?.nombre?.toLowerCase().includes(searchLower));
@@ -183,9 +207,22 @@ const MassRescheduleForm = ({ onSuccess }) => {
 
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Fecha a Cancelar</label>
-                            <select name="fecha_origen" value={formData.fecha_origen} onChange={handleChange} className="w-full p-4 rounded-2xl border-2 border-slate-100 bg-slate-50 focus:border-orange-500 transition-all font-black text-slate-700 text-xs uppercase" disabled={!formData.horario_origen_id || isLoadingFechas} required>
-                                <option value="">{getFechaOrigenPlaceholder()}</option>
-                                {fechasDisponibles.map(fecha => <option key={fecha} value={fecha}>{fecha}</option>)}
+                            <select
+                                name="fecha_origen"
+                                value={formData.fecha_origen || ""}
+                                onChange={handleChange}
+                                className="w-full p-4 rounded-2xl border-2 border-slate-100 bg-slate-50 focus:border-orange-500 transition-all font-black text-slate-700 text-xs uppercase"
+                                disabled={!formData.horario_origen_id || isLoadingFechas}
+                                required
+                            >
+                                <option value="" disabled={fechasDisponibles.length > 0}>
+                                    {getFechaOrigenPlaceholder()}
+                                </option>
+                                {fechasDisponibles.map((fecha) => (
+                                    <option key={fecha} value={fecha}>
+                                        {fecha}
+                                    </option>
+                                ))}
                             </select>
                         </div>
 
@@ -211,7 +248,7 @@ const MassRescheduleForm = ({ onSuccess }) => {
                 </div>
             </form>
 
-            <ConfirmModal 
+            <ConfirmModal
                 isOpen={modalStep === 1}
                 onClose={() => setModalStep(0)}
                 onConfirm={() => setModalStep(2)}
@@ -220,7 +257,7 @@ const MassRescheduleForm = ({ onSuccess }) => {
                 confirmText="Sí, continuar"
             />
 
-            <ConfirmModal 
+            <ConfirmModal
                 isOpen={modalStep === 2}
                 onClose={() => setModalStep(0)}
                 onConfirm={executeReschedule}
