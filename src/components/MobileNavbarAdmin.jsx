@@ -13,6 +13,9 @@ const MobileNavbarAdmin = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
+    const bottomNavClass = ({ isActive }) =>
+        `flex flex-col items-center gap-1.5 w-full transition-all ${isActive ? 'text-orange-500' : 'text-blue-100/50'}`;
+    const bottomNavLabelClass = "text-[8px] uppercase font-black italic tracking-widest";
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -100,31 +103,20 @@ const MobileNavbarAdmin = () => {
             <nav className="fixed bottom-0 left-0 w-full bg-[#0f172a] border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] z-50 md:hidden pb-safe transition-all">
                 <div className="flex justify-around items-end h-[72px] px-2 pb-2">
                     
-                    <NavLink to="/dashboard/admin" end className={({ isActive }) => `flex flex-col items-center gap-1.5 w-full transition-all ${isActive ? 'text-orange-500' : 'text-blue-100/50'}`}>
+                    <NavLink to="/dashboard/admin" end className={bottomNavClass}>
                         <LayoutDashboard size={20} className={location.pathname === '/dashboard/admin' ? 'animate-bounce-short' : ''} />
-                        <span className="text-[8px] uppercase font-black italic tracking-widest">Inicio</span>
+                        <span className={bottomNavLabelClass}>Inicio</span>
                     </NavLink>
 
-                    <NavLink to="/dashboard/admin/students" className={({ isActive }) => `flex flex-col items-center gap-1.5 w-full transition-all ${isActive ? 'text-blue-400' : 'text-blue-100/50'}`}>
+                    <NavLink to="/dashboard/admin/students" className={bottomNavClass}>
                         <GraduationCap size={20} />
-                        <span className="text-[8px] uppercase font-black italic tracking-widest">Alumnos</span>
+                        <span className={bottomNavLabelClass}>Alumnos</span>
                     </NavLink>
 
                     {/* 🌟 ACCIÓN CLAVE: VALIDAR PAGOS (DESTACADO EN EL CENTRO) */}
-                    <NavLink
-                        to="/dashboard/admin/payment-validation"
-                        className={({ isActive }) => `flex flex-col items-center gap-1.5 w-full transition-all relative top-[-8px] ${isActive ? 'text-orange-400' : 'text-blue-100/50'}`}
-                    >
-                        {({ isActive }) => (
-                            <>
-                                <div className={`p-3 rounded-full shadow-lg transition-all ${isActive ? 'bg-orange-600 shadow-orange-500/50 scale-110' : 'bg-slate-800 shadow-slate-950/30'}`}>
-                                    <CheckCircle size={22} className={isActive ? 'text-white' : 'text-blue-100/60'} />
-                                </div>
-                                <span className={`text-[8px] uppercase font-black italic tracking-widest leading-tight text-center ${isActive ? 'text-orange-500' : 'text-blue-100/50'}`}>
-                                    Pagos
-                                </span>
-                            </>
-                        )}
+                    <NavLink to="/dashboard/admin/payment-validation" className={bottomNavClass}>
+                        <CheckCircle size={20} />
+                        <span className={bottomNavLabelClass}>Pagos</span>
                     </NavLink>
 
                     <button onClick={toggleMenu} className="flex flex-col items-center gap-1.5 w-full text-blue-100/50">
