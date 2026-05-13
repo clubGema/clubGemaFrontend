@@ -5,6 +5,7 @@ import {
   getRefreshToken,
   saveAuthTokens,
   clearAuthTokens,
+  isTokenFallbackEnabled,
 } from '../utils/authTokens';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -35,6 +36,7 @@ const processQueue = (error, token = null) => {
 export const apiFetch = async (endpoint, options = {}) => {
   const isFormData = options.body instanceof FormData;
   const accessToken = getAccessToken();
+  const fallbackEnabled = isTokenFallbackEnabled();
   const requestHeaders = {
     ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
     ...options.headers,
@@ -71,12 +73,17 @@ export const apiFetch = async (endpoint, options = {}) => {
     isRefreshing = true;
 
     try {
-      const refreshRes = await fetch(`${API_URL}/auth/refresh`, {
+      const refreshRequestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken: getRefreshToken() }),
         credentials: 'include',
-      });
+      };
+
+      if (fallbackEnabled) {
+        refreshRequestOptions.headers = { 'Content-Type': 'application/json' };
+        refreshRequestOptions.body = JSON.stringify({ refreshToken: getRefreshToken() });
+      }
+
+      const refreshRes = await fetch(`${API_URL}/auth/refresh`, refreshRequestOptions);
 
       if (!refreshRes.ok) {
         processQueue(new Error('Refresh auth failed'), null);

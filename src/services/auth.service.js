@@ -1,6 +1,14 @@
 import Cookies from 'js-cookie';
 import { API_ROUTES } from '../constants/apiRoutes';
-import { saveAuthTokens, getRefreshToken, clearAuthTokens } from '../utils/authTokens';
+import {
+  saveAuthTokens,
+  getRefreshToken,
+  clearAuthTokens,
+  isSafariBrowser,
+  enableTokenFallback,
+  disableTokenFallback,
+  isTokenFallbackEnabled,
+} from '../utils/authTokens';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -25,7 +33,6 @@ export const loginService = async (identifier, password) => {
 
   if (result.data) {
     const { accessToken, refreshToken, user } = result.data;
-    saveAuthTokens({ accessToken, refreshToken });
 
     if (user) {
       Cookies.set('user_role', user.rol, cookieConfig);
@@ -33,21 +40,47 @@ export const loginService = async (identifier, password) => {
       Cookies.set('user_lastname', user.apellidos || '', cookieConfig);
       Cookies.set('user_id', user.id, cookieConfig);
     }
+
+    // Default policy: keep fallback disabled and rely on HttpOnly cookies.
+    disableTokenFallback();
+
+    if (isSafariBrowser()) {
+      try {
+        const profileProbeResponse = await fetch(`${API_URL}/auth/profile`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        // Cookie path works in Safari; no storage fallback needed.
+        if (!profileProbeResponse.ok) {
+          throw new Error('Cookie probe failed');
+        }
+      } catch {
+        // Safari fallback: activate storage + bearer only when cookie auth fails.
+        enableTokenFallback();
+        saveAuthTokens({ accessToken, refreshToken });
+      }
+    }
   }
 
   return result.data;
 };
 
 export const logoutService = async () => {
+  const fallbackEnabled = isTokenFallbackEnabled();
   const refreshToken = getRefreshToken();
+  const requestOptions = {
+    method: 'POST',
+    credentials: 'include',
+  };
+
+  if (fallbackEnabled && refreshToken) {
+    requestOptions.headers = { 'Content-Type': 'application/json' };
+    requestOptions.body = JSON.stringify({ refreshToken });
+  }
 
   try {
-    await fetch(`${API_URL}${API_ROUTES.AUTH.LOGOUT}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refreshToken }),
-      credentials: 'include',
-    });
+    await fetch(`${API_URL}${API_ROUTES.AUTH.LOGOUT}`, requestOptions);
   } catch (error) {
     console.error('Error en la peticion de logout:', error);
   } finally {
