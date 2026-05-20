@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
     Search, Phone, ShieldAlert, ChevronRight, ArrowLeft, Heart, Mail,
     Calendar, User, Fingerprint, Activity, Info, FileText, Loader2,
-    MapPin, Zap, RefreshCw, Eye, Stethoscope, Users
+    MapPin, Zap, RefreshCw, Eye, Stethoscope, Users, Clock
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../../interceptors/api';
@@ -19,6 +19,9 @@ const AdminStudentsManager = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [sedes, setSedes] = useState([]);
     const [selectedSede, setSelectedSede] = useState('');
+    
+    // ESTADO PARA EL MODAL DE INSCRIPCIONES MULTIPLES
+    const [modalInscripciones, setModalInscripciones] = useState({ isOpen: false, data: null });
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
@@ -37,11 +40,64 @@ const AdminStudentsManager = () => {
                     const inscripciones = alumnoData.inscripciones || [];
                     const dir = alumnoData.direcciones || {};
 
-                    const sedesNombres = [...new Set(inscripciones.map(i => i.horarios_clases?.canchas?.sedes?.nombre).filter(Boolean))];
-                    const nivelesNombres = [...new Set(inscripciones.map(i => i.horarios_clases?.niveles_entrenamiento?.nombre).filter(Boolean))];
+                    // 1. LÓGICA DE ESTADOS Y FECHAS
+                    const inscripcionesActivas = inscripciones.filter(i => i.estado === 'ACTIVO');
+                    
+                    let inscripcionesAMostrar = [];
+                    let estadoVisual = 'SIN INSCRIPCIÓN';
 
-                    const ultimaInsc = inscripciones[0];
+                    if (inscripcionesActivas.length > 0) {
+                        inscripcionesAMostrar = inscripcionesActivas;
+                        estadoVisual = 'ACTIVO';
+                    } else if (inscripciones.length > 0) {
+                        inscripcionesAMostrar = [inscripciones[0]];
+                        estadoVisual = inscripciones[0].estado;
+                    }
+
+                    // 2. EXTRACCIÓN DE DATOS
+                    const sedesNombres = [...new Set(inscripcionesAMostrar.map(i => i.horarios_clases?.canchas?.sedes?.nombre).filter(Boolean))];
+                    const nivelesNombres = [...new Set(inscripcionesAMostrar.map(i => i.horarios_clases?.niveles_entrenamiento?.nombre).filter(Boolean))];
+
+                    const ultimaInsc = inscripcionesAMostrar[0];
                     const fCorte = ultimaInsc?.fecha_inscripcion ? addDays(new Date(ultimaInsc.fecha_inscripcion), 30) : null;
+
+                    // 3. HISTORIAL DETALLADO PARA EL POPUP
+                    const historialInscripciones = inscripcionesAMostrar.map(insc => {
+                        const fCorteCalculada = insc.fecha_inscripcion ? addDays(new Date(insc.fecha_inscripcion), 30) : null;
+                        
+                        // LÓGICA DE HORARIOS Y DÍAS CORREGIDA 🔥
+                        const hc = insc.horarios_clases || {};
+                        
+                        // Función para extraer la hora exacta ignorando la zona horaria del navegador
+                        const formatTime = (timeStr) => {
+                            if (!timeStr) return '';
+                            // Si viene como ISO "1970-01-01T10:30:00.000Z", cortamos solo "10:30"
+                            if (timeStr.includes('T')) {
+                                return timeStr.split('T')[1].substring(0, 5);
+                            }
+                            return timeStr.substring(0, 5); 
+                        };
+                        
+                        // Mapa de días que cubre tanto formato JS (0) como formato ISO BD (7)
+                        const mapaDias = {
+                            0: 'Domingo', 1: 'Lunes', 2: 'Martes', 3: 'Miércoles',
+                            4: 'Jueves', 5: 'Viernes', 6: 'Sábado', 7: 'Domingo' 
+                        };
+                        
+                        const nombreDia = hc.dia_semana !== undefined ? mapaDias[hc.dia_semana] : '';
+                        const horaTexto = hc.hora_inicio && hc.hora_fin ? `${formatTime(hc.hora_inicio)} - ${formatTime(hc.hora_fin)}` : '';
+                        const horarioCompleto = `${nombreDia} ${horaTexto}`.trim();
+
+                        return {
+                            estado: insc.estado,
+                            sede: hc.canchas?.sedes?.nombre || 'S/D',
+                            nivel: hc.niveles_entrenamiento?.nombre || 'SIN NIVEL',
+                            horario: horarioCompleto, // Lo guardamos para pintarlo
+                            fechaInscripcion: insc.fecha_inscripcion,
+                            fechaCorte: fCorteCalculada,
+                            estaVencido: fCorteCalculada ? isPast(fCorteCalculada) : false,
+                        };
+                    });
 
                     return {
                         ...user,
@@ -53,7 +109,10 @@ const AdminStudentsManager = () => {
                         niveles: nivelesNombres,
                         fechaCorte: fCorte,
                         estaVencido: fCorte ? isPast(fCorte) : false,
-                        // --- DATA PARA EL EXPEDIENTE (EL OJO) ---
+                        estadoVisual: estadoVisual,
+                        multiplesActivas: inscripcionesActivas.length > 1,
+                        historialInscripciones: historialInscripciones,
+                        
                         direccion: {
                             completa: dir.direccion_completa || 'No registrada',
                             distrito: dir.distrito || 'S/D',
@@ -113,9 +172,6 @@ const AdminStudentsManager = () => {
         </div>
     );
 
-    // ==========================================
-    // 👁️ VISTA DETALLADA: EXPEDIENTE ACADÉMICO
-    // ==========================================
     if (view === 'details' && selectedAlumno) {
         return (
             <div className="space-y-6 animate-fade-in-up p-1">
@@ -131,7 +187,6 @@ const AdminStudentsManager = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2 space-y-6">
-                        {/* Perfil e Identidad */}
                         <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col md:flex-row gap-8 items-center md:items-start relative overflow-hidden">
                             <div className="w-28 h-28 bg-[#1e3a8a] text-white rounded-3xl flex items-center justify-center font-black text-5xl italic shadow-2xl relative z-10">
                                 {selectedAlumno.nombres.charAt(0)}
@@ -161,7 +216,6 @@ const AdminStudentsManager = () => {
                                     </div>
                                 </div>
 
-                                {/* 📍 SECCIÓN DIRECCIÓN */}
                                 <div className="pt-4 border-t border-slate-50">
                                     <p className="text-[9px] font-black text-slate-400 uppercase mb-2">Dirección Registrada</p>
                                     <div className="flex items-start gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
@@ -179,7 +233,6 @@ const AdminStudentsManager = () => {
                             </div>
                         </div>
 
-                        {/* Salud e Historial */}
                         <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
                             <div className="px-8 py-5 bg-blue-50/50 border-b border-blue-100 flex items-center justify-between">
                                 <div className="flex items-center gap-2 text-[#1e3a8a]">
@@ -210,7 +263,6 @@ const AdminStudentsManager = () => {
                         </div>
                     </div>
 
-                    {/* Contacto S.O.S */}
                     <div className="bg-red-50 rounded-[2.5rem] border border-red-100 p-8 relative overflow-hidden h-fit">
                         <div className="absolute -right-4 -bottom-4 text-red-100 opacity-50">
                             <ShieldAlert size={120} />
@@ -247,9 +299,6 @@ const AdminStudentsManager = () => {
         return <ChangeLevelStudent alumno={selectedAlumno} onBack={() => { setView('list'); fetchAlumnos(); }} />;
     }
 
-    // ==========================================
-    // 📋 LISTADO PRINCIPAL
-    // ==========================================
     return (
         <div className="space-y-6 animate-fade-in-up p-1">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -297,11 +346,15 @@ const AdminStudentsManager = () => {
                                             <div className="space-y-1.5">
                                                 <p className="text-sm font-black text-slate-800 uppercase italic tracking-tighter leading-none">{alum.full_name}</p>
                                                 <div className="flex flex-wrap gap-1.5">
-                                                    {alum.sedes.map((s, idx) => (
+                                                    {alum.sedes.length > 0 ? alum.sedes.map((s, idx) => (
                                                         <span key={idx} className="flex items-center gap-1 text-[8px] font-black text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md uppercase border border-orange-100 italic">
                                                             <MapPin size={8} /> {s}
                                                         </span>
-                                                    ))}
+                                                    )) : (
+                                                        <span className="flex items-center gap-1 text-[8px] font-black text-slate-400 bg-slate-50 px-2.5 py-1 rounded-md uppercase border border-slate-100 italic">
+                                                            S/N
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
@@ -312,18 +365,38 @@ const AdminStudentsManager = () => {
                                             <div className="flex items-center gap-2 text-[#1e3a8a] font-bold text-xs italic"><Phone size={14} className="text-blue-300" /> {alum.telefono}</div>
                                         </div>
                                     </td>
+                                    
                                     <td className="p-8 text-center">
-                                        <div className="inline-flex flex-col gap-2">
+                                        <button 
+                                            onClick={() => setModalInscripciones({ isOpen: true, data: alum })}
+                                            className="inline-flex flex-col gap-2 hover:bg-slate-50 p-3 rounded-2xl transition-all cursor-pointer group border border-transparent hover:border-slate-100 hover:shadow-sm w-full items-center justify-center"
+                                            title="Ver detalle de inscripciones"
+                                        >
                                             <div className="flex justify-center flex-wrap gap-1">
-                                                {alum.niveles.map((n, idx) => (
-                                                    <span key={idx} className="bg-blue-100 text-[#1e3a8a] text-[8px] font-black px-3 py-1 rounded-lg uppercase italic border border-blue-200">{n}</span>
-                                                ))}
+                                                {alum.niveles.length > 0 ? alum.niveles.map((n, idx) => (
+                                                    <span key={idx} className="bg-blue-100 text-[#1e3a8a] text-[8px] font-black px-3 py-1 rounded-lg uppercase italic border border-blue-200 group-hover:scale-105 transition-transform">{n}</span>
+                                                )) : (
+                                                    <span className="bg-slate-100 text-slate-400 text-[8px] font-black px-3 py-1 rounded-lg uppercase italic border border-slate-200">SIN NIVEL</span>
+                                                )}
+                                                
+                                                {alum.multiplesActivas && (
+                                                    <span className="bg-orange-500 text-white text-[8px] font-black px-2 py-1 rounded-lg animate-pulse shadow-sm shadow-orange-200">+</span>
+                                                )}
                                             </div>
-                                            <div className={`flex items-center justify-center gap-1.5 text-[9px] font-black uppercase italic ${alum.estaVencido ? 'text-red-500 animate-pulse' : 'text-emerald-600'}`}>
-                                                <Zap size={10} fill="currentColor" /> {alum.estaVencido ? 'VENCIDO' : 'CORTE'}: {alum.fechaCorte ? format(alum.fechaCorte, "dd/MM/yy") : '---'}
+                                            <div className={`flex items-center justify-center gap-1.5 text-[9px] font-black uppercase italic 
+                                                ${alum.estadoVisual === 'ACTIVO' 
+                                                    ? (alum.estaVencido ? 'text-red-500' : 'text-emerald-600') 
+                                                    : 'text-slate-400'}`}
+                                            >
+                                                <Zap size={10} fill="currentColor" className={alum.multiplesActivas ? "animate-bounce" : ""} /> 
+                                                {alum.estadoVisual === 'ACTIVO' 
+                                                    ? (alum.estaVencido ? 'VENCIDO' : 'CORTE') 
+                                                    : alum.estadoVisual}
+                                                : {alum.fechaCorte ? format(alum.fechaCorte, "dd/MM/yy") : '---'}
                                             </div>
-                                        </div>
+                                        </button>
                                     </td>
+
                                     <td className="p-8 text-center">
                                         <div className="flex flex-col items-center gap-1.5">
                                             <div className={`p-2.5 rounded-2xl transition-colors ${alum.cumpleanos !== 'S/D' ? 'bg-pink-50 text-pink-500' : 'bg-slate-50 text-slate-300'}`}>
@@ -344,7 +417,7 @@ const AdminStudentsManager = () => {
                                             <button
                                                 onClick={() => { setSelectedAlumno(alum); setView('cambio_nivel'); }}
                                                 disabled={!alum.fechaCorte}
-                                                title={!alum.fechaCorte ? "Alumno sin inscripción activa" : "Cambiar horario"}
+                                                title={!alum.fechaCorte ? "Alumno sin inscripción histórica" : "Cambiar horario"}
                                                 className={`flex items-center gap-2 px-6 py-3 rounded-xl text-[10px] font-black uppercase italic shadow-lg transition-all
                                                     ${!alum.fechaCorte
                                                         ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
@@ -362,7 +435,6 @@ const AdminStudentsManager = () => {
                     </table>
                 </div>
 
-                {/* --- CONTROLES DE PAGINACIÓN --- */}
                 <div className="bg-slate-50/50 border-t border-slate-100 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                         Mostrando <span className="text-[#1e3a8a]">{currentAlumnos.length}</span> de <span className="text-slate-600">{filteredAlumnos.length}</span> alumnos
@@ -379,7 +451,6 @@ const AdminStudentsManager = () => {
 
                         <div className="flex items-center gap-1">
                             {[...Array(totalPages)].map((_, i) => {
-                                // Lógica para no mostrar demasiados números si hay muchas páginas
                                 if (totalPages > 5 && Math.abs(i + 1 - currentPage) > 1 && i !== 0 && i !== totalPages - 1) {
                                     if (Math.abs(i + 1 - currentPage) === 2) return <span key={i} className="text-slate-300 px-1">...</span>;
                                     return null;
@@ -409,6 +480,84 @@ const AdminStudentsManager = () => {
                     </div>
                 </div>
             </div>
+
+            {/* ========================================== */}
+            {/* 🪟 POPUP DE INSCRIPCIONES DETALLADAS       */}
+            {/* ========================================== */}
+            {modalInscripciones.isOpen && modalInscripciones.data && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+                    <div className="bg-white rounded-[2rem] w-full max-w-lg shadow-2xl border border-slate-100 overflow-hidden animate-fade-in-up">
+                        <div className="bg-slate-50 p-6 border-b border-slate-100 flex justify-between items-center">
+                            <div>
+                                <h3 className="text-xl font-black text-slate-800 uppercase italic tracking-tighter leading-none">
+                                    Detalle de <span className="text-[#1e3a8a]">Inscripciones</span>
+                                </h3>
+                                <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">
+                                    {modalInscripciones.data.full_name}
+                                </p>
+                            </div>
+                            <button 
+                                onClick={() => setModalInscripciones({ isOpen: false, data: null })}
+                                className="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                        
+                        <div className="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
+                            {modalInscripciones.data.historialInscripciones.length === 0 ? (
+                                <p className="text-center text-sm font-bold text-slate-400 py-8">No hay registros de inscripciones.</p>
+                            ) : (
+                                modalInscripciones.data.historialInscripciones.map((insc, idx) => (
+                                    <div key={idx} className="bg-white border-2 border-slate-50 rounded-2xl p-5 hover:border-blue-100 hover:shadow-md transition-all group relative overflow-hidden">
+                                        <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${insc.estado === 'ACTIVO' ? (insc.estaVencido ? 'bg-red-500' : 'bg-emerald-500') : 'bg-slate-300'}`}></div>
+                                        
+                                        <div className="flex justify-between items-start pl-2">
+                                            <div>
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className="bg-blue-100 text-[#1e3a8a] text-[9px] font-black px-2 py-1 rounded-md uppercase italic border border-blue-200">
+                                                        {insc.nivel}
+                                                    </span>
+                                                    <span className={`text-[9px] font-black px-2 py-1 rounded-md uppercase italic border
+                                                        ${insc.estado === 'ACTIVO' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-slate-50 text-slate-500 border-slate-200'}`}>
+                                                        {insc.estado}
+                                                    </span>
+                                                </div>
+                                                <p className="text-sm font-black text-slate-700 uppercase italic mt-2">
+                                                    SEDE {insc.sede}
+                                                </p>
+                                                
+                                                {/* 🔥 AQUÍ PINTAMOS EL HORARIO Y DÍA */}
+                                                {insc.horario && (
+                                                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase mt-1">
+                                                        <Clock size={12} className="text-blue-400" />
+                                                        {insc.horario}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            
+                                            <div className="text-right">
+                                                <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Fecha de Corte</p>
+                                                <div className={`text-base font-black uppercase italic flex items-center justify-end gap-1
+                                                    ${insc.estado === 'ACTIVO' 
+                                                        ? (insc.estaVencido ? 'text-red-500' : 'text-slate-800')
+                                                        : 'text-slate-400'}`}
+                                                >
+                                                    <Calendar size={14} />
+                                                    {insc.fechaCorte ? format(insc.fechaCorte, "dd MMM yyyy", { locale: es }) : '---'}
+                                                </div>
+                                                {insc.estado === 'ACTIVO' && insc.estaVencido && (
+                                                    <p className="text-[8px] font-bold text-red-500 uppercase mt-1 animate-pulse">PAGO PENDIENTE</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
