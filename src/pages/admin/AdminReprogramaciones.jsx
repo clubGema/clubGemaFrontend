@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MassRescheduleForm from '../../components/Admin/MassRescheduleForm';
 import MassRescheduleHistory from '../../components/Admin/MassRescheduleHistory';
-import FeriadoHistory from '../../components/Admin/FeriadoHistory'; 
+import FeriadoHistory from '../../components/Admin/FeriadoHistory';
 import {
     History,
     Info,
@@ -17,14 +17,13 @@ import {
 const AdminReprogramaciones = () => {
     const [refreshSignal, setRefreshSignal] = useState(0);
     const [showFeriadoModal, setShowFeriadoModal] = useState(false);
-
     const handleRefresh = () => {
         setRefreshSignal(prev => prev + 1);
     };
 
     return (
         <div className="min-h-screen bg-slate-50/50 pb-20 overflow-x-hidden">
-            
+
             {showFeriadoModal && (
                 <FeriadoHistory onClose={() => setShowFeriadoModal(false)} />
             )}
@@ -78,7 +77,7 @@ const AdminReprogramaciones = () => {
             </div>
 
             <main className="max-w-7xl mx-auto px-6 flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-10">
-                
+
                 {/* 🚨 PASO 1: FERIADOS (Arriba en celular, Izquierda en PC) */}
                 <div className="lg:col-span-4 w-full">
                     <div className="relative">
