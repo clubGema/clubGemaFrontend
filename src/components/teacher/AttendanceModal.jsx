@@ -12,8 +12,8 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
     const [listaAsistencia, setListaAsistencia] = useState(
         clase.inscripcionesEnEstaFecha?.map(ins => {
             const fechaInscripcion = ins.fecha_inscripcion ? new Date(ins.fecha_inscripcion) : null;
-            const fechaCorte = fechaInscripcion ? addDays(fechaInscripcion, 30) : null;
-            
+            const fechaCorte = fechaInscripcion ? addDays(fechaInscripcion, 29) : null;
+
             // Extraemos fecha de nacimiento desde el objeto que viene del backend
             const fNac = ins.alumnos?.usuarios?.fecha_nacimiento;
 
@@ -92,7 +92,7 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
                                 <p className="font-black text-[#1e3a8a] uppercase text-sm tracking-tight leading-tight">
                                     {alumno.nombreCompleto}
                                 </p>
-                                
+
                                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest italic">
                                         DNI: {alumno.dni}
