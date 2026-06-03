@@ -214,6 +214,9 @@ const AdminStudentsManager = () => {
                                     <div className="flex items-center gap-2 text-slate-500 text-sm font-bold uppercase tracking-tighter">
                                         <Phone size={16} className="text-blue-500" /> {selectedAlumno.telefono}
                                     </div>
+                                    <div className="flex items-center gap-2 text-slate-500 text-sm font-bold uppercase tracking-tighter">
+                                        <User size={16} className="text-blue-500" /> {selectedAlumno.username || 'Sin nombre de usuario'}
+                                    </div>
                                 </div>
 
                                 <div className="pt-4 border-t border-slate-50">
