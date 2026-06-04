@@ -19,7 +19,7 @@ const AdminStudentsManager = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [sedes, setSedes] = useState([]);
     const [selectedSede, setSelectedSede] = useState('');
-    
+
     // ESTADO PARA EL MODAL DE INSCRIPCIONES MULTIPLES
     const [modalInscripciones, setModalInscripciones] = useState({ isOpen: false, data: null });
 
@@ -42,7 +42,7 @@ const AdminStudentsManager = () => {
 
                     // 1. LÓGICA DE ESTADOS Y FECHAS
                     const inscripcionesActivas = inscripciones.filter(i => i.estado === 'ACTIVO');
-                    
+
                     let inscripcionesAMostrar = [];
                     let estadoVisual = 'SIN INSCRIPCIÓN';
 
@@ -64,10 +64,10 @@ const AdminStudentsManager = () => {
                     // 3. HISTORIAL DETALLADO PARA EL POPUP
                     const historialInscripciones = inscripcionesAMostrar.map(insc => {
                         const fCorteCalculada = insc.fecha_inscripcion ? addDays(new Date(insc.fecha_inscripcion), 30) : null;
-                        
+
                         // LÓGICA DE HORARIOS Y DÍAS CORREGIDA 🔥
                         const hc = insc.horarios_clases || {};
-                        
+
                         // Función para extraer la hora exacta ignorando la zona horaria del navegador
                         const formatTime = (timeStr) => {
                             if (!timeStr) return '';
@@ -75,15 +75,15 @@ const AdminStudentsManager = () => {
                             if (timeStr.includes('T')) {
                                 return timeStr.split('T')[1].substring(0, 5);
                             }
-                            return timeStr.substring(0, 5); 
+                            return timeStr.substring(0, 5);
                         };
-                        
+
                         // Mapa de días que cubre tanto formato JS (0) como formato ISO BD (7)
                         const mapaDias = {
                             0: 'Domingo', 1: 'Lunes', 2: 'Martes', 3: 'Miércoles',
-                            4: 'Jueves', 5: 'Viernes', 6: 'Sábado', 7: 'Domingo' 
+                            4: 'Jueves', 5: 'Viernes', 6: 'Sábado', 7: 'Domingo'
                         };
-                        
+
                         const nombreDia = hc.dia_semana !== undefined ? mapaDias[hc.dia_semana] : '';
                         const horaTexto = hc.hora_inicio && hc.hora_fin ? `${formatTime(hc.hora_inicio)} - ${formatTime(hc.hora_fin)}` : '';
                         const horarioCompleto = `${nombreDia} ${horaTexto}`.trim();
@@ -112,7 +112,7 @@ const AdminStudentsManager = () => {
                         estadoVisual: estadoVisual,
                         multiplesActivas: inscripcionesActivas.length > 1,
                         historialInscripciones: historialInscripciones,
-                        
+
                         direccion: {
                             completa: dir.direccion_completa || 'No registrada',
                             distrito: dir.distrito || 'S/D',
@@ -214,7 +214,7 @@ const AdminStudentsManager = () => {
                                     <div className="flex items-center gap-2 text-slate-500 text-sm font-bold uppercase tracking-tighter">
                                         <Phone size={16} className="text-blue-500" /> {selectedAlumno.telefono}
                                     </div>
-                                    <div className="flex items-center gap-2 text-slate-500 text-sm font-bold uppercase tracking-tighter">
+                                    <div className="flex items-center gap-2 text-slate-500 text-sm font-bold tracking-tighter">
                                         <User size={16} className="text-blue-500" /> {selectedAlumno.username || 'Sin nombre de usuario'}
                                     </div>
                                 </div>
@@ -368,9 +368,9 @@ const AdminStudentsManager = () => {
                                             <div className="flex items-center gap-2 text-[#1e3a8a] font-bold text-xs italic"><Phone size={14} className="text-blue-300" /> {alum.telefono}</div>
                                         </div>
                                     </td>
-                                    
+
                                     <td className="p-8 text-center">
-                                        <button 
+                                        <button
                                             onClick={() => setModalInscripciones({ isOpen: true, data: alum })}
                                             className="inline-flex flex-col gap-2 hover:bg-slate-50 p-3 rounded-2xl transition-all cursor-pointer group border border-transparent hover:border-slate-100 hover:shadow-sm w-full items-center justify-center"
                                             title="Ver detalle de inscripciones"
@@ -381,19 +381,19 @@ const AdminStudentsManager = () => {
                                                 )) : (
                                                     <span className="bg-slate-100 text-slate-400 text-[8px] font-black px-3 py-1 rounded-lg uppercase italic border border-slate-200">SIN NIVEL</span>
                                                 )}
-                                                
+
                                                 {alum.multiplesActivas && (
                                                     <span className="bg-orange-500 text-white text-[8px] font-black px-2 py-1 rounded-lg animate-pulse shadow-sm shadow-orange-200">+</span>
                                                 )}
                                             </div>
                                             <div className={`flex items-center justify-center gap-1.5 text-[9px] font-black uppercase italic 
-                                                ${alum.estadoVisual === 'ACTIVO' 
-                                                    ? (alum.estaVencido ? 'text-red-500' : 'text-emerald-600') 
+                                                ${alum.estadoVisual === 'ACTIVO'
+                                                    ? (alum.estaVencido ? 'text-red-500' : 'text-emerald-600')
                                                     : 'text-slate-400'}`}
                                             >
-                                                <Zap size={10} fill="currentColor" className={alum.multiplesActivas ? "animate-bounce" : ""} /> 
-                                                {alum.estadoVisual === 'ACTIVO' 
-                                                    ? (alum.estaVencido ? 'VENCIDO' : 'CORTE') 
+                                                <Zap size={10} fill="currentColor" className={alum.multiplesActivas ? "animate-bounce" : ""} />
+                                                {alum.estadoVisual === 'ACTIVO'
+                                                    ? (alum.estaVencido ? 'VENCIDO' : 'CORTE')
                                                     : alum.estadoVisual}
                                                 : {alum.fechaCorte ? format(alum.fechaCorte, "dd/MM/yy") : '---'}
                                             </div>
@@ -499,14 +499,14 @@ const AdminStudentsManager = () => {
                                     {modalInscripciones.data.full_name}
                                 </p>
                             </div>
-                            <button 
+                            <button
                                 onClick={() => setModalInscripciones({ isOpen: false, data: null })}
                                 className="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all"
                             >
                                 ✕
                             </button>
                         </div>
-                        
+
                         <div className="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
                             {modalInscripciones.data.historialInscripciones.length === 0 ? (
                                 <p className="text-center text-sm font-bold text-slate-400 py-8">No hay registros de inscripciones.</p>
@@ -514,7 +514,7 @@ const AdminStudentsManager = () => {
                                 modalInscripciones.data.historialInscripciones.map((insc, idx) => (
                                     <div key={idx} className="bg-white border-2 border-slate-50 rounded-2xl p-5 hover:border-blue-100 hover:shadow-md transition-all group relative overflow-hidden">
                                         <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${insc.estado === 'ACTIVO' ? (insc.estaVencido ? 'bg-red-500' : 'bg-emerald-500') : 'bg-slate-300'}`}></div>
-                                        
+
                                         <div className="flex justify-between items-start pl-2">
                                             <div>
                                                 <div className="flex items-center gap-2 mb-1">
@@ -529,7 +529,7 @@ const AdminStudentsManager = () => {
                                                 <p className="text-sm font-black text-slate-700 uppercase italic mt-2">
                                                     SEDE {insc.sede}
                                                 </p>
-                                                
+
                                                 {/* 🔥 AQUÍ PINTAMOS EL HORARIO Y DÍA */}
                                                 {insc.horario && (
                                                     <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase mt-1">
@@ -538,11 +538,11 @@ const AdminStudentsManager = () => {
                                                     </div>
                                                 )}
                                             </div>
-                                            
+
                                             <div className="text-right">
                                                 <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Fecha de Corte</p>
                                                 <div className={`text-base font-black uppercase italic flex items-center justify-end gap-1
-                                                    ${insc.estado === 'ACTIVO' 
+                                                    ${insc.estado === 'ACTIVO'
                                                         ? (insc.estaVencido ? 'text-red-500' : 'text-slate-800')
                                                         : 'text-slate-400'}`}
                                                 >
