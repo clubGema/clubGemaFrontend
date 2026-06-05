@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { apiFetch } from '../../interceptors/api';
 import { API_ROUTES } from '../../constants/apiRoutes';
 import ChangeLevelStudent from '../../components/Admin/ChangeLevelStudent';
-import { format, addDays, isPast } from 'date-fns';
+import { format, addDays, isPast, subDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 const AdminStudentsManager = () => {
@@ -395,7 +395,7 @@ const AdminStudentsManager = () => {
                                                 {alum.estadoVisual === 'ACTIVO'
                                                     ? (alum.estaVencido ? 'VENCIDO' : 'CORTE')
                                                     : alum.estadoVisual}
-                                                : {alum.fechaCorte ? format(alum.fechaCorte, "dd/MM/yy") : '---'}
+                                                : {alum.fechaCorte ? format(subDays(alum.fechaCorte, 1), "dd/MM/yy") : '---'}
                                             </div>
                                         </button>
                                     </td>
