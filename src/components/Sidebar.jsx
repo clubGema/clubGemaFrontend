@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     LayoutDashboard, GraduationCap, UserCog, CalendarRange,
     Settings, LogOut, MapPin, BarChart3, DollarSign,
-    ChevronDown, History, CheckCircle, Activity, 
+    ChevronDown, History, CheckCircle, Activity,
     TicketPercent, Megaphone, Ticket, ShieldAlert, Sparkles, Layers
 } from 'lucide-react';
 import { logoutService } from '../services/auth.service';
@@ -68,6 +68,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             items: [
                 { icon: Megaphone, label: 'Publicaciones (Muro)', path: '/dashboard/admin/publications' },
                 { icon: Sparkles, label: 'Anuncios Carrusel', path: '/dashboard/admin/anuncios-beneficios' },
+                { icon: TicketPercent, label: 'Crear Descuentos', path: '/dashboard/admin/CreateBenefits' },
                 { icon: TicketPercent, label: 'Asignar Descuentos', path: '/dashboard/admin/benefits' },
                 { icon: Ticket, label: 'Pases de Invitado', path: '/dashboard/admin/guest-passes' },
             ]
