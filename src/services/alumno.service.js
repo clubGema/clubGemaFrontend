@@ -19,6 +19,15 @@ const alumnoService = {
     }
     return result.data || result;
   },
+
+  changeStatusHistory: async (payload) => {
+    const response = await apiFetch.post('/alumno/gestion/cambiar-historial', payload);
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.message || 'Error al cambiar el historial académico del alumno')
+    }
+    return result;
+  }
 };
 
 export default alumnoService;

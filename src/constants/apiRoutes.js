@@ -34,7 +34,7 @@ export const API_ROUTES = {
   },
   PAGOS: {
     BASE: "/pagos",
-    BASEADMIN:"/pagos/gestion-admin",
+    BASEADMIN: "/pagos/gestion-admin",
     ALUMNO_HISTORIAL: (id) => `/pagos/alumno/${id}`,
     REPORTAR: "/pagos/reportar",
     VALIDAR: "/pagos/validar",
@@ -112,9 +112,9 @@ export const API_ROUTES = {
     BASE: "/beneficioPendiente",
   },
   ALUMNOS: {
-    BASE: "/alumnos",
+    BASE: "/alumno",
     MI_PERFIL: "/alumno/mi-perfil",
-    DIA_CORTE : "/alumno/gestion/resumen-cortes",
+    DIA_CORTE: "/alumno/gestion/resumen-cortes",
     DIA_CORTE_COORDINADOR: "/alumno/gestion/cortes-alumnos",
   },
   PUBLICACIONES: {

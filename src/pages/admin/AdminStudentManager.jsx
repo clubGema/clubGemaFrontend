@@ -11,6 +11,7 @@ import ChangeLevelStudent from '../../components/Admin/ChangeLevelStudent';
 import ChangePasswordModal from '../../components/shared/ChangePasswordModal';
 import { format, addDays, isPast, subDays } from 'date-fns';
 import { es } from 'date-fns/locale';
+import alumnoService from '../../services/alumno.service';
 
 const AdminStudentsManager = () => {
     const [view, setView] = useState('list');
@@ -124,7 +125,7 @@ const AdminStudentsManager = () => {
                             condiciones: alumnoData.condiciones_medicas || 'Ninguna',
                             seguro: alumnoData.seguro_medico || 'S/N',
                             sangre: alumnoData.grupo_sanguineo || 'S/N',
-                            historial: alumnoData.historial || 'Sin observaciones'
+                            historial: alumnoData.historial
                         },
                         contactoEmergencia: {
                             nombre: contacto.nombre_completo || 'No registrado',
@@ -141,6 +142,25 @@ const AdminStudentsManager = () => {
             setLoading(false);
         }
     };
+
+    const handleStatusHistory = async (estado) => {
+        try {
+            const result = await alumnoService.changeStatusHistory({ alumnoId: selectedAlumno.id, estado });
+            toast.success(result.message);
+
+            setSelectedAlumno((prev) => ({
+                ...prev,
+                salud: {
+                    ...prev.salud,
+                    historial: estado,
+                },
+            }));
+
+            fetchAlumnos();
+        } catch (e) {
+            toast.error(e.message || 'Error al actualizar el historial');
+        }
+    }
 
     useEffect(() => {
         fetchAlumnos();
@@ -252,7 +272,7 @@ const AdminStudentsManager = () => {
                                 </div>
                                 <span className="bg-[#1e3a8a] text-white text-[8px] font-black px-2 py-1 rounded-md">GRUPO SANGUÍNEO: {selectedAlumno.salud.sangre}</span>
                             </div>
-                            <div className="p-8 grid md:grid-cols-2 gap-8">
+                            <div className="p-8 grid md:grid-cols-2 gap-8 items-start">
                                 <div className="space-y-6">
                                     <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
                                         <p className="text-[9px] font-black text-slate-400 uppercase mb-2 italic">Alergias / Condiciones:</p>
@@ -266,9 +286,16 @@ const AdminStudentsManager = () => {
                                 <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
                                     <div className="flex items-center gap-2 mb-2 text-slate-400">
                                         <FileText size={14} />
-                                        <p className="text-[9px] font-black uppercase italic">Historial Académico / Deportivo:</p>
+                                        <p className="text-[9px] font-black uppercase italic">Historial Deportivo:</p>
                                     </div>
-                                    <p className="text-[11px] font-medium text-slate-500 italic leading-relaxed">{selectedAlumno.salud.historial}</p>
+                                    <select
+                                        value={selectedAlumno.salud?.historial ?? 'Nuevo'}
+                                        onChange={(e) => handleStatusHistory(e.target.value)}
+                                        className="w-full text-[11px] font-medium text-slate-500 italic leading-relaxed bg-transparent border border-slate-200 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    >
+                                        <option value="Antiguo">Antiguo</option>
+                                        <option value="Nuevo">Nuevo</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
