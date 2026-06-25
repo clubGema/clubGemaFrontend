@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import {
     Search, Phone, ShieldAlert, ChevronRight, ArrowLeft, Heart, Mail,
     Calendar, User, Fingerprint, Activity, Info, FileText, Loader2,
-    MapPin, Zap, RefreshCw, Eye, Stethoscope, Users, Clock
+    MapPin, Zap, RefreshCw, Eye, Stethoscope, Users, Clock, KeyRound
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../../interceptors/api';
 import { API_ROUTES } from '../../constants/apiRoutes';
 import ChangeLevelStudent from '../../components/Admin/ChangeLevelStudent';
+import ChangePasswordModal from '../../components/shared/ChangePasswordModal';
 import { format, addDays, isPast, subDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -19,6 +20,7 @@ const AdminStudentsManager = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [sedes, setSedes] = useState([]);
     const [selectedSede, setSelectedSede] = useState('');
+    const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
     // ESTADO PARA EL MODAL DE INSCRIPCIONES MULTIPLES
     const [modalInscripciones, setModalInscripciones] = useState({ isOpen: false, data: null });
@@ -192,13 +194,19 @@ const AdminStudentsManager = () => {
                                 {selectedAlumno.nombres.charAt(0)}
                             </div>
                             <div className="flex-1 space-y-6 relative z-10 w-full">
-                                <div>
-                                    <h3 className="text-4xl font-black text-slate-800 uppercase italic tracking-tighter leading-none">{selectedAlumno.full_name}</h3>
-                                    <div className="flex gap-2 mt-2">
-                                        {selectedAlumno.sedes.map((s, i) => (
-                                            <span key={i} className="px-3 py-1 bg-orange-100 text-orange-600 rounded-lg text-[9px] font-black uppercase italic border border-orange-200">{s}</span>
-                                        ))}
+                                <div className='flex items-center gap-4'>
+                                    <div className='flex-1'>
+                                        <h3 className="text-4xl font-black text-slate-800 uppercase italic tracking-tighter leading-none">{selectedAlumno.full_name}</h3>
+                                        <div className="flex gap-2 mt-2">
+                                            {selectedAlumno.sedes.map((s, i) => (
+                                                <span key={i} className="px-3 py-1 bg-orange-100 text-orange-600 rounded-lg text-[9px] font-black uppercase italic border border-orange-200">{s}</span>
+                                            ))}
+                                        </div>
                                     </div>
+                                    <button onClick={() => setIsPasswordModalOpen(true)} className="flex items-center justify-center gap-3 bg-slate-800 hover:bg-black text-white px-6 md:px-8 py-3.5 md:py-4 rounded-xl md:rounded-2xl transition-all duration-300 active:scale-95 font-black text-[10px] sm:text-xs uppercase tracking-widest border-2 border-slate-800 hover:border-white">
+                                        <KeyRound size={16} className="sm:w-[18px] sm:h-[18px]" />
+                                        <span>Contraseña</span>
+                                    </button>
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-slate-50 pt-4">
@@ -294,6 +302,11 @@ const AdminStudentsManager = () => {
                         </div>
                     </div>
                 </div>
+                <ChangePasswordModal
+                    isOpen={isPasswordModalOpen}
+                    onClose={() => setIsPasswordModalOpen(false)}
+                    userId={selectedAlumno.id}
+                />
             </div>
         );
     }

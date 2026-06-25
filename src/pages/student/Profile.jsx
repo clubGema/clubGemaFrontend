@@ -159,6 +159,7 @@ const Profile = () => {
       <ChangePasswordModal
         isOpen={isPasswordModalOpen}
         onClose={() => setIsPasswordModalOpen(false)}
+        userId={null}
       />
     </div>
   );

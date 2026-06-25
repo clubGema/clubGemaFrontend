@@ -9,6 +9,7 @@ import {
   disableTokenFallback,
   isTokenFallbackEnabled,
 } from '../utils/authTokens';
+import apiFetch from '../interceptors/api';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -141,3 +142,13 @@ export const completarEmailService = async (nuevoEmail) => {
 
   return result.data;
 };
+
+export const resetPasswordByAdmin = async (data) => {
+  console.log(API_URL)
+  const response = await apiFetch.post(`/auth/reset-password-admin`, data);
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.message || 'Error al actualizar contraseña del usuario');
+  }
+  return result;
+}
