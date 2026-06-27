@@ -56,7 +56,7 @@ import StudentInjuries from "./pages/student/StudentInjuries";
 import StudentRecoveries from "./pages/student/StudentRecoveries";
 import StudentNews from "./pages/student/StudentNews";
 import MyRegistrations from "./pages/student/MyRegistrations";
-
+import AdminCashFlow from "./pages/admin/monthly-transactions/AdminCashFlow";
 
 function App() {
   return (
@@ -175,7 +175,8 @@ function App() {
               <Route path="admin/anuncios-beneficios" element={<AdminCreateBenefitsAnuncio />} />
               <Route path="admin/payment-validation" element={<AdminPaymentManager />} />
               <Route path="admin/guest-passes" element={<AdminGuestPasses />} />
-
+              <Route path="admin/cash-flow" element={<AdminCashFlow />} />
+              
               {/* Configuración */}
               <Route path="admin/settings" element={<AdminSettings />} />
             </Route>

@@ -50,6 +50,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 { icon: GraduationCap, label: 'Alumnos', path: '/dashboard/admin/students' },
                 { icon: UserCog, label: 'Coordinadores', path: '/dashboard/admin/teachers' },
                 { icon: CheckCircle, label: 'Validar Pagos', path: '/dashboard/admin/payment-validation' },
+                { icon: DollarSign, label: 'Balance', path: '/dashboard/admin/cash-flow' },
             ]
         },
         {
