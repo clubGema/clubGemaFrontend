@@ -147,7 +147,7 @@ const MyRegistrations = () => {
     const packages = {};
     const history = [];
     registrations.forEach(reg => {
-      const isHistory = !reg.id_grupo_transaccion || ['FINALIZADO', 'PEN-RECU'].includes(reg.estado);
+      const isHistory = !reg.id_grupo_transaccion || ['FINALIZADO'].includes(reg.estado);
       if (isHistory) history.push(reg);
       else {
         const gid = reg.id_grupo_transaccion;
