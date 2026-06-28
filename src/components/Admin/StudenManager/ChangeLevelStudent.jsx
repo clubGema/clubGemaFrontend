@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Clock, CheckCircle2, AlertCircle, Loader2, Save, ArrowRightLeft, CheckSquare, Filter } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { apiFetch } from '../../interceptors/api';
-import { useAuth } from '../../context/AuthContext';
+import { apiFetch } from '../../../interceptors/api.js';
+import { useAuth } from '../../../context/AuthContext';
 
 const diasSemana = (dia) => {
     let nombreDia;
