@@ -140,4 +140,8 @@ export const API_ROUTES = {
     BASE: '/anuncios-beneficios',
     ACTIVOS: '/anuncios-beneficios/activos'
   },
+  CAJA: {
+    BASE: "/caja",
+    RESUMEN: "/caja/resumen",
+  },
 };
