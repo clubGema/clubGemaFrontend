@@ -6,22 +6,23 @@ import { apiFetch } from '../../../interceptors/api';
 import { API_ROUTES } from '../../../constants/apiRoutes';
 
 import { MonthAccordion } from '../../../components/Admin/Components-monthly-transactions/MonthAccordion';
+import Swal from 'sweetalert2';
 
 // Utilidades
 const currentYear = new Date().getFullYear();
 const MESES = [
-    "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", 
+    "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
     "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"
 ];
 
 const formatLocalToUTC = (fechaStr) => {
-    if(!fechaStr) return new Date().toISOString();
+    if (!fechaStr) return new Date().toISOString();
     const [yyyy, mm, dd] = fechaStr.split('-');
     return new Date(yyyy, mm - 1, dd, 12, 0, 0).toISOString();
 };
 
 const formatUTCtoLocalInput = (fechaISO) => {
-    if(!fechaISO) return '';
+    if (!fechaISO) return '';
     const d = new Date(fechaISO);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 };
@@ -30,7 +31,7 @@ const AdminCashFlow = () => {
     const [datosPorMes, setDatosPorMes] = useState({});
     const [loadingMeses, setLoadingMeses] = useState({});
     const [sedes, setSedes] = useState([]);
-    
+
     const [filtroAnio, setFiltroAnio] = useState(currentYear);
     const [mesesAbiertos, setMesesAbiertos] = useState([]);
 
@@ -63,7 +64,7 @@ const AdminCashFlow = () => {
         try {
             setLoadingMeses(prev => ({ ...prev, [mesNum]: true }));
             const url = API_ROUTES.CAJA ? `${API_ROUTES.CAJA.RESUMEN}?mes=${mesNum}&anio=${anio}` : `/caja/resumen?mes=${mesNum}&anio=${anio}`;
-            
+
             const response = await apiFetch.get(url);
             const data = await response.json();
 
@@ -99,32 +100,32 @@ const AdminCashFlow = () => {
 
                 setDatosPorMes(prev => ({
                     ...prev,
-                    [mesNum]: { 
-                        ingresosConsolidados: Object.values(ingresosConsolidadosObj), 
+                    [mesNum]: {
+                        ingresosConsolidados: Object.values(ingresosConsolidadosObj),
                         ingresosManuales: ingresosManualesFlats,
-                        egresos: egresosFlats 
+                        egresos: egresosFlats
                     }
                 }));
             } else {
-                if(mostrarError) toast.error(data.message || `Error al cargar mes ${mesNum}`);
+                if (mostrarError) toast.error(data.message || `Error al cargar mes ${mesNum}`);
             }
         } catch (error) {
-            if(mostrarError) toast.error(`Error al cargar el mes ${mesNum}`);
+            if (mostrarError) toast.error(`Error al cargar el mes ${mesNum}`);
         } finally {
             setLoadingMeses(prev => ({ ...prev, [mesNum]: false }));
         }
     };
 
-    // 3. Cargar todo el año
-    useEffect(() => {
-        const cargarTodoElAnio = async () => {
-            setDatosPorMes({});
-            const promesas = MESES.map((_, index) => fetchMes(index + 1, filtroAnio, false));
-            await Promise.all(promesas);
+    // 3. Cargar todo el año}
+    const cargarTodoElAnio = async () => {
+        setDatosPorMes({});
+        const promesas = MESES.map((_, index) => fetchMes(index + 1, filtroAnio, false));
+        await Promise.all(promesas);
 
-            const mesActual = new Date().getMonth() + 1;
-            setMesesAbiertos([mesActual]); 
-        };
+        const mesActual = new Date().getMonth() + 1;
+        setMesesAbiertos([mesActual]);
+    };
+    useEffect(() => {
         cargarTodoElAnio();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filtroAnio]);
@@ -137,9 +138,9 @@ const AdminCashFlow = () => {
     const startInlineEdit = (movimiento) => {
         setInlineEditId(movimiento.id);
         const sedeEncontrada = sedes.find(s => s.nombre === movimiento.sede);
-        setInlineData({ 
-            concepto: movimiento.concepto, 
-            monto: movimiento.monto, 
+        setInlineData({
+            concepto: movimiento.concepto,
+            monto: movimiento.monto,
             fecha: formatUTCtoLocalInput(movimiento.fecha),
             sede_id: sedeEncontrada ? sedeEncontrada.id : ''
         });
@@ -149,7 +150,7 @@ const AdminCashFlow = () => {
         if (!inlineData.concepto || !inlineData.monto) return toast.error("Complete concepto y monto");
         try {
             setSubmitting(true);
-            const endpoint = `${API_ROUTES.CAJA?.BASE || '/caja'}/${id}`; 
+            const endpoint = `${API_ROUTES.CAJA?.BASE || '/caja'}/${id}`;
             const payload = {
                 concepto: inlineData.concepto,
                 monto: parseFloat(inlineData.monto),
@@ -160,7 +161,7 @@ const AdminCashFlow = () => {
             if (response.ok) {
                 toast.success("Movimiento actualizado");
                 setInlineEditId(null);
-                await fetchMes(mesNum, filtroAnio); 
+                await fetchMes(mesNum, filtroAnio);
             } else {
                 const err = await response.json();
                 toast.error(err.message || "Error al actualizar");
@@ -183,7 +184,7 @@ const AdminCashFlow = () => {
         if (!newData.concepto || !newData.monto || !newData.fecha) return toast.error("Complete los datos requeridos");
         try {
             setSubmitting(true);
-            const endpoint = API_ROUTES.CAJA?.BASE || '/caja'; 
+            const endpoint = API_ROUTES.CAJA?.BASE || '/caja';
             const payload = {
                 tipo_movimiento: addingType,
                 concepto: newData.concepto,
@@ -196,7 +197,7 @@ const AdminCashFlow = () => {
                 toast.success(`${addingType} registrado correctamente`);
                 setAddingMonth(null);
                 setAddingType(null);
-                await fetchMes(mesNum, filtroAnio); 
+                await fetchMes(mesNum, filtroAnio);
             } else {
                 const err = await response.json();
                 toast.error(err.message || "Error al registrar");
@@ -208,13 +209,36 @@ const AdminCashFlow = () => {
         }
     };
 
+    const movimientoDelete = async (movimiento) => {
+        const result = await Swal.fire({
+            title: `<span class="italic font-black uppercase text-[#1e3a8a]">¿Eliminar ${movimiento.tipo}?</span>`,
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            confirmButtonText: 'SÍ, ELIMINAR',
+            customClass: { popup: 'rounded-[3rem] p-8' }
+        });
+        if (!result.isConfirmed) return;
+        try {
+            const response = await apiFetch.delete(`/caja/${movimiento.id}`);
+            if (response.ok) {
+                toast.success(`${movimiento.tipo} eliminado correctamente.`)
+                await cargarTodoElAnio();
+            } else {
+                const err = await response.json();
+                toast.error(err.message || 'Error al eliminar.')
+            }
+        } catch (e) {
+            toast.error(e.message || 'Internal Error Server')
+        }
+    }
+
     // 5. Excel (Exportará tal cual se ve en la tabla: Consolidado Sede + Manuales)
     const exportToExcel = () => {
         let dataToExport = [];
         Object.keys(datosPorMes).forEach(mes => {
             const dataMes = datosPorMes[mes];
             const todos = [...(dataMes.ingresosConsolidados || []), ...(dataMes.ingresosManuales || []), ...(dataMes.egresos || [])];
-            
+
             todos.forEach(m => {
                 dataToExport.push({
                     "AÑO": filtroAnio,
@@ -228,7 +252,7 @@ const AdminCashFlow = () => {
             });
         });
 
-        if(dataToExport.length === 0) return toast.error("No hay datos para exportar.");
+        if (dataToExport.length === 0) return toast.error("No hay datos para exportar.");
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, `Flujo ${filtroAnio}`);
@@ -238,9 +262,9 @@ const AdminCashFlow = () => {
 
     // Objeto con todas las props que necesitan las tablas (para no escribirlas 10 veces)
     const tableProps = {
-        sedes, inlineEditId, inlineData, setInlineData, submitting, saveInlineEdit, 
-        setInlineEditId, startInlineEdit, addingMonth, addingType, newData, 
-        setNewData, startAddNew, saveNewMovimiento, setAddingMonth, setAddingType
+        sedes, inlineEditId, inlineData, setInlineData, submitting, saveInlineEdit,
+        setInlineEditId, startInlineEdit, addingMonth, addingType, newData,
+        setNewData, startAddNew, saveNewMovimiento, setAddingMonth, setAddingType, movimientoDelete
     };
 
     return (
@@ -262,8 +286,8 @@ const AdminCashFlow = () => {
                 <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
                     <div className="flex items-center bg-white border border-slate-200 rounded-2xl px-3 py-1.5 shadow-sm hover:border-orange-300 transition-colors">
                         <Calendar size={14} className="text-slate-400" />
-                        <select 
-                            value={filtroAnio} 
+                        <select
+                            value={filtroAnio}
                             onChange={(e) => setFiltroAnio(e.target.value)}
                             className="bg-transparent border-none text-[11px] font-black uppercase text-[#0f172a] outline-none cursor-pointer py-2 pl-2 pr-4 focus:ring-0"
                         >
@@ -282,7 +306,7 @@ const AdminCashFlow = () => {
             {/* Listado de Meses */}
             <div className="space-y-3">
                 {MESES.map((nombre, index) => (
-                    <MonthAccordion 
+                    <MonthAccordion
                         key={index + 1}
                         mesNum={index + 1}
                         mesNombre={nombre}
