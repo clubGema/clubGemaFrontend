@@ -26,6 +26,8 @@ export const API_ROUTES = {
     STATS: "/usuarios/count/usuarios-stats",
     REPORTE: "/usuarios/reporte/detallado",
     REGISTER: "/usuarios/register",
+    MOVIMIENTOS: "/usuarios/reporte/maestro",
+    EDIT_PAGO: (id) => `/usuarios/pago/${id}/inline-edit`,
   },
   INSCRIPCIONES: {
     BASE: "/inscripciones",
