@@ -25,7 +25,7 @@ const Dashboard = ({ role = 'student' }) => {
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
     const [availableYears, setAvailableYears] = useState([]);
     const [reporteMaestro, setReporteMaestro] = useState([]);
-    
+
     // ESTADO PARA EXPORTACIÓN: Contendrá los datos que el usuario visualiza
     const [reporteFiltrado, setReporteFiltrado] = useState([]);
 
@@ -43,7 +43,7 @@ const Dashboard = ({ role = 'student' }) => {
         return meses.map((mes, idx) => ({ monthIndex: idx, year: año, mes, ingresos: 0 }));
     };
 
-   useEffect(() => {
+    useEffect(() => {
         const fetchMovimientos = async () => {
             try {
                 // 1. Armamos el rango basado en el año seleccionado en tu UI
@@ -52,18 +52,18 @@ const Dashboard = ({ role = 'student' }) => {
 
                 // 2. Adjuntamos las fechas a la URL
                 const url = `${API_ROUTES.USUARIOS.MOVIMIENTOS}?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
-                
+
                 const response = await apiFetch.get(url);
                 const result = await response.json();
-                
+
                 if (result.success) {
                     setReporteMaestro(result.data.reporte);
                 }
-            } catch (error) { 
-                console.error("Error cargando reporte:", error); 
+            } catch (error) {
+                console.error("Error cargando reporte:", error);
             }
         };
-        
+
         fetchMovimientos();
     }, [selectedYear]); // <-- 3. SUPER IMPORTANTE: Agregar selectedYear como dependencia
 
@@ -71,16 +71,23 @@ const Dashboard = ({ role = 'student' }) => {
         if (role === 'admin') {
             const fetchDashboardData = async () => {
                 try {
-                    const [resStats, resPagos, resOcupacion] = await Promise.all([
+                    const [resStats, resPagos, resOcupacion, resGraficos] = await Promise.all([
                         apiFetch.get(API_ROUTES.USUARIOS.STATS),
                         apiFetch.get(API_ROUTES.PAGOS.BASE),
-                        apiFetch.get(API_ROUTES.SEDES.OCUPACION)
+                        apiFetch.get(API_ROUTES.SEDES.OCUPACION),
+                        apiFetch.get(API_ROUTES.USUARIOS.GRAFICOS_AVANZADOS)
                     ]);
 
                     const extractArray = (json) => Array.isArray(json?.data?.data) ? json.data.data : (Array.isArray(json?.data) ? json.data : (Array.isArray(json) ? json : []));
 
+                    // --- AQUÍ ESTABA EL FALLO: Extraemos los datos del response antes de usarlos ---
+                    const graficosJson = resGraficos.ok ? await resGraficos.json() : {};
+                    const dataGraficos = graficosJson.data || {};
+                    // ------------------------------------------------------------------------------
+
                     const resultStats = resStats.ok ? await resStats.json() : {};
                     if (resStats.ok && resultStats.data) {
+                        // ... (tu lógica de stats se mantiene igual)
                         const d = resultStats.data;
                         setStats(prevStats => prevStats.map(stat => {
                             switch (stat.id) {
@@ -111,8 +118,19 @@ const Dashboard = ({ role = 'student' }) => {
                     const genderStats = resultStats.data?.alumnosGenero || {};
                     const genderData = [{ nombre: 'Femenino', valor: genderStats.F || 0, color: '#f97316' }, { nombre: 'Masculino', valor: genderStats.M || 0, color: '#1e3a8a' }].filter(g => g.valor > 0);
 
-                    setChartData(prev => ({ ...prev, sedes: distribucionSedes, totalAlumnos: alumnosActivosTotales, alumnosGenero: genderData, alumnosEdades: resultStats.data?.alumnosEdades || [] }));
-                } catch (error) { console.error("Error analíticas:", error); }
+                    // Ahora dataGraficos ya está definida y funciona aquí:
+                    setChartData(prev => ({
+                        ...prev,
+                        sedes: distribucionSedes,
+                        totalAlumnos: alumnosActivosTotales,
+                        alumnosGenero: genderData,
+                        alumnosEdades: resultStats.data?.alumnosEdades || [],
+                        vigentesPorSedeNivel: dataGraficos.vigentesPorSedeNivel || [],
+                        ingresosVsDeserciones: dataGraficos.ingresosVsDeserciones || []
+                    }));
+                } catch (error) {
+                    console.error("Error analíticas:", error);
+                }
             };
             fetchDashboardData();
         } else {
@@ -141,7 +159,7 @@ const Dashboard = ({ role = 'student' }) => {
 
     const handleExportExcel = () => {
         // Usamos el estado recién creado
-        const reportData = reporteFiltrado; 
+        const reportData = reporteFiltrado;
 
         if (!reportData || reportData.length === 0) {
             toast.error("No hay datos para exportar");
@@ -152,10 +170,10 @@ const Dashboard = ({ role = 'student' }) => {
             setIsExporting(true);
             const workbook = XLSX.utils.book_new();
             const ws = XLSX.utils.json_to_sheet(reportData);
-            
+
             // Configuración de estilo y columnas
             ws['!cols'] = [{ wch: 15 }, { wch: 15 }, { wch: 25 }, { wch: 30 }, { wch: 12 }, { wch: 15 }, { wch: 25 }, { wch: 15 }, { wch: 12 }, { wch: 15 }, { wch: 18 }, { wch: 20 }, { wch: 30 }];
-            
+
             XLSX.utils.book_append_sheet(workbook, ws, "Reporte_Maestro");
             XLSX.writeFile(workbook, `Reporte_Maestro_${new Date().toISOString().split('T')[0]}.xlsx`);
             toast.success("Excel exportado exitosamente");

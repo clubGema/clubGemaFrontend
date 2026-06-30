@@ -1,10 +1,27 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { CalendarDays } from 'lucide-react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
+import {
+    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+    PieChart, Pie, Cell, BarChart, Bar, LineChart, Line, Legend
+} from 'recharts';
 
 const CHART_COLORS = ['#1e3a8a', '#f97316', '#3b82f6', '#94a3b8', '#cbd5e1', '#facc15'];
 
+
 const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYears }) => {
+const [sedeSeleccionada, setSedeSeleccionada] = useState([]);
+    // Función para obtener los niveles dinámicamente de la data del backend (Gráfico de Sedes x Nivel)
+    const nivelesUnicos = useMemo(() => {
+        if (!chartData?.vigentesPorSedeNivel) return [];
+        const niveles = new Set();
+        chartData.vigentesPorSedeNivel.forEach(item => {
+            Object.keys(item).forEach(key => {
+                if (key !== 'sede') niveles.add(key);
+            });
+        });
+        return Array.from(niveles);
+    }, [chartData?.vigentesPorSedeNivel]);
+
     return (
         <div className="mb-16 pt-8 border-t border-slate-200/60">
             <div className="mb-10">
@@ -28,9 +45,9 @@ const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYe
                         </div>
                         <div className="flex items-center bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 cursor-pointer shadow-sm relative">
                             <CalendarDays size={16} className="text-[#1e3a8a] mr-2" />
-                            <select 
-                                className="bg-transparent text-sm font-black text-[#1e3a8a] outline-none cursor-pointer appearance-none pr-4" 
-                                value={selectedYear} 
+                            <select
+                                className="bg-transparent text-sm font-black text-[#1e3a8a] outline-none cursor-pointer appearance-none pr-4"
+                                value={selectedYear}
                                 onChange={(e) => setSelectedYear(Number(e.target.value))}
                             >
                                 {availableYears.map(year => <option key={year} value={year}>{year}</option>)}
@@ -160,10 +177,10 @@ const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYe
                 </div>
 
                 {/* 5. DISTRIBUCIÓN POR EDADES (BARRAS) */}
-                <div className="lg:col-span-3 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col mt-4 lg:mt-8">
+                <div className="lg:col-span-3 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col mt-4 lg:mt-4">
                     <div className="mb-8">
                         <h2 className="font-black text-[#1e3a8a] uppercase tracking-tight text-xl italic mb-1 flex items-center gap-2">
-                            <div className="w-1.5 h-6 bg-orange-500 rounded-full"></div> Rangos de Edad
+                            <div className="w-1.5 h-6 bg-emerald-500 rounded-full"></div> Rangos de Edad
                         </h2>
                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-3.5">Métricas de Crecimiento</p>
                     </div>
@@ -191,6 +208,111 @@ const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYe
                         ))}
                     </div>
                 </div>
+
+                {/* 6. RETENCIÓN VS DESERCIÓN (LÍNEAS) - NUEVO */}
+                <div className="lg:col-span-2 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col mt-4 lg:mt-4">
+                    <div className="mb-6">
+                        <h2 className="font-black text-[#1e3a8a] uppercase tracking-tight text-xl italic mb-1 flex items-center gap-2">
+                            <div className="w-1.5 h-6 bg-red-500 rounded-full"></div> Retención vs Deserción
+                        </h2>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-3.5">Métricas de los últimos 30 días</p>
+                    </div>
+                    <div style={{ width: '100%', height: 260 }}>
+                        {chartData.ingresosVsDeserciones?.length > 0 ? (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <LineChart data={chartData.ingresosVsDeserciones} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                    <XAxis
+                                        dataKey="fecha"
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }}
+                                        dy={10}
+                                        tickFormatter={(val) => {
+                                            const parts = val.split('-');
+                                            return `${parts[2]}/${parts[1]}`; // Muestra DD/MM
+                                        }}
+                                    />
+                                    <YAxis axisLine={false} tickLine={false} width={60} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }} />
+                                    <Tooltip
+                                        cursor={{ stroke: '#cbd5e1', strokeWidth: 1, strokeDasharray: '3 3' }}
+                                        contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgb(0 0 0 / 0.1)' }}
+                                    />
+                                    <Legend iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 'bold', paddingTop: '10px' }} />
+
+                                    <Line type="monotone" dataKey="ingresos" name="Nuevos Ingresos" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981', strokeWidth: 0 }} activeDot={{ r: 6, stroke: '#fff', strokeWidth: 2 }} />
+                                    <Line type="monotone" dataKey="deserciones" name="Deserciones (>30 días)" stroke="#ef4444" strokeWidth={3} dot={{ r: 4, fill: '#ef4444', strokeWidth: 0 }} activeDot={{ r: 6, stroke: '#fff', strokeWidth: 2 }} />
+                                </LineChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="h-full w-full flex items-center justify-center text-slate-400 font-bold text-sm uppercase bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                                Datos no disponibles o insuficientes
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                
+                {/* 7. NIVELES POR SEDE (BARRAS APILADAS) CON FILTRO MULTIPLE */}
+                <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col mt-4 lg:mt-4">
+                    <div className="mb-6 flex justify-between items-center">
+                        <div>
+                            <h2 className="font-black text-[#1e3a8a] uppercase tracking-tight text-xl italic mb-1 flex items-center gap-2">
+                                <div className="w-1.5 h-6 bg-teal-500 rounded-full"></div> Niveles x Sede
+                            </h2>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-3.5">Distribución Académica</p>
+                        </div>
+
+                        {/* SELECT MULTIPLE DE SEDES */}
+                        <select
+                            multiple
+                            className="text-[10px] font-bold text-[#1e3a8a] bg-slate-50 border border-slate-200 rounded-xl p-2 w-32 h-20 outline-none"
+                            onChange={(e) => {
+                                const values = Array.from(e.target.selectedOptions, option => option.value);
+                                // Si seleccionan nada, reseteamos a mostrar todas
+                                setSedeSeleccionada(values.length === 0 ? [] : values);
+                            }}
+                        >
+                            {(chartData?.vigentesPorSedeNivel || []).map(item => (
+                                <option key={item.sede} value={item.sede}>{item.sede}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div style={{ width: '100%', height: 260 }}>
+                        {chartData.vigentesPorSedeNivel?.length > 0 ? (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart
+                                    data={sedeSeleccionada.length > 0
+                                        ? chartData.vigentesPorSedeNivel.filter(s => sedeSeleccionada.includes(s.sede))
+                                        : chartData.vigentesPorSedeNivel}
+                                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                                >
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                    <XAxis dataKey="sede" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }} dy={10} />
+                                    <YAxis axisLine={false} tickLine={false} width={40} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }} />
+                                    <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgb(0 0 0 / 0.1)' }} />
+                                    <Legend iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 'bold', paddingTop: '10px' }} />
+
+                                    {nivelesUnicos.map((nivel, idx) => (
+                                        <Bar
+                                            key={nivel}
+                                            dataKey={nivel}
+                                            name={nivel}
+                                            stackId="a"
+                                            fill={CHART_COLORS[idx % CHART_COLORS.length]}
+                                        />
+                                    ))}
+                                </BarChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="h-full w-full flex items-center justify-center text-slate-400 font-bold text-sm uppercase bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                                Sin alumnos activos
+                            </div>
+                        )}
+                    </div>
+                </div>
+
             </div>
         </div>
     );
