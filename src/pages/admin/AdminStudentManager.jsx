@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Loader2, ChevronRight, ArrowLeft } from 'lucide-react';
+import { Search, Loader2, ChevronRight, ArrowLeft, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { addDays, isPast, format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -13,6 +13,7 @@ import ChangeLevelStudent from '../../components/Admin/StudenManager/ChangeLevel
 import StudentDetails from '../../components/Admin/StudenManager/StudentDetails.jsx';
 import InscriptionsModal from '../../components/Admin/StudenManager/InscriptionsModal.jsx';
 import StudentTable from '../../components/Admin/StudenManager/StudentTable.jsx';
+import AdminStudents from './AdminStudents.jsx';
 
 const AdminStudentsManager = () => {
     const [view, setView] = useState('list'); // 'list' | 'details' | 'cambio_nivel'
@@ -24,7 +25,7 @@ const AdminStudentsManager = () => {
     const [selectedSede, setSelectedSede] = useState('');
     const [modalInscripciones, setModalInscripciones] = useState({ isOpen: false, data: null });
     const [currentPage, setCurrentPage] = useState(1);
-    
+
     const itemsPerPage = 10;
 
     // --- CARGA Y PROCESAMIENTO DE DATOS ---
@@ -98,7 +99,7 @@ const AdminStudentsManager = () => {
                         dni: user.numero_documento || '---',
                         telefono: user.telefono_personal || 'S/N',
                         cumpleanos: user.fecha_nacimiento ? format(new Date(user.fecha_nacimiento), "dd 'de' MMM", { locale: es }) : 'S/D',
-                        
+
                         sedes: sedesNombres,
                         niveles: nivelesNombres,
                         fechaCorte: fCorte,
@@ -106,7 +107,7 @@ const AdminStudentsManager = () => {
                         estadoVisual: estadoVisual,
                         multiplesActivas: inscripcionesActivas.length > 1,
                         historialInscripciones: historialInscripciones,
-                        
+
                         // 🔥 Dato clave inyectado para la columna de Monto
                         monto_pendiente: totalDeuda,
 
@@ -128,7 +129,7 @@ const AdminStudentsManager = () => {
                         }
                     };
                 });
-                
+
                 setAlumnos(formattedData);
             }
         } catch (error) {
@@ -178,15 +179,25 @@ const AdminStudentsManager = () => {
     );
 
     if (view === 'details' && selectedAlumno) {
-        return <StudentDetails 
-            selectedAlumno={selectedAlumno} 
-            onBack={() => setView('list')} 
-            onStatusHistoryChange={handleStatusHistory} 
+        return <StudentDetails
+            selectedAlumno={selectedAlumno}
+            onBack={() => setView('list')}
+            onStatusHistoryChange={handleStatusHistory}
         />;
     }
 
     if (view === 'cambio_nivel' && selectedAlumno) {
         return <ChangeLevelStudent alumno={selectedAlumno} onBack={() => { setView('list'); fetchAlumnos(); }} />;
+    }
+
+    if (view === 'create') {
+        return <AdminStudents
+            onBack={() => setView('list')}
+            onFinish={(nuevoAlumno) => {
+                setSelectedAlumno(nuevoAlumno);
+                setView('details');
+            }}
+        />
     }
 
     return (
@@ -197,25 +208,30 @@ const AdminStudentsManager = () => {
                     <h1 className="text-3xl font-black text-slate-900 uppercase italic tracking-tighter leading-none">Gestión de <span className="text-[#1e3a8a]">Alumnos</span></h1>
                     <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-2">Control Maestro de la Academia</p>
                 </div>
+                <button onClick={() => setView('create')} className="bg-[#1e3a8a] text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all hover:bg-orange-500 shadow-lg">
+                    <Plus size={20} /> Registrar Alumno
+                </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_220px] gap-4">
+                <div className="relative group">
+                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#1e3a8a] transition-colors" size={20} />
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="BUSCAR POR NOMBRE, APELLIDO O DNI..."
+                        className="w-full bg-white border-2 border-slate-100 rounded-[1.8rem] pl-16 pr-8 py-5 font-black text-xs uppercase tracking-widest outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-[#1e3a8a] transition-all shadow-sm"
+                    />
+                </div>
                 <select value={selectedSede} onChange={(e) => setSelectedSede(e.target.value)} className="bg-white border border-slate-200 rounded-xl px-4 py-3 text-[10px] font-black uppercase shadow-sm outline-none cursor-pointer focus:ring-2 focus:ring-blue-500">
                     <option value="">TODAS LAS SEDES</option>
                     {sedes.map(s => <option key={s.id} value={s.id}>SEDE {s.nombre}</option>)}
                 </select>
             </div>
 
-            <div className="relative group">
-                <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#1e3a8a] transition-colors" size={20} />
-                <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="BUSCAR POR NOMBRE, APELLIDO O DNI..."
-                    className="w-full bg-white border-2 border-slate-100 rounded-[1.8rem] pl-16 pr-8 py-5 font-black text-xs uppercase tracking-widest outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-[#1e3a8a] transition-all shadow-sm"
-                />
-            </div>
-
             {/* TABLA PRINCIPAL MODULARIZADA */}
-            <StudentTable 
+            <StudentTable
                 currentAlumnos={currentAlumnos}
                 onViewDetails={(alum) => { setSelectedAlumno(alum); setView('details'); }}
                 onOpenInscriptions={(alum) => setModalInscripciones({ isOpen: true, data: alum })}
@@ -266,10 +282,10 @@ const AdminStudentsManager = () => {
             </div>
 
             {/* MODAL DE INSCRIPCIONES MODULARIZADO */}
-            <InscriptionsModal 
-                isOpen={modalInscripciones.isOpen} 
-                data={modalInscripciones.data} 
-                onClose={() => setModalInscripciones({ isOpen: false, data: null })} 
+            <InscriptionsModal
+                isOpen={modalInscripciones.isOpen}
+                data={modalInscripciones.data}
+                onClose={() => setModalInscripciones({ isOpen: false, data: null })}
             />
         </div>
     );

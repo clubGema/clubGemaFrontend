@@ -27,10 +27,10 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
                             {selectedAlumno.nombres.charAt(0)}
                         </div>
                         <div className="flex-1 space-y-6 relative z-10 w-full">
-                            <div className='flex flex-wrap items-center gap-4 justify-between'>
-                                <div>
+                            <div className='flex items-center gap-4'>
+                                <div className='flex-1'>
                                     <h3 className="text-4xl font-black text-slate-800 uppercase italic tracking-tighter leading-none">{selectedAlumno.full_name}</h3>
-                                    <div className="flex flex-wrap gap-2 mt-2">
+                                    <div className="flex gap-2 mt-2">
                                         {selectedAlumno.sedes.map((s, i) => (
                                             <span key={i} className="px-3 py-1 bg-orange-100 text-orange-600 rounded-lg text-[9px] font-black uppercase italic border border-orange-200">{s}</span>
                                         ))}
@@ -144,7 +144,7 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
                     </div>
                 </div>
             </div>
-            
+
             <ChangePasswordModal
                 isOpen={isPasswordModalOpen}
                 onClose={() => setIsPasswordModalOpen(false)}
