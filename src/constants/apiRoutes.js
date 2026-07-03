@@ -32,6 +32,7 @@ export const API_ROUTES = {
   },
   INSCRIPCIONES: {
     BASE: "/inscripciones",
+    INDIVIDUAL: "/inscripciones/individual",
     SEPARAR_FINALIZAR: (id) => `/inscripciones/${id}/separar-finalizar`,
     ACTUALIZAR_FECHA_PAQUETE: (cuentaId) => `/inscripciones/paquete/fecha/${cuentaId}`,
   },

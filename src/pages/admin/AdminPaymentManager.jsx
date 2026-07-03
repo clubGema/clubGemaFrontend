@@ -207,7 +207,7 @@ const AdminPaymentManager = () => {
 
                                     <div className={`flex justify-between items-start mb-6`}>
                                         <div className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase border shadow-sm ${getStatusStyle(p.estado_validacion)}`}>
-                                            {p.estado_validacion}
+                                            {p.cuentas_por_cobrar?.detalle_adicional === 'Plan Individual' ? `${p.estado_validacion} | Clase Única` : p.estado_validacion}
                                         </div>
                                         <div className={`p-2.5 rounded-2xl transition-all duration-300 bg-slate-50 group-hover:bg-[#1e3a8a] group-hover:text-white`}>
                                             <ChevronRight size={18} />

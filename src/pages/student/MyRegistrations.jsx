@@ -317,6 +317,9 @@ const MyRegistrations = () => {
                         <span>{formatTimeSafe(item.horarios_clases?.hora_inicio)} - {formatTimeSafe(item.horarios_clases?.hora_fin)}</span>
                       </div>
                     </div>
+                    <span className="text-[9px] font-black text-slate-400 border-slate-100 px-4 py-2 rounded-xluppercase italic transition-colors">
+                      {item.tipo_inscripcion}
+                    </span>
                     <span className="text-[9px] font-black text-slate-400 border-2 border-slate-100 px-4 py-2 rounded-xl group-hover:border-slate-700 group-hover:text-slate-300 uppercase italic transition-colors">
                       {item.estado}
                     </span>
