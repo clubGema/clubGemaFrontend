@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react';
-import { Fingerprint, MapPin, Phone, Eye, RefreshCw, Zap, ArrowUpDown, Filter, AlertCircle, CreditCard, Search } from 'lucide-react';
+import { Fingerprint, MapPin, Phone, Eye, RefreshCw, Zap, ArrowUpDown, Filter, AlertCircle, CreditCard, Search, History } from 'lucide-react';
 import { format, subDays } from 'date-fns';
 
-const StudentTable = ({ currentAlumnos, onViewDetails, onOpenInscriptions, onChangeLevel }) => {
+const StudentTable = ({ currentAlumnos, onViewDetails, onAttendanceHistory, onOpenInscriptions, onChangeLevel }) => {
     // 1. ESTADOS PARA ORDENAMIENTO Y FILTROS ESTILO EXCEL
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
     const [filters, setFilters] = useState({ sede: '', nivel: '', estadoVisual: '' });
-    
+
     // 🔥 NUEVO ESTADO: Filtro de texto avanzado para la primera columna
     const [textFilter, setTextFilter] = useState({ field: 'full_name', value: '' });
     const [isTextFilterOpen, setIsTextFilterOpen] = useState(false);
@@ -95,16 +95,16 @@ const StudentTable = ({ currentAlumnos, onViewDetails, onOpenInscriptions, onCha
 
     return (
         <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl overflow-visible">
-            
+
             {/* Aviso de Filtros Activos */}
             {hasFilters && (
                 <div className="bg-orange-50 px-6 py-2 border-b border-orange-100 flex items-center justify-between">
                     <span className="text-[10px] font-black text-orange-600 uppercase tracking-widest">Filtros Aplicados</span>
-                    <button 
+                    <button
                         onClick={() => {
                             setFilters({ sede: '', nivel: '', estadoVisual: '' });
                             setTextFilter({ field: 'full_name', value: '' });
-                        }} 
+                        }}
                         className="text-[9px] font-bold bg-white border border-orange-200 text-orange-500 px-3 py-1 rounded-lg hover:bg-orange-500 hover:text-white transition-all"
                     >
                         Limpiar Filtros
@@ -116,7 +116,7 @@ const StudentTable = ({ currentAlumnos, onViewDetails, onOpenInscriptions, onCha
                 <table className="w-full text-left">
                     <thead>
                         <tr className="bg-slate-50/50 border-b border-slate-100 font-black text-[9px] text-slate-400 uppercase tracking-[0.15em]">
-                            
+
                             {/* 🔥 NUEVO: CABECERA PERSONALIZADA CON POP-UP DE BÚSQUEDA */}
                             <th className="p-4 pl-6 text-left group select-none relative">
                                 <div className="flex items-center gap-2">
@@ -124,9 +124,9 @@ const StudentTable = ({ currentAlumnos, onViewDetails, onOpenInscriptions, onCha
                                         Alumno / Contacto
                                         <ArrowUpDown size={12} className={`transition-opacity ${sortConfig.key === 'full_name' ? 'opacity-100 text-[#1e3a8a]' : 'opacity-30 group-hover:opacity-100'}`} />
                                     </div>
-                                    
+
                                     <div>
-                                        <button 
+                                        <button
                                             onClick={() => setIsTextFilterOpen(!isTextFilterOpen)}
                                             className="p-1 rounded hover:bg-slate-200 transition-colors"
                                             title="Búsqueda Avanzada"
@@ -138,7 +138,7 @@ const StudentTable = ({ currentAlumnos, onViewDetails, onOpenInscriptions, onCha
                                         {isTextFilterOpen && (
                                             <div className="absolute top-full left-6 mt-1 bg-white border border-slate-200 shadow-2xl rounded-2xl p-4 w-64 z-50 normal-case tracking-normal font-normal">
                                                 <p className="text-[10px] font-black text-[#1e3a8a] uppercase mb-2 tracking-widest">Filtro de Texto</p>
-                                                
+
                                                 <select
                                                     value={textFilter.field}
                                                     onChange={(e) => setTextFilter({ ...textFilter, field: e.target.value })}
@@ -148,7 +148,7 @@ const StudentTable = ({ currentAlumnos, onViewDetails, onOpenInscriptions, onCha
                                                     <option value="dni">Documento (DNI)</option>
                                                     <option value="telefono">Celular</option>
                                                 </select>
-                                                
+
                                                 <input
                                                     type="text"
                                                     value={textFilter.value}
@@ -157,7 +157,7 @@ const StudentTable = ({ currentAlumnos, onViewDetails, onOpenInscriptions, onCha
                                                     className="w-full p-2.5 text-xs border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 font-bold transition-all"
                                                     autoFocus
                                                 />
-                                                
+
                                                 <div className="flex justify-between items-center mt-4">
                                                     <button
                                                         onClick={() => { setTextFilter({ field: 'full_name', value: '' }); setIsTextFilterOpen(false); }}
@@ -190,7 +190,7 @@ const StudentTable = ({ currentAlumnos, onViewDetails, onOpenInscriptions, onCha
                             <tr><td colSpan="6" className="p-12 text-center text-slate-400 text-xs font-bold uppercase italic">No se encontraron alumnos con esos filtros</td></tr>
                         ) : processedAlumnos.map((alum) => (
                             <tr key={alum.id} className="hover:bg-blue-50/30 transition-all group">
-                                
+
                                 {/* COLUMNA 1: ALUMNO Y CONTACTO */}
                                 <td className="p-4 pl-6">
                                     <div className="flex items-center gap-4">
@@ -269,7 +269,7 @@ const StudentTable = ({ currentAlumnos, onViewDetails, onOpenInscriptions, onCha
                                         </div>
                                     )}
                                 </td>
-                                
+
                                 {/* COLUMNA 6: GESTIÓN */}
                                 <td className="p-4 text-center pr-6">
                                     <div className="flex justify-center gap-2">
@@ -279,6 +279,13 @@ const StudentTable = ({ currentAlumnos, onViewDetails, onOpenInscriptions, onCha
                                             title="Ver Expediente"
                                         >
                                             <Eye size={18} />
+                                        </button>
+                                        <button
+                                            onClick={() => onAttendanceHistory(alum)}
+                                            className="w-10 h-10 bg-slate-100 text-slate-500 rounded-xl hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center shadow-sm"
+                                            title="Historial de Asistencias"
+                                        >
+                                            <History size={18} />
                                         </button>
                                         <button
                                             onClick={() => onChangeLevel(alum)}

@@ -14,6 +14,7 @@ import StudentDetails from '../../components/Admin/StudenManager/StudentDetails.
 import InscriptionsModal from '../../components/Admin/StudenManager/InscriptionsModal.jsx';
 import StudentTable from '../../components/Admin/StudenManager/StudentTable.jsx';
 import AdminStudents from './AdminStudents.jsx';
+import StudentAttendanceHistory from '../../components/Admin/StudenManager/StudentAttendanceHistory.jsx';
 
 const AdminStudentsManager = () => {
     const [view, setView] = useState('list'); // 'list' | 'details' | 'cambio_nivel'
@@ -200,6 +201,15 @@ const AdminStudentsManager = () => {
         />
     }
 
+    if (view === 'attendanceHistory' && selectedAlumno) {
+        return (
+            <StudentAttendanceHistory
+                alumno={selectedAlumno}
+                onBack={() => setView('list')}
+            />
+        );
+    }
+
     return (
         <div className="space-y-6 animate-fade-in-up p-1">
             {/* Header y Filtros */}
@@ -234,6 +244,7 @@ const AdminStudentsManager = () => {
             <StudentTable
                 currentAlumnos={currentAlumnos}
                 onViewDetails={(alum) => { setSelectedAlumno(alum); setView('details'); }}
+                onAttendanceHistory={(alum) => { setSelectedAlumno(alum); setView('attendanceHistory'); }}
                 onOpenInscriptions={(alum) => setModalInscripciones({ isOpen: true, data: alum })}
                 onChangeLevel={(alum) => { setSelectedAlumno(alum); setView('cambio_nivel'); }}
             />
