@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Check, UserMinus, Loader2, ShieldAlert, RefreshCw, Baby } from 'lucide-react';
 import { asistenciaService } from '../../services/asistencia.service';
 import toast from 'react-hot-toast';
-import { format, addDays, isPast, isToday, differenceInYears } from 'date-fns';
+import { format, addDays, isPast, isToday, differenceInYears, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 const AttendanceModal = ({ clase, onClose, onRefresh }) => {
@@ -21,7 +21,7 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
                 asistenciaId: ins.registro_especifico?.id,
                 nombreCompleto: `${ins.alumnos?.usuarios?.nombres} ${ins.alumnos?.usuarios?.apellidos}`,
                 dni: ins.alumnos?.usuarios?.numero_documento,
-                fechaNacimiento: fNac ? format(new Date(fNac), "dd/MM/yyyy") : 'N/A',
+                fechaNacimiento: fNac ? format(parseISO(fNac.slice(0, 10)), "dd/MM/yyyy") : 'N/A',
                 edad: fNac ? differenceInYears(new Date(), new Date(fNac)) : null,
                 estado: ins.registro_especifico?.estado || 'PROGRAMADA',
                 esRecuperacion: ins.tipo_sesion === 'RECUPERACION' || ins.estado === 'RECUPERACION',

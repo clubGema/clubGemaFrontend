@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Loader2, ChevronRight, ArrowLeft, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { addDays, isPast, format } from 'date-fns';
+import { addDays, isPast, format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 import { apiFetch } from '../../interceptors/api';
@@ -98,7 +98,7 @@ const AdminStudentsManager = () => {
                         full_name: `${user.nombres} ${user.apellidos}`,
                         dni: user.numero_documento || '---',
                         telefono: user.telefono_personal || 'S/N',
-                        cumpleanos: user.fecha_nacimiento ? format(new Date(user.fecha_nacimiento), "dd 'de' MMM", { locale: es }) : 'S/D',
+                        cumpleanos: user.fecha_nacimiento ? format(parseISO(user.fecha_nacimiento.slice(0, 10)), "dd 'de' MMM", { locale: es }) : 'S/D',
 
                         sedes: sedesNombres,
                         niveles: nivelesNombres,

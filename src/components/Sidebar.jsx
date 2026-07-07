@@ -71,7 +71,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 { icon: Sparkles, label: 'Anuncios Carrusel', path: '/dashboard/admin/anuncios-beneficios' },
                 { icon: TicketPercent, label: 'Crear Descuentos', path: '/dashboard/admin/CreateBenefits' },
                 { icon: TicketPercent, label: 'Asignar Descuentos', path: '/dashboard/admin/benefits' },
-                { icon: Ticket, label: 'Pases de Invitado', path: '/dashboard/admin/guest-passes' },
+                { icon: Ticket, label: 'Clases Únicas', path: '/dashboard/admin/guest-passes' },
             ]
         },
         {
