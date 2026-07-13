@@ -7,9 +7,9 @@ import {
 
 const CHART_COLORS = ['#1e3a8a', '#f97316', '#3b82f6', '#94a3b8', '#cbd5e1', '#facc15'];
 
-
 const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYears }) => {
-const [sedeSeleccionada, setSedeSeleccionada] = useState([]);
+    const [sedeSeleccionada, setSedeSeleccionada] = useState([]);
+
     // Función para obtener los niveles dinámicamente de la data del backend (Gráfico de Sedes x Nivel)
     const nivelesUnicos = useMemo(() => {
         if (!chartData?.vigentesPorSedeNivel) return [];
@@ -33,8 +33,12 @@ const [sedeSeleccionada, setSedeSeleccionada] = useState([]);
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* 1. FLUJO DE CAJA (LINEAL) */}
+            {/* GRID PRINCIPAL DE 3 COLUMNAS */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+                
+                {/* ================= FILA 1 ================= */}
+                
+                {/* 1. FLUJO DE CAJA (2 COLUMNAS) */}
                 <div className="lg:col-span-2 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col relative z-20">
                     <div className="mb-6 flex justify-between items-start">
                         <div>
@@ -73,8 +77,8 @@ const [sedeSeleccionada, setSedeSeleccionada] = useState([]);
                     </div>
                 </div>
 
-                {/* 2. OCUPACIÓN (DONA) */}
-                <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col">
+                {/* 2. OCUPACIÓN (1 COLUMNA) */}
+                <div className="lg:col-span-1 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col">
                     <div className="mb-6">
                         <h2 className="font-black text-[#1e3a8a] uppercase tracking-tight text-xl italic mb-1 flex items-center gap-2">
                             <div className="w-1.5 h-6 bg-blue-600 rounded-full"></div> Ocupación
@@ -99,50 +103,66 @@ const [sedeSeleccionada, setSedeSeleccionada] = useState([]);
                         {chartData.sedes.map((sede, idx) => (
                             <div key={idx} className="flex justify-between items-center text-xs">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: CHART_COLORS[idx % CHART_COLORS.length] }}></div>
-                                    <span className="text-slate-600 font-bold uppercase tracking-tight">{sede.nombre}</span>
+                                    <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: CHART_COLORS[idx % CHART_COLORS.length] }}></div>
+                                    <span className="text-slate-600 font-bold uppercase tracking-tight truncate max-w-[120px]">{sede.nombre}</span>
                                 </div>
-                                <span className="font-black text-[#1e3a8a] bg-blue-50 px-2 py-0.5 rounded-lg">{sede.valor}</span>
+                                <span className="font-black text-[#1e3a8a] bg-blue-50 px-2 py-0.5 rounded-lg shrink-0">{sede.valor}</span>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                {/* 3. RECAUDACIÓN (BARRAS) */}
-                <div className="lg:col-span-2 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col mt-4 lg:mt-0">
-                    <div className="mb-6 flex justify-between items-start">
-                        <div>
-                            <h2 className="font-black text-[#1e3a8a] uppercase tracking-tight text-xl italic mb-1 flex items-center gap-2">
-                                <div className="w-1.5 h-6 bg-orange-500 rounded-full"></div> Recaudación
-                            </h2>
-                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-3.5">Canales de Pago</p>
-                        </div>
+                {/* ================= FILA 2 ================= */}
+
+                {/* 3. EVOLUCIÓN DE ALUMNOS ACTIVOS (2 COLUMNAS) */}
+                <div className="lg:col-span-2 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col">
+                    <div className="mb-6">
+                        <h2 className="font-black text-[#1e3a8a] uppercase tracking-tight text-xl italic mb-1 flex items-center gap-2">
+                            <div className="w-1.5 h-6 bg-indigo-500 rounded-full"></div> Alumnos Activos
+                        </h2>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-3.5">Evolución mensual durante el año</p>
                     </div>
                     <div style={{ width: '100%', height: 260 }}>
-                        {chartData.metodosPago.length > 0 ? (
+                        {chartData.activosPorMes?.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={chartData.metodosPago} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                <LineChart data={chartData.activosPorMes} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                    <XAxis dataKey="nombre" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }} dy={10} />
-                                    <YAxis axisLine={false} tickLine={false} width={80} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }} tickFormatter={(val) => val === 0 ? 'S/ 0' : `S/ ${val.toLocaleString()}`} />
-                                    <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgb(0 0 0 / 0.1)' }} formatter={(value) => [`S/ ${value.toLocaleString()}`, 'Total Recaudado']} />
-                                    <Bar dataKey="monto" radius={[10, 10, 0, 0]} barSize={40}>
-                                        {chartData.metodosPago.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={index === 0 ? '#1e3a8a' : index === 1 ? '#f97316' : CHART_COLORS[index % CHART_COLORS.length]} />
-                                        ))}
-                                    </Bar>
-                                </BarChart>
+                                    <XAxis
+                                        dataKey="mes"
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }}
+                                        dy={10}
+                                    />
+                                    <YAxis axisLine={false} tickLine={false} width={60} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }} />
+                                    <Tooltip
+                                        cursor={{ stroke: '#cbd5e1', strokeWidth: 1, strokeDasharray: '3 3' }}
+                                        contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgb(0 0 0 / 0.1)' }}
+                                        formatter={(value) => [`${value} alumnos`, 'Activos']}
+                                    />
+                                    <Legend iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 'bold', paddingTop: '10px' }} />
+
+                                    <Line 
+                                        type="monotone" 
+                                        dataKey="activos" 
+                                        name="Total de Alumnos Activos" 
+                                        stroke="#6366f1" 
+                                        strokeWidth={4} 
+                                        dot={{ r: 4, fill: '#6366f1', strokeWidth: 0 }} 
+                                        activeDot={{ r: 7, stroke: '#fff', strokeWidth: 2 }} 
+                                    />
+                                </LineChart>
                             </ResponsiveContainer>
                         ) : (
                             <div className="h-full w-full flex items-center justify-center text-slate-400 font-bold text-sm uppercase bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
-                                No hay pagos registrados para este periodo
+                                Datos no disponibles
                             </div>
                         )}
                     </div>
                 </div>
 
-                {/* 4. GÉNERO ALUMNOS (PIE) */}
-                <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col mt-4 lg:mt-0">
+                {/* 4. GÉNERO ALUMNOS (1 COLUMNA) */}
+                <div className="lg:col-span-1 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col">
                     <div className="mb-6">
                         <h2 className="font-black text-[#1e3a8a] uppercase tracking-tight text-xl italic mb-1 flex items-center gap-2">
                             <div className="w-1.5 h-6 bg-blue-600 rounded-full"></div> Alumnado
@@ -163,35 +183,113 @@ const [sedeSeleccionada, setSedeSeleccionada] = useState([]);
                             <span className="text-[10px] font-bold text-slate-400 uppercase">Total</span>
                         </div>
                     </div>
-                    <div className="mt-6 space-y-3">
+                    <div className="mt-8 space-y-4">
                         {chartData.alumnosGenero.map((g, idx) => (
                             <div key={idx} className="flex justify-between items-center text-xs">
                                 <div className="flex items-center gap-2">
                                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: g.color }}></div>
                                     <span className="text-slate-600 font-bold uppercase tracking-tight">{g.nombre}</span>
                                 </div>
-                                <span className="font-black text-[#1e3a8a] bg-blue-50 px-2 py-0.5 rounded-lg">{g.valor}</span>
+                                <span className="font-black text-[#1e3a8a] bg-blue-50 px-3 py-1 rounded-lg">{g.valor}</span>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                {/* 5. DISTRIBUCIÓN POR EDADES (BARRAS) */}
-                <div className="lg:col-span-3 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col mt-4 lg:mt-4">
+                {/* ================= FILA 3 ================= */}
+
+                {/* 5. NIVELES POR SEDE (3 COLUMNAS - ANCHO COMPLETO) */}
+                <div className="lg:col-span-3 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col">
+                    <div className="mb-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+                        <div>
+                            <h2 className="font-black text-[#1e3a8a] uppercase tracking-tight text-xl italic mb-1 flex items-center gap-2">
+                                <div className="w-1.5 h-6 bg-teal-500 rounded-full"></div> Niveles x Sede
+                            </h2>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-3.5">Distribución Académica General</p>
+                        </div>
+
+                        {/* SELECT MULTIPLE DE SEDES */}
+                        <div className="relative">
+                            <select
+                                multiple
+                                className="text-[10px] font-bold text-[#1e3a8a] bg-slate-50 border border-slate-200 rounded-xl p-2 w-full md:w-64 h-20 outline-none focus:border-teal-500 transition-colors shadow-sm"
+                                onChange={(e) => {
+                                    const values = Array.from(e.target.selectedOptions, option => option.value);
+                                    setSedeSeleccionada(values.length === 0 ? [] : values);
+                                }}
+                            >
+                                {(chartData?.vigentesPorSedeNivel || []).map(item => (
+                                    <option key={item.sede} value={item.sede} className="py-1 px-2 mb-1 rounded hover:bg-teal-50 cursor-pointer">
+                                        {item.sede}
+                                    </option>
+                                ))}
+                            </select>
+                            <p className="text-[8px] text-slate-400 absolute -bottom-4 right-1 italic">Ctrl / Cmd para selección múltiple</p>
+                        </div>
+                    </div>
+
+                    <div style={{ width: '100%', height: 320 }}>
+                        {chartData.vigentesPorSedeNivel?.length > 0 ? (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart
+                                    data={sedeSeleccionada.length > 0
+                                        ? chartData.vigentesPorSedeNivel.filter(s => sedeSeleccionada.includes(s.sede))
+                                        : chartData.vigentesPorSedeNivel}
+                                    margin={{ top: 10, right: 10, left: -20, bottom: 20 }}
+                                >
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                    <XAxis 
+                                        dataKey="sede" 
+                                        axisLine={false} 
+                                        tickLine={false} 
+                                        tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }} 
+                                        dy={15} 
+                                        angle={-15} 
+                                        textAnchor="end"
+                                    />
+                                    <YAxis axisLine={false} tickLine={false} width={40} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }} />
+                                    <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgb(0 0 0 / 0.1)' }} />
+                                    <Legend iconType="circle" wrapperStyle={{ fontSize: '11px', fontWeight: 'bold', paddingTop: '20px' }} />
+
+                                    {nivelesUnicos.map((nivel, idx) => (
+                                        <Bar
+                                            key={nivel}
+                                            dataKey={nivel}
+                                            name={nivel}
+                                            stackId="a"
+                                            fill={CHART_COLORS[idx % CHART_COLORS.length]}
+                                            radius={idx === nivelesUnicos.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]}
+                                            barSize={40}
+                                        />
+                                    ))}
+                                </BarChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="h-full w-full flex items-center justify-center text-slate-400 font-bold text-sm uppercase bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                                Sin alumnos activos
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* ================= FILA 4 ================= */}
+
+                {/* 6. DISTRIBUCIÓN POR EDADES (2 COLUMNAS) */}
+                <div className="lg:col-span-2 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col">
                     <div className="mb-8">
                         <h2 className="font-black text-[#1e3a8a] uppercase tracking-tight text-xl italic mb-1 flex items-center gap-2">
                             <div className="w-1.5 h-6 bg-emerald-500 rounded-full"></div> Rangos de Edad
                         </h2>
                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-3.5">Métricas de Crecimiento</p>
                     </div>
-                    <div style={{ width: '100%', height: 300 }}>
+                    <div style={{ width: '100%', height: 260 }}>
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={chartData.alumnosEdades} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                            <BarChart data={chartData.alumnosEdades} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                <XAxis dataKey="range" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#94a3b8', fontWeight: 'bold' }} dy={10} />
-                                <YAxis axisLine={false} tickLine={false} width={40} tick={{ fontSize: 12, fill: '#94a3b8', fontWeight: 'bold' }} />
+                                <XAxis dataKey="range" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontWeight: 'bold' }} dy={10} />
+                                <YAxis axisLine={false} tickLine={false} width={50} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }} />
                                 <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} formatter={(value) => [`${value} alumnos`, 'Edades']} />
-                                <Bar dataKey="count" fill="#3b82f6" radius={[10, 10, 0, 0]} barSize={60}>
+                                <Bar dataKey="count" fill="#3b82f6" radius={[8, 8, 0, 0]} barSize={50}>
                                     {chartData.alumnosEdades.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
                                     ))}
@@ -201,7 +299,7 @@ const [sedeSeleccionada, setSedeSeleccionada] = useState([]);
                     </div>
                     <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
                         {chartData.alumnosEdades.map((item, idx) => (
-                            <div key={idx} className="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex flex-col items-center">
+                            <div key={idx} className="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex flex-col items-center justify-center shadow-sm">
                                 <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">{item.range} años</span>
                                 <span className="text-xl font-black text-[#1e3a8a]">{item.count}</span>
                             </div>
@@ -209,105 +307,42 @@ const [sedeSeleccionada, setSedeSeleccionada] = useState([]);
                     </div>
                 </div>
 
-                {/* 6. RETENCIÓN VS DESERCIÓN (LÍNEAS) - NUEVO */}
-                <div className="lg:col-span-2 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col mt-4 lg:mt-4">
-                    <div className="mb-6">
-                        <h2 className="font-black text-[#1e3a8a] uppercase tracking-tight text-xl italic mb-1 flex items-center gap-2">
-                            <div className="w-1.5 h-6 bg-red-500 rounded-full"></div> Retención vs Deserción
-                        </h2>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-3.5">Métricas de los últimos 30 días</p>
-                    </div>
-                    <div style={{ width: '100%', height: 260 }}>
-                        {chartData.ingresosVsDeserciones?.length > 0 ? (
-                            <ResponsiveContainer width="100%" height="100%">
-                                <LineChart data={chartData.ingresosVsDeserciones} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                    <XAxis
-                                        dataKey="fecha"
-                                        axisLine={false}
-                                        tickLine={false}
-                                        tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }}
-                                        dy={10}
-                                        tickFormatter={(val) => {
-                                            const parts = val.split('-');
-                                            return `${parts[2]}/${parts[1]}`; // Muestra DD/MM
-                                        }}
-                                    />
-                                    <YAxis axisLine={false} tickLine={false} width={60} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }} />
-                                    <Tooltip
-                                        cursor={{ stroke: '#cbd5e1', strokeWidth: 1, strokeDasharray: '3 3' }}
-                                        contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgb(0 0 0 / 0.1)' }}
-                                    />
-                                    <Legend iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 'bold', paddingTop: '10px' }} />
-
-                                    <Line type="monotone" dataKey="ingresos" name="Nuevos Ingresos" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981', strokeWidth: 0 }} activeDot={{ r: 6, stroke: '#fff', strokeWidth: 2 }} />
-                                    <Line type="monotone" dataKey="deserciones" name="Deserciones (>30 días)" stroke="#ef4444" strokeWidth={3} dot={{ r: 4, fill: '#ef4444', strokeWidth: 0 }} activeDot={{ r: 6, stroke: '#fff', strokeWidth: 2 }} />
-                                </LineChart>
-                            </ResponsiveContainer>
-                        ) : (
-                            <div className="h-full w-full flex items-center justify-center text-slate-400 font-bold text-sm uppercase bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
-                                Datos no disponibles o insuficientes
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                
-                {/* 7. NIVELES POR SEDE (BARRAS APILADAS) CON FILTRO MULTIPLE */}
-                <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col mt-4 lg:mt-4">
-                    <div className="mb-6 flex justify-between items-center">
+                {/* 7. RECAUDACIÓN (1 COLUMNA) */}
+                <div className="lg:col-span-1 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col">
+                    <div className="mb-6 flex justify-between items-start">
                         <div>
                             <h2 className="font-black text-[#1e3a8a] uppercase tracking-tight text-xl italic mb-1 flex items-center gap-2">
-                                <div className="w-1.5 h-6 bg-teal-500 rounded-full"></div> Niveles x Sede
+                                <div className="w-1.5 h-6 bg-orange-500 rounded-full"></div> Recaudación
                             </h2>
-                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-3.5">Distribución Académica</p>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-3.5">Canales de Pago</p>
                         </div>
-
-                        {/* SELECT MULTIPLE DE SEDES */}
-                        <select
-                            multiple
-                            className="text-[10px] font-bold text-[#1e3a8a] bg-slate-50 border border-slate-200 rounded-xl p-2 w-32 h-20 outline-none"
-                            onChange={(e) => {
-                                const values = Array.from(e.target.selectedOptions, option => option.value);
-                                // Si seleccionan nada, reseteamos a mostrar todas
-                                setSedeSeleccionada(values.length === 0 ? [] : values);
-                            }}
-                        >
-                            {(chartData?.vigentesPorSedeNivel || []).map(item => (
-                                <option key={item.sede} value={item.sede}>{item.sede}</option>
-                            ))}
-                        </select>
                     </div>
-
-                    <div style={{ width: '100%', height: 260 }}>
-                        {chartData.vigentesPorSedeNivel?.length > 0 ? (
+                    <div style={{ width: '100%', height: 350 }}>
+                        {chartData.metodosPago.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart
-                                    data={sedeSeleccionada.length > 0
-                                        ? chartData.vigentesPorSedeNivel.filter(s => sedeSeleccionada.includes(s.sede))
-                                        : chartData.vigentesPorSedeNivel}
-                                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                                >
+                                <BarChart data={chartData.metodosPago} margin={{ top: 10, right: 10, left: -10, bottom: 20 }}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                    <XAxis dataKey="sede" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }} dy={10} />
-                                    <YAxis axisLine={false} tickLine={false} width={40} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }} />
-                                    <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgb(0 0 0 / 0.1)' }} />
-                                    <Legend iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 'bold', paddingTop: '10px' }} />
-
-                                    {nivelesUnicos.map((nivel, idx) => (
-                                        <Bar
-                                            key={nivel}
-                                            dataKey={nivel}
-                                            name={nivel}
-                                            stackId="a"
-                                            fill={CHART_COLORS[idx % CHART_COLORS.length]}
-                                        />
-                                    ))}
+                                    <XAxis 
+                                        dataKey="nombre" 
+                                        axisLine={false} 
+                                        tickLine={false} 
+                                        tick={{ fontSize: 9, fill: '#64748b', fontWeight: 'bold' }} 
+                                        dy={15} 
+                                        angle={-25} 
+                                        textAnchor="end" 
+                                    />
+                                    <YAxis axisLine={false} tickLine={false} width={60} tick={{ fontSize: 9, fill: '#94a3b8', fontWeight: 'bold' }} tickFormatter={(val) => val === 0 ? 'S/ 0' : `S/ ${val.toLocaleString()}`} />
+                                    <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgb(0 0 0 / 0.1)' }} formatter={(value) => [`S/ ${value.toLocaleString()}`, 'Total Recaudado']} />
+                                    <Bar dataKey="monto" radius={[6, 6, 0, 0]} barSize={35}>
+                                        {chartData.metodosPago.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={index === 0 ? '#1e3a8a' : index === 1 ? '#f97316' : CHART_COLORS[index % CHART_COLORS.length]} />
+                                        ))}
+                                    </Bar>
                                 </BarChart>
                             </ResponsiveContainer>
                         ) : (
-                            <div className="h-full w-full flex items-center justify-center text-slate-400 font-bold text-sm uppercase bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
-                                Sin alumnos activos
+                            <div className="h-full w-full flex items-center justify-center text-slate-400 font-bold text-sm uppercase bg-slate-50/50 rounded-2xl border border-dashed border-slate-200 text-center p-4">
+                                No hay pagos registrados
                             </div>
                         )}
                     </div>

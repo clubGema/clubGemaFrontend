@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Calendar, FileSpreadsheet } from 'lucide-react';
 import toast from 'react-hot-toast';
 import * as XLSX from 'xlsx';
@@ -35,7 +35,7 @@ const AdminCashFlow = () => {
     const [filtroAnio, setFiltroAnio] = useState(currentYear);
     const [mesesAbiertos, setMesesAbiertos] = useState([]);
 
-    // Estados de edición y creación (pasados por props a los componentes hijos)
+    // Estados de edición y creación
     const [inlineEditId, setInlineEditId] = useState(null);
     const [inlineData, setInlineData] = useState({ concepto: '', monto: '', fecha: '', sede_id: '' });
     const [addingMonth, setAddingMonth] = useState(null);
@@ -73,35 +73,92 @@ const AdminCashFlow = () => {
                 let ingresosManualesFlats = [];
                 let egresosFlats = [];
 
-                Object.entries(data.data).forEach(([sedeNombre, movimientosSede]) => {
-                    movimientosSede.ingresos.forEach(ing => {
-                        // LA CLAVE ESTÁ AQUÍ: Agrupamos los automáticos, dejamos manuales libres
-                        if (ing.registrado_por === "SISTEMA AUTOMÁTICO") {
-                            if (!ingresosConsolidadosObj[sedeNombre]) {
-                                ingresosConsolidadosObj[sedeNombre] = {
-                                    id: `auto-${sedeNombre}`,
-                                    sede: sedeNombre,
-                                    concepto: 'INGRESOS ACUMULADOS',
-                                    monto: 0,
-                                    cantidad: 0,
-                                };
-                            }
-                            ingresosConsolidadosObj[sedeNombre].monto += parseFloat(ing.monto);
-                            ingresosConsolidadosObj[sedeNombre].cantidad += 1;
-                        } else {
-                            ingresosManualesFlats.push({ ...ing, sede: sedeNombre, tipo: 'INGRESO' });
+                // Iterar sobre la nueva estructura: Sede -> niveles -> ingresos / egresos
+                Object.entries(data.data).forEach(([sedeNombre, sedeData]) => {
+                    
+                    // 🚀 NUEVA AGRUPACIÓN: SOLO POR SEDE
+                    if (sedeData.niveles) {
+                        const groupKey = sedeNombre; // Ahora es solo la Sede, para hacer 1 sola fila
+
+                        if (!ingresosConsolidadosObj[groupKey]) {
+                            ingresosConsolidadosObj[groupKey] = {
+                                id: `auto-${groupKey}`,
+                                sede: sedeNombre,
+                                monto: 0,
+                                cantidad: 0,
+                                fteTotal: 0,
+                                detallesNiveles: [] // Aquí guardaremos el desglose de los niveles
+                            };
                         }
+
+                        // Iterar niveles para sumar al total de la sede y guardar el desglose
+                        Object.entries(sedeData.niveles).forEach(([nivelNombre, nivelData]) => {
+                            const ingresosDelNivel = Array.isArray(nivelData.ingresos) ? nivelData.ingresos : [];
+                            let cantidadNivel = 0;
+                            let fteNivel = 0;
+
+                            ingresosDelNivel.forEach(ing => {
+                                // Sumar al gran total de la sede
+                                ingresosConsolidadosObj[groupKey].monto += parseFloat(ing.monto || 0);
+                                ingresosConsolidadosObj[groupKey].cantidad += 1;
+                                
+                                // Sumar a los contadores locales del nivel
+                                cantidadNivel += 1;
+
+                                const matchFte = ing.concepto?.match(/([\d.]+)\s*FTE/i);
+                                const currentFte = matchFte ? parseFloat(matchFte[1]) : 0.5;
+                                
+                                ingresosConsolidadosObj[groupKey].fteTotal += currentFte;
+                                fteNivel += currentFte;
+                            });
+
+                            // Si este nivel tuvo pagos, lo agregamos al arreglo de detalles
+                            if (cantidadNivel > 0) {
+                                ingresosConsolidadosObj[groupKey].detallesNiveles.push({
+                                    nivel: nivelNombre,
+                                    fte: fteNivel,
+                                    cantidad: cantidadNivel
+                                });
+                            }
+                        });
+                    }
+
+                    // Procesar Egresos de la sede
+                    if (sedeData.egresos) {
+                        sedeData.egresos.forEach(egr => {
+                            egresosFlats.push({ ...egr, sede: sedeNombre, tipo: 'EGRESO' });
+                        });
+                    }
+                    
+                    // Procesar ingresos manuales (Si existen)
+                    if (sedeData.ingresosManuales) {
+                        sedeData.ingresosManuales.forEach(ing => {
+                            ingresosManualesFlats.push({ ...ing, sede: sedeNombre, tipo: 'INGRESO' });
+                        });
+                    }
+                });
+
+                // 🚀 INYECTAR EL TEXTO MULTILÍNEA
+                const ingresosConsolidadosArray = Object.values(ingresosConsolidadosObj).map(item => {
+                    // Línea principal (Ej: INGRESOS ACUMULADOS | 7.5 FTE (15 PAGOS))
+                    let conceptoStr = `INGRESOS ACUMULADOS | ${item.fteTotal} FTE (${item.cantidad} PAGO${item.cantidad !== 1 ? 'S' : ''})`;
+                    
+                    // Agregar una línea por cada nivel (Ej: ↳ BÁSICO: 2 FTE (4 PAGOS))
+                    item.detallesNiveles.forEach(det => {
+                        conceptoStr += `\n  ↳ ${det.nivel}: ${det.fte} FTE (${det.cantidad} PAGO${det.cantidad !== 1 ? 'S' : ''})`;
                     });
 
-                    movimientosSede.egresos.forEach(egr => {
-                        egresosFlats.push({ ...egr, sede: sedeNombre, tipo: 'EGRESO' });
-                    });
+                    return {
+                        ...item,
+                        concepto: conceptoStr,
+                        detallesRender: item.detallesNiveles // Lo dejamos por si a futuro quieres mapearlo con React
+                    };
                 });
 
                 setDatosPorMes(prev => ({
                     ...prev,
                     [mesNum]: {
-                        ingresosConsolidados: Object.values(ingresosConsolidadosObj),
+                        ingresosConsolidados: ingresosConsolidadosArray,
                         ingresosManuales: ingresosManualesFlats,
                         egresos: egresosFlats
                     }
@@ -116,7 +173,7 @@ const AdminCashFlow = () => {
         }
     };
 
-    // 3. Cargar todo el año}
+    // 3. Cargar todo el año
     const cargarTodoElAnio = async () => {
         setDatosPorMes({});
         const promesas = MESES.map((_, index) => fetchMes(index + 1, filtroAnio, false));
@@ -125,6 +182,7 @@ const AdminCashFlow = () => {
         const mesActual = new Date().getMonth() + 1;
         setMesesAbiertos([mesActual]);
     };
+
     useEffect(() => {
         cargarTodoElAnio();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -232,40 +290,99 @@ const AdminCashFlow = () => {
         }
     }
 
-    // 5. Excel (Exportará tal cual se ve en la tabla: Consolidado Sede + Manuales)
-    const exportToExcel = () => {
-        let dataToExport = [];
-        Object.keys(datosPorMes).forEach(mes => {
-            const dataMes = datosPorMes[mes];
-            const todos = [...(dataMes.ingresosConsolidados || []), ...(dataMes.ingresosManuales || []), ...(dataMes.egresos || [])];
+    // 5. Excel 
+const exportToExcel = () => {
+    let dataToExport = [];
 
-            todos.forEach(m => {
+    // Iteramos por cada mes que tengamos cargado en el estado
+    Object.entries(datosPorMes).forEach(([mesNum, dataMes]) => {
+        const nombreMes = MESES[parseInt(mesNum) - 1];
+
+        // 1. Procesar Ingresos Automáticos (Estructura: Sede -> Niveles)
+        // Como 'data.data' del endpoint viene estructurado como:
+        // { Sede: { niveles: { Nivel: { ingresos: [...] } } } }
+        // Vamos a reconstruir el detalle desde el objeto original de la respuesta
+        // (Nota: Si tu `datosPorMes` ya está procesado, ajustaremos para leer eso)
+        
+        // Si usas el estado 'datosPorMes', accedemos a la estructura que ya procesaste:
+        if (dataMes.ingresosConsolidados) {
+            dataMes.ingresosConsolidados.forEach(item => {
+                // Fila principal de la Sede
                 dataToExport.push({
                     "AÑO": filtroAnio,
-                    "MES": MESES[parseInt(mes) - 1],
-                    "FECHA": m.fecha ? new Date(m.fecha).toLocaleDateString() : "VARIAS FECHAS",
-                    "SEDE": m.sede,
-                    "TIPO": m.tipo || (m.cantidad ? 'INGRESO AUTOMÁTICO' : 'INGRESO/EGRESO'),
-                    "CONCEPTO": m.concepto,
-                    "MONTO (S/)": (m.tipo === 'INGRESO' || m.cantidad) ? parseFloat(m.monto) : -parseFloat(m.monto)
+                    "MES": nombreMes,
+                    "SEDE": item.sede,
+                    "NIVEL": "TOTAL SEDE",
+                    "CONCEPTO": "TOTAL ACUMULADO",
+                    "CANTIDAD PAGOS": item.cantidad,
+                    "TOTAL FTE": item.fteTotal,
+                    "MONTO (S/)": parseFloat(item.monto)
+                });
+
+                // Filas detalladas por nivel (dentro de la misma sede)
+                if (item.detallesRender) {
+                    item.detallesRender.forEach(det => {
+                        dataToExport.push({
+                            "AÑO": filtroAnio,
+                            "MES": nombreMes,
+                            "SEDE": item.sede,
+                            "NIVEL": det.nivel,
+                            "CONCEPTO": `DESGLOSE: ${det.nivel}`,
+                            "CANTIDAD PAGOS": det.cantidad,
+                            "TOTAL FTE": det.fte,
+                            "MONTO (S/)": "" // El monto total ya está arriba
+                        });
+                    });
+                }
+            });
+        }
+
+        // 2. Ingresos Manuales y Egresos (Mantenemos tu lógica existente)
+        if (dataMes.ingresosManuales) {
+            dataMes.ingresosManuales.forEach(ing => {
+                dataToExport.push({
+                    "AÑO": filtroAnio,
+                    "MES": nombreMes,
+                    "SEDE": ing.sede,
+                    "NIVEL": "N/A",
+                    "CONCEPTO": ing.concepto,
+                    "CANTIDAD PAGOS": 1,
+                    "TOTAL FTE": 0,
+                    "MONTO (S/)": parseFloat(ing.monto)
                 });
             });
-        });
+        }
 
-        if (dataToExport.length === 0) return toast.error("No hay datos para exportar.");
-        const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, `Flujo ${filtroAnio}`);
-        XLSX.writeFile(workbook, `Flujo_Caja_Gema_${filtroAnio}.xlsx`);
-        toast.success("Reporte Excel descargado");
-    };
+        if (dataMes.egresos) {
+            dataMes.egresos.forEach(egr => {
+                dataToExport.push({
+                    "AÑO": filtroAnio,
+                    "MES": nombreMes,
+                    "SEDE": egr.sede,
+                    "NIVEL": "N/A",
+                    "CONCEPTO": egr.concepto,
+                    "CANTIDAD PAGOS": 1,
+                    "TOTAL FTE": 0,
+                    "MONTO (S/)": -Math.abs(parseFloat(egr.monto))
+                });
+            });
+        }
+    });
 
-    // Objeto con todas las props que necesitan las tablas (para no escribirlas 10 veces)
-    const tableProps = {
+    if (dataToExport.length === 0) return toast.error("No hay datos para exportar.");
+    
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, `Resumen ${filtroAnio}`);
+    XLSX.writeFile(workbook, `Resumen_Financiero_${filtroAnio}.xlsx`);
+};
+
+    // Objeto memoizado
+    const tableProps = useMemo(() => ({
         sedes, inlineEditId, inlineData, setInlineData, submitting, saveInlineEdit,
         setInlineEditId, startInlineEdit, addingMonth, addingType, newData,
         setNewData, startAddNew, saveNewMovimiento, setAddingMonth, setAddingType, movimientoDelete
-    };
+    }), [sedes, inlineEditId, inlineData, submitting, addingMonth, addingType, newData]);
 
     return (
         <div className="space-y-6 animate-fade-in-up p-2 max-w-[1400px] mx-auto">

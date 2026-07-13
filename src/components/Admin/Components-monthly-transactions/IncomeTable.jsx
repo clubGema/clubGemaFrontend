@@ -28,17 +28,45 @@ export const IncomeTable = ({
 
                             {/* --- INGRESOS CONSOLIDADOS (SISTEMA AUTOMÁTICO - SOLO LECTURA) --- */}
                             {ingresosConsolidados.map(m => (
-                                <tr key={m.id} className="hover:bg-slate-50 bg-slate-50/50 transition-colors">
-                                    <td className="p-3 text-slate-500 font-bold uppercase text-[9px] italic">Consolidado</td>
-                                    <td className="p-3 text-[#f97316] font-bold text-[9px] uppercase">
-                                        <div className="flex items-center gap-1"><MapPin size={10} /> {m.sede}</div>
+                                <tr key={m.id} className="hover:bg-slate-50 bg-slate-50/30 transition-colors">
+                                    <td className="p-3 text-slate-500 font-bold uppercase text-[9px] italic align-top pt-4">Consolidado</td>
+                                    <td className="p-3 text-[#f97316] font-bold text-[9px] uppercase align-top pt-4">
+                                        <div className="flex items-center gap-1 mt-0.5"><MapPin size={10} className="shrink-0" /> <span className="leading-tight">{m.sede}</span></div>
                                     </td>
-                                    <td className="p-3 text-[#0f172a] font-black uppercase">
-                                        {m.concepto} <span className="text-slate-400 text-[9px]">({m.cantidad} pagos)</span>
+                                    
+                                    {/* 🚀 CELDA DE CONCEPTO "BONITA" */}
+                                    <td className="p-3 align-top pt-3.5">
+                                        {m.detallesRender && m.detallesRender.length > 0 ? (
+                                            <div className="flex flex-col gap-1.5">
+                                                {/* Título Principal */}
+                                                <div className="text-[#0f172a] font-black uppercase text-[11px]">
+                                                    Ingresos Acumulados | <span className="text-blue-600">{m.fteTotal} FTE</span> 
+                                                    <span className="text-slate-400 font-bold text-[9px] ml-1">({m.cantidad} PAGO{m.cantidad !== 1 ? 'S' : ''})</span>
+                                                </div>
+                                                
+                                                {/* Desglose de Niveles con diseño de lista indentada */}
+                                                <div className="flex flex-col pl-2.5 border-l-2 border-orange-200 ml-1 gap-1 mt-0.5">
+                                                    {m.detallesRender.map((det, index) => (
+                                                        <div key={index} className="flex items-center gap-1.5 text-[9px] uppercase">
+                                                            <span className="text-slate-400 font-bold">↳</span>
+                                                            <span className="font-bold text-slate-600">{det.nivel}:</span>
+                                                            <span className="font-black text-[#0f172a]">{det.fte} FTE</span>
+                                                            <span className="text-slate-400 font-semibold opacity-80">({det.cantidad} pagos)</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            // Fallback por si acaso
+                                            <span className="text-[#0f172a] font-black uppercase">
+                                                {m.concepto}
+                                            </span>
+                                        )}
                                     </td>
-                                    <td className="p-3 text-right font-black text-green-600">+ S/ {m.monto.toFixed(2)}</td>
-                                    <td className="p-3 text-center">
-                                        <div className="flex justify-center text-slate-300" title="Acumulado automáticamente (No editable)">
+
+                                    <td className="p-3 text-right font-black text-green-600 align-top pt-4">+ S/ {m.monto.toFixed(2)}</td>
+                                    <td className="p-3 text-center align-top pt-4">
+                                        <div className="flex justify-center text-slate-300 mt-1" title="Acumulado automáticamente (No editable)">
                                             <Lock size={14} />
                                         </div>
                                     </td>
@@ -65,28 +93,30 @@ export const IncomeTable = ({
                                     </td>
                                     <td className="p-2 text-center">
                                         <div className="flex justify-center gap-1.5">
-                                            <button disabled={submitting} onClick={() => saveInlineEdit(m.id, mesNum)} className="text-white bg-[#0f172a] hover:bg-[#1e3a8a] p-1.5 rounded-lg disabled:opacity-50">{submitting ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}</button>
-                                            <button disabled={submitting} onClick={() => setInlineEditId(null)} className="text-slate-500 bg-slate-200 hover:bg-slate-300 p-1.5 rounded-lg"><X size={14} /></button>
+                                            <button disabled={submitting} onClick={() => saveInlineEdit(m.id, mesNum)} className="text-white bg-[#0f172a] hover:bg-[#1e3a8a] p-1.5 rounded-lg disabled:opacity-50 transition-colors shadow-sm">{submitting ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}</button>
+                                            <button disabled={submitting} onClick={() => setInlineEditId(null)} className="text-slate-500 bg-slate-200 hover:bg-slate-300 p-1.5 rounded-lg transition-colors shadow-sm"><X size={14} /></button>
                                         </div>
                                     </td>
                                 </tr>
                             ) : (
                                 <tr key={m.id} className="hover:bg-slate-50 transition-colors group">
-                                    <td className="p-3 text-slate-500 font-bold">{new Date(m.fecha).toLocaleDateString()}</td>
-                                    <td className="p-3 text-[#f97316] font-bold text-[9px] uppercase">
-                                        <div className="flex items-center gap-1"><MapPin size={10} /> {m.sede}</div>
+                                    <td className="p-3 text-slate-500 font-bold align-top">{new Date(m.fecha).toLocaleDateString()}</td>
+                                    <td className="p-3 text-[#f97316] font-bold text-[9px] uppercase align-top">
+                                        <div className="flex items-center gap-1 mt-0.5"><MapPin size={10} /> {m.sede}</div>
                                     </td>
-                                    <td className="p-3 text-[#0f172a] font-black uppercase">
-                                        {m.concepto} <span className="text-[9px] bg-slate-100 text-slate-400 px-1 rounded ml-1">{m.registrado_por}</span>
+                                    <td className="p-3 text-[#0f172a] font-black uppercase align-top">
+                                        {m.concepto} <span className="text-[9px] bg-slate-100 text-slate-400 px-1.5 py-0.5 rounded ml-1 font-bold">{m.registrado_por}</span>
                                     </td>
-                                    <td className="p-3 text-right font-black text-green-600">+ S/ {parseFloat(m.monto).toFixed(2)}</td>
-                                    <td className="p-3 text-center">
-                                        <button onClick={() => startInlineEdit(m)} className="text-green-600 font-black uppercase text-[9px] hover:bg-green-50 px-2 py-1 rounded-lg transition-colors flex items-center justify-center gap-1 mx-auto border border-transparent hover:border-green-200">
-                                            <Edit2 size={12} /> Editar
-                                        </button>
-                                        <button onClick={() => movimientoDelete(m)} className="text-red-600 font-black uppercase text-[9px] hover:bg-green-50 px-2 py-1 rounded-lg transition-colors flex items-center justify-center gap-1 mx-auto border border-transparent hover:border-green-200">
-                                            <Trash2 size={12} /> Eliminar
-                                        </button>
+                                    <td className="p-3 text-right font-black text-green-600 align-top">+ S/ {parseFloat(m.monto).toFixed(2)}</td>
+                                    <td className="p-3 text-center align-top">
+                                        <div className="flex flex-col gap-1.5">
+                                            <button onClick={() => startInlineEdit(m)} className="text-green-600 font-black uppercase text-[9px] hover:bg-green-50 px-2 py-1.5 rounded-lg transition-colors flex items-center justify-center gap-1 mx-auto border border-transparent hover:border-green-200 w-full">
+                                                <Edit2 size={12} /> Editar
+                                            </button>
+                                            <button onClick={() => movimientoDelete(m)} className="text-red-600 font-black uppercase text-[9px] hover:bg-red-50 px-2 py-1.5 rounded-lg transition-colors flex items-center justify-center gap-1 mx-auto border border-transparent hover:border-red-200 w-full">
+                                                <Trash2 size={12} /> Eliminar
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -111,15 +141,15 @@ export const IncomeTable = ({
                                     </td>
                                     <td className="p-2 text-center">
                                         <div className="flex justify-center gap-1.5">
-                                            <button disabled={submitting} onClick={() => saveNewMovimiento(mesNum)} className="text-white bg-green-600 hover:bg-green-700 p-1.5 rounded-lg shadow-sm disabled:opacity-50">{submitting ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}</button>
-                                            <button disabled={submitting} onClick={() => { setAddingMonth(null); setAddingType(null); }} className="text-slate-500 bg-slate-200 hover:bg-slate-300 p-1.5 rounded-lg shadow-sm"><X size={14} /></button>
+                                            <button disabled={submitting} onClick={() => saveNewMovimiento(mesNum)} className="text-white bg-green-600 hover:bg-green-700 p-1.5 rounded-lg shadow-sm disabled:opacity-50 transition-colors">{submitting ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}</button>
+                                            <button disabled={submitting} onClick={() => { setAddingMonth(null); setAddingType(null); }} className="text-slate-500 bg-slate-200 hover:bg-slate-300 p-1.5 rounded-lg shadow-sm transition-colors"><X size={14} /></button>
                                         </div>
                                     </td>
                                 </tr>
                             )}
 
                             {(ingresosConsolidados.length === 0 && ingresosManuales.length === 0 && addingType !== 'INGRESO') && (
-                                <tr><td colSpan="5" className="p-6 text-center text-slate-400 font-bold italic text-[10px] uppercase">No hay ingresos registrados</td></tr>
+                                <tr><td colSpan="5" className="p-8 text-center text-slate-400 font-bold italic text-[10px] uppercase">No hay ingresos registrados</td></tr>
                             )}
                         </tbody>
                     </table>
@@ -127,7 +157,7 @@ export const IncomeTable = ({
 
                 <div className="mt-auto p-3 bg-slate-50 border-t border-slate-200">
                     {!(addingMonth === mesNum && addingType === 'INGRESO') && (
-                        <button onClick={() => startAddNew(mesNum, 'INGRESO')} className="w-full p-2 text-[10px] font-black uppercase tracking-widest text-[#0f172a] bg-white border border-slate-300 hover:border-green-600 hover:text-green-600 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm">
+                        <button onClick={() => startAddNew(mesNum, 'INGRESO')} className="w-full p-2.5 text-[10px] font-black uppercase tracking-widest text-[#0f172a] bg-white border border-slate-300 hover:border-green-600 hover:text-green-600 hover:bg-green-50 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm">
                             <TrendingUp size={14} /> Ingresar Dinero Manual
                         </button>
                     )}

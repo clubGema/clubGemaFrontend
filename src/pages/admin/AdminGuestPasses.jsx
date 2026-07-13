@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Ticket, UserPlus, CheckCircle, Loader2, AlertTriangle, ShieldCheck, Send, User, Phone, Clock, CreditCard, DollarSign, MapPin, Layers, Search, Calendar, ShoppingBag, X, Plus } from 'lucide-react';
+import { Ticket, UserPlus, CheckCircle, Loader2, AlertTriangle, ShieldCheck, Send, User, Phone, Clock, CreditCard, DollarSign, MapPin, Layers, Search, Calendar, ShoppingBag, X, Plus, FileSpreadsheet } from 'lucide-react';
 import { apiFetch } from '../../interceptors/api';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import { sedeService } from '../../services/sede.service';
 import { API_ROUTES } from '../../constants/apiRoutes';
+import * as XLSX from 'xlsx'; // 🚀 IMPORTAMOS LA LIBRERÍA DE EXCEL
 
 const diasSemana = [
   { id: 1, nombre: "lunes" },
@@ -40,6 +41,9 @@ const AdminGuestPasses = () => {
   const [metodosPago, setMetodosPago] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  
+  // 🚀 NUEVO ESTADO PARA EL BOTÓN DE EXCEL
+  const [isExporting, setIsExporting] = useState(false);
 
   const [formData, setFormData] = useState({
     alumno_id: '',
@@ -195,6 +199,31 @@ const AdminGuestPasses = () => {
     }
   };
 
+  // 🚀 LÓGICA PARA EXPORTAR EL EXCEL
+  const handleExportExcel = async () => {
+    try {
+      setIsExporting(true);
+      // Usamos el endpoint que creaste en apiRoutes
+      const response = await apiFetch.get(API_ROUTES.INSCRIPCIONES.REPORTE_INDIVIDUALES);
+      const result = await response.json();
+
+      if (result.success && result.data && result.data.length > 0) {
+        const worksheet = XLSX.utils.json_to_sheet(result.data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Clases_Individuales");
+        XLSX.writeFile(workbook, `Reporte_Clases_Individuales_${new Date().toISOString().split('T')[0]}.xlsx`);
+        toast.success("Excel descargado correctamente");
+      } else {
+        toast.error("No hay datos para exportar");
+      }
+    } catch (error) {
+      console.error("Error al exportar:", error);
+      toast.error("Error de conexión al generar el reporte");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   const alumnosFiltrados = alumnos.filter((usuario) => {
     const nombreCompleto = `${usuario.nombres} ${usuario.apellidos}`.toLowerCase();
     return nombreCompleto.includes(textoBusqueda.toLowerCase());
@@ -209,19 +238,31 @@ const AdminGuestPasses = () => {
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-8 animate-fade-in pb-24">
 
-      {/* HEADER */}
-      <div className="mb-10 flex items-center gap-4">
-        <div className="w-16 h-16 bg-gradient-to-br from-[#1e3a8a] to-[#0f172a] rounded-2xl flex items-center justify-center text-white shadow-xl transform -rotate-3">
-          <Ticket size={32} />
+      {/* HEADER 🚀 ACTUALIZADO CON FLEX-BETWEEN PARA NO DAÑAR EL DISEÑO */}
+      <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 bg-gradient-to-br from-[#1e3a8a] to-[#0f172a] rounded-2xl flex items-center justify-center text-white shadow-xl transform -rotate-3 shrink-0">
+            <Ticket size={32} />
+          </div>
+          <div>
+            <h1 className="text-4xl font-black text-[#1e3a8a] uppercase tracking-tighter italic leading-none">
+              Inscripción <span className="text-orange-500">Individual</span>
+            </h1>
+            <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mt-1">
+              Registro de Clases Únicas al Alumno
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-4xl font-black text-[#1e3a8a] uppercase tracking-tighter italic leading-none">
-            Inscripción <span className="text-orange-500">Individual</span>
-          </h1>
-          <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mt-1">
-            Registro de Clases Únicas al Alumno
-          </p>
-        </div>
+
+        {/* 🚀 BOTÓN DE EXCEL A LA DERECHA */}
+        <button 
+          onClick={handleExportExcel}
+          disabled={isExporting}
+          className="bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-300 text-white px-5 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/30 transition-all flex items-center gap-2"
+        >
+          {isExporting ? <Loader2 size={16} className="animate-spin" /> : <FileSpreadsheet size={16} />}
+          {isExporting ? 'Generando...' : 'Descargar Reporte'}
+        </button>
       </div>
 
       <form onSubmit={handleInscripcionIndividual} className="space-y-6">

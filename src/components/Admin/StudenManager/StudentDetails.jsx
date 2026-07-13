@@ -1,14 +1,109 @@
-import React, { useState } from 'react';
-import { ArrowLeft, Fingerprint, Phone, Mail, Calendar, User, MapPin, Stethoscope, ShieldAlert, Users, KeyRound } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { 
+    ArrowLeft, Fingerprint, Phone, Mail, Calendar, User, 
+    MapPin, Stethoscope, ShieldAlert, Users, KeyRound, 
+    CalendarClock, Loader2 
+} from 'lucide-react';
+import { format, parseISO } from 'date-fns';
+import { es } from 'date-fns/locale';
+import toast from 'react-hot-toast';
+
 import ChangePasswordModal from '../../../components/shared/ChangePasswordModal'; // Ajusta la ruta si es necesario
+import apiFetch from '../../../interceptors/api';
+import { API_ROUTES } from '../../../constants/apiRoutes';
 
 const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+    const [ciclos, setCiclos] = useState([]);
+    const [loadingCiclos, setLoadingCiclos] = useState(true);
+
+    useEffect(() => {
+        if (!selectedAlumno) return;
+
+        const fetchCiclos = async () => {
+            try {
+                setLoadingCiclos(true);
+                const res = await apiFetch.get(API_ROUTES.INSCRIPCIONES.HISTORIAL_CICLOS(selectedAlumno.id));
+                const result = await res.json();
+                
+                if (res.ok) {
+                    setCiclos(result.data || []);
+                } else {
+                    toast.error("No se pudo obtener el historial de ciclos");
+                }
+            } catch (error) {
+                toast.error("Error al conectar con el servidor para obtener ciclos");
+            } finally {
+                setLoadingCiclos(false);
+            }
+        };
+
+        fetchCiclos();
+    }, [selectedAlumno]);
+
+    // Helpers para la UI
+    const formatearFecha = (fechaString) => {
+        if (!fechaString) return "S/F";
+        return format(parseISO(fechaString.slice(0, 10)), "dd 'de' MMM, yyyy", { locale: es });
+    };
+
+    // 🚀 NUEVO: Extrae "Abril - Mayo 2026" evaluando inicio y corte
+    const obtenerMesCiclo = (fechaInicio, fechaCorte) => {
+        if (!fechaInicio) return "MES DESCONOCIDO";
+        
+        const inicioDate = parseISO(fechaInicio.slice(0, 10));
+        const mesInicio = format(inicioDate, "MMMM", { locale: es });
+        const anioInicio = format(inicioDate, "yyyy");
+
+        // Si no hay fecha de corte, solo mostramos el inicio
+        if (!fechaCorte) return `${mesInicio} ${anioInicio}`;
+
+        const corteDate = parseISO(fechaCorte.slice(0, 10));
+        const mesCorte = format(corteDate, "MMMM", { locale: es });
+        const anioCorte = format(corteDate, "yyyy");
+
+        // Si es el mismo mes y año (Ej: 01 Mayo al 30 Mayo)
+        if (mesInicio === mesCorte && anioInicio === anioCorte) {
+            return `${mesInicio} ${anioInicio}`;
+        } 
+        // Si son meses diferentes pero el mismo año (Ej: 26 Abril al 10 Mayo)
+        else if (anioInicio === anioCorte) {
+            return `${mesInicio} - ${mesCorte} ${anioInicio}`;
+        } 
+        // Si cruza de un año a otro (Ej: Diciembre 2025 - Enero 2026)
+        else {
+            return `${mesInicio.slice(0,3)} ${anioInicio} - ${mesCorte.slice(0,3)} ${anioCorte}`;
+        }
+    };
+
+    // BADGE PARA EL PAGO (Mensualidad)
+    const getEstadoPagoBadge = (estado) => {
+        switch (estado?.toUpperCase()) {
+            case 'PAGADA':
+            case 'PAGADO': return 'bg-green-100 text-green-700 border-green-200';
+            case 'PENDIENTE': return 'bg-orange-100 text-orange-700 border-orange-200'; 
+            case 'VENCIDO': return 'bg-red-100 text-red-700 border-red-200'; 
+            default: return 'bg-slate-100 text-slate-500 border-slate-200';
+        }
+    };
+
+    // BADGE PARA LA INSCRIPCIÓN (Estado general)
+    const getEstadoInscripcionBadge = (estado) => {
+        switch (estado?.toUpperCase()) {
+            case 'ACTIVO': return 'text-emerald-600 bg-emerald-50 border-emerald-100';
+            case 'INACTIVO': return 'text-slate-500 bg-slate-50 border-slate-200';
+            case 'FINALIZADO': return 'text-slate-500 bg-slate-100 border-slate-200';
+            case 'PENDIENTE_PAGO': return 'text-amber-600 bg-amber-50 border-amber-100';
+            case 'CONGELADO': return 'text-blue-600 bg-blue-50 border-blue-100';
+            default: return 'text-slate-400 bg-slate-50 border-slate-100';
+        }
+    };
 
     if (!selectedAlumno) return null;
 
     return (
         <div className="space-y-6 animate-fade-in-up p-1">
+            {/* Header del Expediente */}
             <div className="flex items-center gap-4">
                 <button onClick={onBack} className="w-12 h-12 bg-white border border-slate-200 rounded-2xl flex items-center justify-center hover:bg-slate-50 transition-all shadow-sm">
                     <ArrowLeft size={24} className="text-slate-600" />
@@ -20,6 +115,8 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                {/* COLUMNA IZQUIERDA (Datos Personales y Médicos) */}
                 <div className="lg:col-span-2 space-y-6">
                     {/* Perfil Principal */}
                     <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col md:flex-row gap-8 items-center md:items-start relative overflow-hidden">
@@ -115,33 +212,100 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
                     </div>
                 </div>
 
-                {/* Contacto de Emergencia */}
-                <div className="bg-red-50 rounded-[2.5rem] border border-red-100 p-8 relative overflow-hidden h-fit">
-                    <div className="absolute -right-4 -bottom-4 text-red-100 opacity-50">
-                        <ShieldAlert size={120} />
-                    </div>
-                    <div className="relative z-10 space-y-6">
-                        <div className="flex items-center gap-3 text-red-600">
-                            <Users size={24} />
-                            <span className="text-xs font-black uppercase tracking-widest italic">Contacto Emergencia</span>
+                {/* COLUMNA DERECHA (Emergencia y Ciclos) */}
+                <div className="lg:col-span-1 space-y-6">
+                    
+                    {/* Contacto de Emergencia */}
+                    <div className="bg-red-50 rounded-[2.5rem] border border-red-100 p-8 relative overflow-hidden shrink-0">
+                        <div className="absolute -right-4 -bottom-4 text-red-100 opacity-50">
+                            <ShieldAlert size={120} />
                         </div>
-                        <div className="space-y-4">
-                            <div>
-                                <p className="text-[9px] font-black text-red-400 uppercase mb-1">Responsable</p>
-                                <p className="text-lg font-black text-red-900 leading-tight uppercase italic">{selectedAlumno.contactoEmergencia.nombre}</p>
-                                <p className="text-[10px] font-bold text-red-600 uppercase italic mt-1">{selectedAlumno.contactoEmergencia.relacion}</p>
+                        <div className="relative z-10 space-y-6">
+                            <div className="flex items-center gap-3 text-red-600">
+                                <Users size={24} />
+                                <span className="text-xs font-black uppercase tracking-widest italic">Contacto Emergencia</span>
                             </div>
-                            <div className="pt-4 border-t border-red-100 flex items-center justify-between">
+                            <div className="space-y-4">
                                 <div>
-                                    <p className="text-[9px] font-black text-red-400 uppercase mb-1">Teléfono Directo</p>
-                                    <p className="text-xl font-black text-red-900 tracking-tighter">{selectedAlumno.contactoEmergencia.telefono}</p>
+                                    <p className="text-[9px] font-black text-red-400 uppercase mb-1">Responsable</p>
+                                    <p className="text-lg font-black text-red-900 leading-tight uppercase italic">{selectedAlumno.contactoEmergencia.nombre}</p>
+                                    <p className="text-[10px] font-bold text-red-600 uppercase italic mt-1">{selectedAlumno.contactoEmergencia.relacion}</p>
                                 </div>
-                                <a href={`tel:${selectedAlumno.contactoEmergencia.telefono}`} className="bg-red-600 text-white p-3 rounded-2xl shadow-lg shadow-red-200 hover:bg-red-700 transition-all active:scale-95">
-                                    <Phone size={20} />
-                                </a>
+                                <div className="pt-4 border-t border-red-100 flex items-center justify-between">
+                                    <div>
+                                        <p className="text-[9px] font-black text-red-400 uppercase mb-1">Teléfono Directo</p>
+                                        <p className="text-xl font-black text-red-900 tracking-tighter">{selectedAlumno.contactoEmergencia.telefono}</p>
+                                    </div>
+                                    <a href={`tel:${selectedAlumno.contactoEmergencia.telefono}`} className="bg-red-600 text-white p-3 rounded-2xl shadow-lg shadow-red-200 hover:bg-red-700 transition-all active:scale-95">
+                                        <Phone size={20} />
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    {/* Historial de Ciclos (Meses) */}
+                    <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+                        <div className="px-6 py-5 bg-orange-50/50 border-b border-orange-100 flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
+                                <CalendarClock size={16} />
+                            </div>
+                            <h3 className="text-xs font-black text-slate-800 uppercase italic tracking-widest leading-tight">
+                                Historial de Ciclos
+                            </h3>
+                        </div>
+                        
+                        <div className="p-5 overflow-y-auto custom-scrollbar max-h-[500px] space-y-3 bg-slate-50/30">
+                            {loadingCiclos ? (
+                                <div className="flex flex-col justify-center items-center py-10 gap-2">
+                                    <Loader2 className="animate-spin text-orange-500" size={24} />
+                                    <span className="text-[9px] text-slate-400 uppercase font-bold tracking-widest">Cargando ciclos...</span>
+                                </div>
+                            ) : ciclos.length > 0 ? (
+                                ciclos.map((ciclo, idx) => (
+                                    <div key={idx} className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-3 shadow-sm relative transition-all hover:border-orange-200 hover:shadow-md">
+                                        <div className="flex justify-between items-start gap-2">
+                                            <div>
+                                                <span className="text-[10px] font-black text-[#1e3a8a] uppercase tracking-widest bg-blue-50 px-2 py-1 rounded-md">
+                                                    {obtenerMesCiclo(ciclo.fecha_inicio_ciclo, ciclo.fecha_corte_ciclo)}
+                                                </span>
+                                                <div className="text-[9px] font-bold text-slate-500 flex items-center gap-1.5 mt-2">
+                                                    <MapPin size={10} className="text-orange-500 shrink-0" /> 
+                                                    <span className="truncate">{ciclo.sede}</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-col items-end gap-1.5 shrink-0">
+                                                <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-md border ${getEstadoPagoBadge(ciclo.estado_pago_mes)}`}>
+                                                    PAGO: {ciclo.estado_pago_mes}
+                                                </span>
+                                                <span className={`text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded border ${getEstadoInscripcionBadge(ciclo.estado_inscripcion)}`}>
+                                                    INSC: {ciclo.estado_inscripcion}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+                                            <div className="flex flex-col">
+                                                <span className="text-[8px] text-slate-400 uppercase font-black tracking-widest">Inicio</span>
+                                                <span className="text-[10px] font-black text-slate-700">{formatearFecha(ciclo.fecha_inicio_ciclo)}</span>
+                                            </div>
+                                            <div className="flex flex-col items-end">
+                                                <span className="text-[8px] text-slate-400 uppercase font-black tracking-widest">Corte</span>
+                                                <span className="text-[10px] font-black text-slate-700">{ciclo.fecha_corte_ciclo ? formatearFecha(ciclo.fecha_corte_ciclo) : 'N/A'}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="text-center py-10 flex flex-col items-center justify-center opacity-60">
+                                    <CalendarClock size={32} className="text-slate-300 mb-2" />
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sin registros de ciclos</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
                 </div>
             </div>
 

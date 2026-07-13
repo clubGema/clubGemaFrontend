@@ -126,7 +126,7 @@ const Dashboard = ({ role = 'student' }) => {
                         alumnosGenero: genderData,
                         alumnosEdades: resultStats.data?.alumnosEdades || [],
                         vigentesPorSedeNivel: dataGraficos.vigentesPorSedeNivel || [],
-                        ingresosVsDeserciones: dataGraficos.ingresosVsDeserciones || []
+                        activosPorMes: dataGraficos.activosPorMes || []
                     }));
                 } catch (error) {
                     console.error("Error analíticas:", error);

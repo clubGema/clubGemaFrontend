@@ -35,6 +35,8 @@ export const API_ROUTES = {
     INDIVIDUAL: "/inscripciones/individual",
     SEPARAR_FINALIZAR: (id) => `/inscripciones/${id}/separar-finalizar`,
     ACTUALIZAR_FECHA_PAQUETE: (cuentaId) => `/inscripciones/paquete/fecha/${cuentaId}`,
+    HISTORIAL_CICLOS: (alumnoId) => `/inscripciones/alumno/${alumnoId}/historial-ciclos`,
+    REPORTE_INDIVIDUALES: "/inscripciones/reportes/individuales",
   },
   PAGOS: {
     BASE: "/pagos",
