@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { CalendarDays } from 'lucide-react';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -8,9 +8,11 @@ import {
 const CHART_COLORS = ['#1e3a8a', '#f97316', '#3b82f6', '#94a3b8', '#cbd5e1', '#facc15'];
 
 const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYears }) => {
+    // 1. ESTADOS DEL COMPONENTE
     const [sedeSeleccionada, setSedeSeleccionada] = useState([]);
+    const [nivelesSeleccionados, setNivelesSeleccionados] = useState([]); // <- AGREGADO
 
-    // Función para obtener los niveles dinámicamente de la data del backend (Gráfico de Sedes x Nivel)
+    // 2. OBTENER NIVELES ÚNICOS
     const nivelesUnicos = useMemo(() => {
         if (!chartData?.vigentesPorSedeNivel) return [];
         const niveles = new Set();
@@ -21,6 +23,26 @@ const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYe
         });
         return Array.from(niveles);
     }, [chartData?.vigentesPorSedeNivel]);
+
+    // 3. SELECCIONAR TODOS LOS NIVELES POR DEFECTO AL CARGAR LA DATA
+    useEffect(() => {
+        if (nivelesUnicos.length > 0) {
+            setNivelesSeleccionados(nivelesUnicos);
+        }
+    }, [nivelesUnicos]);
+
+    // 4. FUNCIONES DE TOGGLE (AHORA DENTRO DEL COMPONENTE)
+    const toggleSede = (sede) => {
+        setSedeSeleccionada(prev =>
+            prev.includes(sede) ? prev.filter(s => s !== sede) : [...prev, sede]
+        );
+    };
+
+    const toggleNivel = (nivel) => {
+        setNivelesSeleccionados(prev =>
+            prev.includes(nivel) ? prev.filter(n => n !== nivel) : [...prev, nivel]
+        );
+    };
 
     return (
         <div className="mb-16 pt-8 border-t border-slate-200/60">
@@ -35,9 +57,9 @@ const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYe
 
             {/* GRID PRINCIPAL DE 3 COLUMNAS */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-                
+
                 {/* ================= FILA 1 ================= */}
-                
+
                 {/* 1. FLUJO DE CAJA (2 COLUMNAS) */}
                 <div className="lg:col-span-2 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col relative z-20">
                     <div className="mb-6 flex justify-between items-start">
@@ -59,7 +81,7 @@ const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYe
                         </div>
                     </div>
                     <div style={{ width: '100%', height: 280 }}>
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={1}>
                             <AreaChart data={chartData.ingresos} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                 <defs>
                                     <linearGradient id="colorIng" x1="0" y1="0" x2="0" y2="1">
@@ -86,7 +108,7 @@ const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYe
                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-3.5">Distribución Estratégica</p>
                     </div>
                     <div style={{ width: '100%', height: 180, position: 'relative' }}>
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={1}>
                             <PieChart>
                                 <Pie data={chartData.sedes} cx="50%" cy="50%" innerRadius={55} outerRadius={75} paddingAngle={5} dataKey="valor" nameKey="nombre" stroke="none">
                                     {chartData.sedes.map((entry, idx) => (<Cell key={idx} fill={CHART_COLORS[idx % CHART_COLORS.length]} />))}
@@ -124,7 +146,7 @@ const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYe
                     </div>
                     <div style={{ width: '100%', height: 260 }}>
                         {chartData.activosPorMes?.length > 0 ? (
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={1}>
                                 <LineChart data={chartData.activosPorMes} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                     <XAxis
@@ -142,14 +164,14 @@ const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYe
                                     />
                                     <Legend iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 'bold', paddingTop: '10px' }} />
 
-                                    <Line 
-                                        type="monotone" 
-                                        dataKey="activos" 
-                                        name="Total de Alumnos Activos" 
-                                        stroke="#6366f1" 
-                                        strokeWidth={4} 
-                                        dot={{ r: 4, fill: '#6366f1', strokeWidth: 0 }} 
-                                        activeDot={{ r: 7, stroke: '#fff', strokeWidth: 2 }} 
+                                    <Line
+                                        type="monotone"
+                                        dataKey="activos"
+                                        name="Total de Alumnos Activos"
+                                        stroke="#6366f1"
+                                        strokeWidth={4}
+                                        dot={{ r: 4, fill: '#6366f1', strokeWidth: 0 }}
+                                        activeDot={{ r: 7, stroke: '#fff', strokeWidth: 2 }}
                                     />
                                 </LineChart>
                             </ResponsiveContainer>
@@ -170,7 +192,7 @@ const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYe
                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-3.5">Segmentación por Género</p>
                     </div>
                     <div style={{ width: '100%', height: 180, position: 'relative' }}>
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={1}>
                             <PieChart>
                                 <Pie data={chartData.alumnosGenero} cx="50%" cy="50%" innerRadius={55} outerRadius={75} paddingAngle={5} dataKey="valor" nameKey="nombre" stroke="none">
                                     {chartData.alumnosGenero.map((entry, idx) => (<Cell key={idx} fill={entry.color} />))}
@@ -200,7 +222,8 @@ const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYe
 
                 {/* 5. NIVELES POR SEDE (3 COLUMNAS - ANCHO COMPLETO) */}
                 <div className="lg:col-span-3 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col">
-                    <div className="mb-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+                    {/* CABECERA Y FILTROS */}
+                    <div className="mb-8 flex flex-col gap-6">
                         <div>
                             <h2 className="font-black text-[#1e3a8a] uppercase tracking-tight text-xl italic mb-1 flex items-center gap-2">
                                 <div className="w-1.5 h-6 bg-teal-500 rounded-full"></div> Niveles x Sede
@@ -208,60 +231,113 @@ const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYe
                             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-3.5">Distribución Académica General</p>
                         </div>
 
-                        {/* SELECT MULTIPLE DE SEDES */}
-                        <div className="relative">
-                            <select
-                                multiple
-                                className="text-[10px] font-bold text-[#1e3a8a] bg-slate-50 border border-slate-200 rounded-xl p-2 w-full md:w-64 h-20 outline-none focus:border-teal-500 transition-colors shadow-sm"
-                                onChange={(e) => {
-                                    const values = Array.from(e.target.selectedOptions, option => option.value);
-                                    setSedeSeleccionada(values.length === 0 ? [] : values);
-                                }}
-                            >
-                                {(chartData?.vigentesPorSedeNivel || []).map(item => (
-                                    <option key={item.sede} value={item.sede} className="py-1 px-2 mb-1 rounded hover:bg-teal-50 cursor-pointer">
-                                        {item.sede}
-                                    </option>
-                                ))}
-                            </select>
-                            <p className="text-[8px] text-slate-400 absolute -bottom-4 right-1 italic">Ctrl / Cmd para selección múltiple</p>
+                        {/* CONTENEDORES DE FILTROS ORGANICOS */}
+                        <div className="flex flex-col md:flex-row gap-6 bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
+
+                            {/* FILTRO DE NIVELES */}
+                            <div className="flex-1">
+                                <p className="text-[10px] font-bold text-slate-400 uppercase mb-2">Filtrar Niveles</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {nivelesUnicos.map((nivel, idx) => {
+                                        const isSelected = nivelesSeleccionados.includes(nivel);
+                                        return (
+                                            <button
+                                                key={nivel}
+                                                onClick={() => toggleNivel(nivel)}
+                                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${isSelected
+                                                    ? 'bg-[#1e3a8a] text-white shadow-md'
+                                                    : 'bg-white text-slate-400 border border-slate-200 hover:bg-slate-100'
+                                                    }`}
+                                            >
+                                                {nivel}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* FILTRO DE SEDES */}
+                            <div className="flex-[2]">
+                                <div className="flex justify-between items-center mb-2">
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase">Filtrar Sedes</p>
+                                    {sedeSeleccionada.length > 0 && (
+                                        <button onClick={() => setSedeSeleccionada([])} className="text-[9px] font-bold text-teal-600 hover:text-teal-700 underline">
+                                            Limpiar filtros
+                                        </button>
+                                    )}
+                                </div>
+                                <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200">
+                                    {(chartData?.vigentesPorSedeNivel || []).map(item => {
+                                        const isSelected = sedeSeleccionada.length === 0 || sedeSeleccionada.includes(item.sede);
+                                        return (
+                                            <label
+                                                key={item.sede}
+                                                className={`flex items-center gap-1.5 cursor-pointer px-2.5 py-1.5 rounded-lg text-xs font-bold transition-colors select-none ${isSelected
+                                                    ? 'bg-teal-50 border-teal-200 text-teal-800'
+                                                    : 'bg-white border-slate-200 text-slate-400 hover:bg-slate-50'
+                                                    } border`}
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isSelected}
+                                                    onChange={() => toggleSede(item.sede)}
+                                                    className="hidden"
+                                                />
+                                                {item.sede}
+                                            </label>
+                                        );
+                                    })}
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div style={{ width: '100%', height: 320 }}>
+                    {/* GRÁFICO */}
+                    <div style={{ width: '100%', height: 380 }}>
                         {chartData.vigentesPorSedeNivel?.length > 0 ? (
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={1}>
                                 <BarChart
                                     data={sedeSeleccionada.length > 0
                                         ? chartData.vigentesPorSedeNivel.filter(s => sedeSeleccionada.includes(s.sede))
                                         : chartData.vigentesPorSedeNivel}
-                                    margin={{ top: 10, right: 10, left: -20, bottom: 20 }}
+                                    // Redujimos el bottom porque ahora el XAxis controlará su propio espacio
+                                    margin={{ top: 10, right: 10, left: -20, bottom: 10 }}
                                 >
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                    <XAxis 
-                                        dataKey="sede" 
-                                        axisLine={false} 
-                                        tickLine={false} 
-                                        tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }} 
-                                        dy={15} 
-                                        angle={-15} 
+                                    <XAxis
+                                        dataKey="sede"
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }}
+                                        angle={-45}
                                         textAnchor="end"
+                                        interval={0}
+                                        dx={-5}        // NUEVO: Lo mueve ligeramente a la izquierda
+                                        dy={5}         // NUEVO: Lo baja solo un poquito
+                                        height={90}    // NUEVO: ¡El truco maestro! Reserva 90px de alto solo para los textos inclinados
                                     />
                                     <YAxis axisLine={false} tickLine={false} width={40} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }} />
                                     <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgb(0 0 0 / 0.1)' }} />
-                                    <Legend iconType="circle" wrapperStyle={{ fontSize: '11px', fontWeight: 'bold', paddingTop: '20px' }} />
 
-                                    {nivelesUnicos.map((nivel, idx) => (
-                                        <Bar
-                                            key={nivel}
-                                            dataKey={nivel}
-                                            name={nivel}
-                                            stackId="a"
-                                            fill={CHART_COLORS[idx % CHART_COLORS.length]}
-                                            radius={idx === nivelesUnicos.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]}
-                                            barSize={40}
-                                        />
-                                    ))}
+                                    <Legend
+                                        iconType="circle"
+                                        verticalAlign="bottom" // NUEVO: Obliga a la leyenda a estar abajo de todo
+                                        wrapperStyle={{ fontSize: '11px', fontWeight: 'bold', paddingTop: '10px' }}
+                                    />
+
+                                    {nivelesUnicos
+                                        .filter(nivel => nivelesSeleccionados.includes(nivel))
+                                        .map((nivel, idx) => (
+                                            <Bar
+                                                key={nivel}
+                                                dataKey={nivel}
+                                                name={nivel}
+                                                stackId="a"
+                                                fill={CHART_COLORS[idx % CHART_COLORS.length]}
+                                                radius={[0, 0, 0, 0]}
+                                                barSize={40}
+                                            />
+                                        ))}
                                 </BarChart>
                             </ResponsiveContainer>
                         ) : (
@@ -283,7 +359,7 @@ const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYe
                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-3.5">Métricas de Crecimiento</p>
                     </div>
                     <div style={{ width: '100%', height: 260 }}>
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minWidth={1}>
                             <BarChart data={chartData.alumnosEdades} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="range" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontWeight: 'bold' }} dy={10} />
@@ -319,17 +395,17 @@ const DashboardCharts = ({ chartData, selectedYear, setSelectedYear, availableYe
                     </div>
                     <div style={{ width: '100%', height: 350 }}>
                         {chartData.metodosPago.length > 0 ? (
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={1}>
                                 <BarChart data={chartData.metodosPago} margin={{ top: 10, right: 10, left: -10, bottom: 20 }}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                    <XAxis 
-                                        dataKey="nombre" 
-                                        axisLine={false} 
-                                        tickLine={false} 
-                                        tick={{ fontSize: 9, fill: '#64748b', fontWeight: 'bold' }} 
-                                        dy={15} 
-                                        angle={-25} 
-                                        textAnchor="end" 
+                                    <XAxis
+                                        dataKey="nombre"
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fontSize: 9, fill: '#64748b', fontWeight: 'bold' }}
+                                        dy={15}
+                                        angle={-25}
+                                        textAnchor="end"
                                     />
                                     <YAxis axisLine={false} tickLine={false} width={60} tick={{ fontSize: 9, fill: '#94a3b8', fontWeight: 'bold' }} tickFormatter={(val) => val === 0 ? 'S/ 0' : `S/ ${val.toLocaleString()}`} />
                                     <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgb(0 0 0 / 0.1)' }} formatter={(value) => [`S/ ${value.toLocaleString()}`, 'Total Recaudado']} />

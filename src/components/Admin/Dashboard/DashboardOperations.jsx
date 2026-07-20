@@ -5,6 +5,9 @@ import { apiFetch } from '../../../interceptors/api';
 import { API_ROUTES } from '../../../constants/apiRoutes';
 
 const DashboardOperations = ({ reporte = [], handleExportExcel, isExporting, setReporteFiltrado }) => {
+    // 1. NUEVO: Creamos un estado local para poder modificar la tabla al instante
+    const [localReporte, setLocalReporte] = useState([]);
+    
     const [filterState, setFilterState] = useState({});
     const [activeCol, setActiveCol] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -14,6 +17,11 @@ const DashboardOperations = ({ reporte = [], handleExportExcel, isExporting, set
     const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     const selectFilterCols = ['Estado Deuda', 'Validación Admin', 'Nivel', 'Medio de pago', 'Sede'];
 
+    // 2. NUEVO: Sincronizamos los datos del prop 'reporte' con nuestro estado local
+    useEffect(() => {
+        setLocalReporte(reporte);
+    }, [reporte]);
+
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (popoverRef.current && !popoverRef.current.contains(e.target)) setActiveCol(null);
@@ -22,13 +30,12 @@ const DashboardOperations = ({ reporte = [], handleExportExcel, isExporting, set
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    // 1. USEMEMO: Actualizado para manejar el filtro booleano estricto de Boleta/Factura
+    // 3. CAMBIO: Ahora filtramos basándonos en 'localReporte' en lugar de 'reporte'
     const processedData = useMemo(() => {
-        return reporte.filter(item => {
+        return localReporte.filter(item => {
             return Object.entries(filterState).every(([key, val]) => {
                 if (!val) return true;
                 
-                // Nueva regla estricta para el select de Boleta/Factura
                 if (key === 'Boleta/Factura') {
                     return String(item[key]) === val;
                 }
@@ -46,7 +53,7 @@ const DashboardOperations = ({ reporte = [], handleExportExcel, isExporting, set
                 return String(item[key]).toLowerCase().includes(String(val).toLowerCase());
             });
         });
-    }, [reporte, filterState]);
+    }, [localReporte, filterState]);
 
     useEffect(() => {
         if (setReporteFiltrado) {
@@ -55,7 +62,16 @@ const DashboardOperations = ({ reporte = [], handleExportExcel, isExporting, set
         setCurrentPage(1);
     }, [processedData, setReporteFiltrado]);
 
+    // 4. CAMBIO: Actualización Optimista para que la UI reaccione instantáneamente
     const handleInlineEdit = async (id, campo, valor) => {
+        // Guardamos el estado anterior por si la API falla y necesitamos revertirlo
+        const previousData = [...localReporte];
+
+        // ACTUALIZACIÓN VISUAL INSTANTÁNEA
+        setLocalReporte(prev => prev.map(item => 
+            item.id === id ? { ...item, [campo]: valor } : item
+        ));
+
         try {
             const url = API_ROUTES.USUARIOS.EDIT_PAGO(id);
             const response = await apiFetch.patch(url, {
@@ -67,9 +83,11 @@ const DashboardOperations = ({ reporte = [], handleExportExcel, isExporting, set
                 toast.success('Guardado correctamente');
             } else {
                 toast.error('Error al guardar');
+                setLocalReporte(previousData); // Revertimos si hay error
             }
         } catch (error) {
             toast.error('Error de conexión');
+            setLocalReporte(previousData); // Revertimos si hay error de red
         }
     };
 
@@ -106,7 +124,8 @@ const DashboardOperations = ({ reporte = [], handleExportExcel, isExporting, set
                         <table className="w-full text-left min-w-[1000px]">
                             <thead className="bg-slate-50">
                                 <tr className="text-[10px] uppercase font-black text-slate-400">
-                                    {reporte.length > 0 && Object.keys(reporte[0]).filter(k => k !== 'id').map((key) => (
+                                    {/* CAMBIO: Usamos localReporte[0] para generar los headers */}
+                                    {localReporte.length > 0 && Object.keys(localReporte[0]).filter(k => k !== 'id').map((key) => (
                                         <th key={key} className="p-4 relative overflow-visible whitespace-nowrap">
                                             <div className="flex items-center gap-2">{key} 
                                                 <Filter size={10} className="cursor-pointer hover:text-[#1e3a8a] transition-colors" onClick={() => setActiveCol(activeCol === key ? null : key)} />
@@ -117,7 +136,8 @@ const DashboardOperations = ({ reporte = [], handleExportExcel, isExporting, set
                                                     
                                                     {selectFilterCols.includes(key) ? (
                                                         <div className="flex flex-col gap-1 max-h-48 overflow-y-auto">
-                                                            {[...new Set(reporte.map(item => item[key]))].filter(Boolean).map(opt => (
+                                                            {/* CAMBIO: Usamos localReporte */}
+                                                            {[...new Set(localReporte.map(item => item[key]))].filter(Boolean).map(opt => (
                                                                 <button key={opt} onClick={() => setFilterState({...filterState, [key]: opt})} className={`flex justify-between items-center px-3 py-2 text-xs rounded-lg transition-colors ${filterState[key] === opt ? 'bg-blue-600 text-white' : 'hover:bg-slate-100'}`}>
                                                                     {opt} {filterState[key] === opt && <Check size={12} />}
                                                                 </button>
@@ -136,7 +156,6 @@ const DashboardOperations = ({ reporte = [], handleExportExcel, isExporting, set
                                                             <input type="number" placeholder="Min" className="w-1/2 p-2 border rounded-lg text-xs outline-none focus:border-[#1e3a8a]" onChange={(e) => setFilterState({...filterState, [key]: `${e.target.value}-${filterState[key]?.split('-')[1] || ''}`})} />
                                                             <input type="number" placeholder="Max" className="w-1/2 p-2 border rounded-lg text-xs outline-none focus:border-[#1e3a8a]" onChange={(e) => setFilterState({...filterState, [key]: `${filterState[key]?.split('-')[0] || ''}-${e.target.value}`})} />
                                                         </div>
-                                                    // 🔥 AQUI ESTÁ EL NUEVO SELECT PARA EL FILTRO POPUP 🔥
                                                     ) : key === 'Boleta/Factura' ? (
                                                         <select
                                                             className="w-full p-2 border rounded-lg text-xs outline-none focus:border-[#1e3a8a] text-slate-600 cursor-pointer"
@@ -161,42 +180,53 @@ const DashboardOperations = ({ reporte = [], handleExportExcel, isExporting, set
                                     <tr key={item.id || idx} className="border-b hover:bg-slate-50 transition-colors">
                                         {Object.entries(item).filter(([k]) => k !== 'id').map(([key, val], i) => {
                                             
-                                            // COLUMNA SELECT EDITABLE (Boleta/Factura)
+                                            // CHECKBOX BOOLETA/FACTURA
                                             if (key === 'Boleta/Factura') {
+                                                const isChecked = val === true || val === 'true';
                                                 return (
                                                     <td key={i} className="p-4 text-center">
-                                                        <select
-                                                            defaultValue={val === true ? "true" : "false"}
-                                                            className={`p-1.5 text-xs font-bold rounded-lg outline-none cursor-pointer border ${
-                                                                val === true 
-                                                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
-                                                                : 'bg-amber-50 text-amber-700 border-amber-200'
-                                                            }`}
-                                                            onChange={(e) => {
-                                                                const booleanValue = e.target.value === "true";
-                                                                handleInlineEdit(item.id, key, booleanValue);
-                                                            }}
-                                                        >
-                                                            <option value="true">Enviado</option>
-                                                            <option value="false">Pendiente</option>
-                                                        </select>
+                                                        <label className="flex items-center justify-start gap-2 cursor-pointer w-fit">
+                                                            <input 
+                                                                type="checkbox" 
+                                                                className="hidden"
+                                                                checked={isChecked} 
+                                                                onChange={(e) => {
+                                                                    handleInlineEdit(item.id, key, e.target.checked);
+                                                                }}
+                                                            />
+                                                            <div className={`w-4 h-4 rounded shadow-sm border flex items-center justify-center transition-all duration-200 ${
+                                                                isChecked 
+                                                                ? 'bg-emerald-500 border-emerald-500 text-white' 
+                                                                : 'bg-white border-slate-300 text-transparent hover:border-emerald-400'
+                                                            }`}>
+                                                                <Check size={12} strokeWidth={4} />
+                                                            </div>
+                                                            <span className={`text-[10px] uppercase font-black tracking-wide ${
+                                                                isChecked ? 'text-emerald-600' : 'text-slate-400'
+                                                            }`}>
+                                                                {isChecked ? 'Enviado' : 'Pendiente'}
+                                                            </span>
+                                                        </label>
                                                     </td>
                                                 );
                                             }
 
-                                            // COLUMNA TEXTO EDITABLE
+                                            // TEXTO EDITABLE
                                             if (key === 'Comentarios') {
                                                 return (
                                                     <td key={i} className="p-4 min-w-[200px]">
                                                         <input 
                                                             type="text" 
-                                                            defaultValue={String(val || '')}
+                                                            value={String(val || '')} // CAMBIADO: A 'value' en lugar de 'defaultValue'
                                                             placeholder="Añadir comentario..."
                                                             className="w-full p-2 border border-transparent hover:border-slate-300 focus:border-blue-500 rounded bg-transparent focus:bg-white outline-none transition-all font-medium text-slate-600"
+                                                            onChange={(e) => { // NUEVO: Para actualizar al tipear
+                                                                setLocalReporte(prev => prev.map(row => 
+                                                                    row.id === item.id ? { ...row, [key]: e.target.value } : row
+                                                                ));
+                                                            }}
                                                             onBlur={(e) => {
-                                                                if (e.target.value !== String(val || '')) {
-                                                                    handleInlineEdit(item.id, key, e.target.value);
-                                                                }
+                                                                handleInlineEdit(item.id, key, e.target.value);
                                                             }}
                                                             onKeyDown={(e) => {
                                                                 if (e.key === 'Enter') e.target.blur();
