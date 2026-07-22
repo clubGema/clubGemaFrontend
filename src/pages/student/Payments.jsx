@@ -45,7 +45,7 @@ const Payments = () => {
   }, [userId, fetchFinancialData]);
 
   const activeDebts = debts.filter((d) =>
-    ["PENDIENTE", "PARCIAL", "POR_VALIDAR"].includes(d.estado)
+    ["PENDIENTE", "PARCIAL"].includes(d.estado)
   );
 
   if (loading) return (
