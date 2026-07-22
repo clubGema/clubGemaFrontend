@@ -14,19 +14,19 @@ export const IncomeTable = ({
             </div>
             <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex flex-col flex-grow">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse min-w-[500px]">
+                    <table className="w-full text-left border-collapse min-w-[600px]">
                         <thead>
                             <tr className="bg-[#0f172a] text-white text-[10px] uppercase tracking-widest">
                                 <th className="p-3 font-black w-24">Fecha</th>
                                 <th className="p-3 font-black w-28">Sede</th>
-                                <th className="p-3 font-black">Concepto</th>
+                                <th className="p-3 font-black min-w-[320px]">Concepto</th>
                                 <th className="p-3 font-black text-right w-24">Monto</th>
                                 <th className="p-3 font-black text-center w-20">Acción</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 text-[11px]">
 
-                            {/* --- INGRESOS CONSOLIDADOS (SISTEMA AUTOMÁTICO - SOLO LECTURA) --- */}
+                            {/* --- INGRESOS CONSOLIDADOS (SISTEMA AUTOMÁTICO) --- */}
                             {ingresosConsolidados.map(m => (
                                 <tr key={m.id} className="hover:bg-slate-50 bg-slate-50/30 transition-colors">
                                     <td className="p-3 text-slate-500 font-bold uppercase text-[9px] italic align-top pt-4">Consolidado</td>
@@ -34,30 +34,39 @@ export const IncomeTable = ({
                                         <div className="flex items-center gap-1 mt-0.5"><MapPin size={10} className="shrink-0" /> <span className="leading-tight">{m.sede}</span></div>
                                     </td>
                                     
-                                    {/* 🚀 CELDA DE CONCEPTO "BONITA" */}
-                                    <td className="p-3 align-top pt-3.5">
+                                    <td className="p-3 align-top pt-3.5 pb-4">
                                         {m.detallesRender && m.detallesRender.length > 0 ? (
-                                            <div className="flex flex-col gap-1.5">
-                                                {/* Título Principal */}
+                                            <div className="flex flex-col gap-1.5 w-full">
                                                 <div className="text-[#0f172a] font-black uppercase text-[11px]">
                                                     Ingresos Acumulados | <span className="text-blue-600">{m.fteTotal} FTE</span> 
                                                     <span className="text-slate-400 font-bold text-[9px] ml-1">({m.cantidad} PAGO{m.cantidad !== 1 ? 'S' : ''})</span>
                                                 </div>
                                                 
-                                                {/* Desglose de Niveles con diseño de lista indentada */}
-                                                <div className="flex flex-col pl-2.5 border-l-2 border-orange-200 ml-1 gap-1 mt-0.5">
+                                                <div className="flex flex-col pl-2 border-l-2 border-orange-200 ml-1 gap-1.5 mt-1">
                                                     {m.detallesRender.map((det, index) => (
-                                                        <div key={index} className="flex items-center gap-1.5 text-[9px] uppercase">
-                                                            <span className="text-slate-400 font-bold">↳</span>
-                                                            <span className="font-bold text-slate-600">{det.nivel}:</span>
-                                                            <span className="font-black text-[#0f172a]">{det.fte} FTE</span>
-                                                            <span className="text-slate-400 font-semibold opacity-80">({det.cantidad} pagos)</span>
+                                                        // ✨ ACÁ SE APLICA EL COLOR DEPENDIENDO SI ES INDIVIDUAL O NO
+                                                        <div key={index} className={`grid grid-cols-[12px_minmax(70px,1fr)_auto_auto] gap-2 items-center text-[10px] uppercase ${det.esIndividual ? 'bg-indigo-50/50 -ml-1 pl-1 py-0.5 rounded-r-lg' : ''}`}>
+                                                            
+                                                            <span className={`${det.esIndividual ? 'text-indigo-400' : 'text-slate-400'} font-bold`}>↳</span>
+                                                            
+                                                            <span className={`font-bold truncate ${det.esIndividual ? 'text-indigo-600 font-black' : 'text-slate-600'}`} title={det.nivel}>
+                                                                {det.nivel}
+                                                            </span>
+                                                            
+                                                            <span className="text-slate-500 whitespace-nowrap">
+                                                                <strong className="text-[#0f172a] font-black">{det.fte} FTE</strong>
+                                                                <span className="opacity-80 text-[8px] ml-1 font-semibold">({det.cantidad} P.)</span>
+                                                            </span>
+                                                            
+                                                            {/* Color de monto: Verde si es normal, Indigo si es individual */}
+                                                            <span className={`font-black text-right whitespace-nowrap px-1.5 py-0.5 rounded ${det.esIndividual ? 'text-indigo-700 bg-indigo-100' : 'text-green-600 bg-green-50'}`}>
+                                                                + S/ {det.monto ? det.monto.toFixed(2) : "0.00"}
+                                                            </span>
                                                         </div>
                                                     ))}
                                                 </div>
                                             </div>
                                         ) : (
-                                            // Fallback por si acaso
                                             <span className="text-[#0f172a] font-black uppercase">
                                                 {m.concepto}
                                             </span>
