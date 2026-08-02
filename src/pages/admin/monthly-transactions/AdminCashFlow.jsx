@@ -438,6 +438,7 @@ const AdminCashFlow = () => {
                             <option value="2024">Año 2024</option>
                             <option value="2025">Año 2025</option>
                             <option value="2026">Año 2026</option>
+                            <option value="2027">Año 2027</option>
                         </select>
                     </div>
 
