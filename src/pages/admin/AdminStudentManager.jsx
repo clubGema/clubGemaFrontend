@@ -65,10 +65,10 @@ const AdminStudentsManager = () => {
                     const nivelesNombres = [...new Set(inscripcionesAMostrar.map(i => i.horarios_clases?.niveles_entrenamiento?.nombre).filter(Boolean))];
 
                     const ultimaInsc = inscripcionesAMostrar[0];
-                    const fCorte = ultimaInsc?.fecha_inscripcion ? addDays(new Date(ultimaInsc.fecha_inscripcion), 30) : null;
+                    const fCorte = ultimaInsc?.fecha_inscripcion ? addDays(new Date(ultimaInsc.fecha_inscripcion), 29) : null;
 
                     const historialInscripciones = inscripcionesAMostrar.map(insc => {
-                        const fCorteCalculada = insc.fecha_inscripcion ? addDays(new Date(insc.fecha_inscripcion), 30) : null;
+                        const fCorteCalculada = insc.fecha_inscripcion ? addDays(new Date(insc.fecha_inscripcion), 29) : null;
                         const hc = insc.horarios_clases || {};
 
                         const formatTime = (timeStr) => {
