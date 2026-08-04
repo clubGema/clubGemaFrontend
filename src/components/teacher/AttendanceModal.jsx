@@ -29,7 +29,8 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
                 esLesion: ins.registro_especifico?.estado === 'JUSTIFICADO_LESION',
                 fechaCorte: fechaCorte,
                 vencido: fechaCorte && isPast(fechaCorte) && !isToday(fechaCorte),
-                esHoyCorte: fechaCorte && isToday(fechaCorte)
+                esHoyCorte: fechaCorte && isToday(fechaCorte),
+                esClaseUnica: ins.tipo_inscripcion === 'INDIVIDUAL'
             };
         }) || []
     );
@@ -103,7 +104,11 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
                                         <Baby size={10} /> {alumno.fechaNacimiento} {alumno.edad && `(${alumno.edad} años)`}
                                     </span>
 
-                                    {alumno.fechaCorte && (
+                                    {alumno.esClaseUnica ? (
+                                        <span className={`px-2 py-0.5 rounded-lg border text-[9px] font-black tracking-tighter bg-gray-50 text-gray-600 border-gray-100`}>
+                                            CLASE INDIVIDUAL
+                                        </span>
+                                    ) : alumno.fechaCorte ? (
                                         <span className={`px-2 py-0.5 rounded-lg border text-[9px] font-black tracking-tighter ${alumno.vencido
                                             ? 'bg-red-50 text-red-600 border-red-100 animate-pulse'
                                             : alumno.esHoyCorte
@@ -112,7 +117,8 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
                                             }`}>
                                             CORTE: {format(alumno.fechaCorte, "dd/MM", { locale: es })}
                                         </span>
-                                    )}
+                                    ) : null}
+
                                 </div>
                             </div>
 
