@@ -15,6 +15,30 @@ const MESES = [
     "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"
 ];
 
+// ✅ ORDEN FIJO DE NIVELES: ajusta/agrega aquí si tienes más niveles.
+// Cualquier nivel que NO esté en esta lista se ubicará al final (antes de PLAN INDIVIDUAL),
+// ordenado alfabéticamente, para que nunca "desaparezca" un nivel nuevo silenciosamente.
+const ORDEN_NIVELES = ['BÁSICO', 'PRE INTERMEDIO', 'INTERMEDIO', 'AVANZADO'];
+
+// Ordena los niveles de una sede: sigue ORDEN_NIVELES y deja PLAN INDIVIDUAL siempre al final.
+const ordenarNiveles = (detalles) => {
+    return [...detalles].sort((a, b) => {
+        // PLAN INDIVIDUAL (esIndividual: true) siempre al final
+        if (a.esIndividual && !b.esIndividual) return 1;
+        if (!a.esIndividual && b.esIndividual) return -1;
+        if (a.esIndividual && b.esIndividual) return 0;
+
+        const idxA = ORDEN_NIVELES.indexOf((a.nivel || '').toUpperCase());
+        const idxB = ORDEN_NIVELES.indexOf((b.nivel || '').toUpperCase());
+        const posA = idxA === -1 ? ORDEN_NIVELES.length : idxA;
+        const posB = idxB === -1 ? ORDEN_NIVELES.length : idxB;
+
+        if (posA !== posB) return posA - posB;
+        // Si ambos son "desconocidos" (no están en ORDEN_NIVELES), orden alfabético
+        return (a.nivel || '').localeCompare(b.nivel || '');
+    });
+};
+
 const formatLocalToUTC = (fechaStr) => {
     if (!fechaStr) return new Date().toISOString();
     const [yyyy, mm, dd] = fechaStr.split('-');
@@ -148,6 +172,13 @@ const AdminCashFlow = () => {
                                 esIndividual: true // 👈 Flag que usaremos en IncomeTable para pintarlo de otro color
                             });
                         }
+
+                        // ✅ FIX: forzar orden fijo de niveles (BÁSICO, PRE INTERMEDIO, INTERMEDIO...)
+                        // y dejar PLAN INDIVIDUAL siempre al final, sin importar el orden en que
+                        // vinieron las niveles desde el backend.
+                        ingresosConsolidadosObj[groupKey].detallesNiveles = ordenarNiveles(
+                            ingresosConsolidadosObj[groupKey].detallesNiveles
+                        );
                     }
 
                     // Procesar Egresos de la sede

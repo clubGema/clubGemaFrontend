@@ -11,46 +11,34 @@ import DashboardHeader from '../components/Admin/Dashboard/DashboardHeader';
 import DashboardCharts from '../components/Admin/Dashboard/DashboardCharts';
 import DashboardOperations from '../components/Admin/Dashboard/DashboardOperations';
 
-const MAPA_METODOS = {
-    1: 'YAPE', 2: 'PLIN', 3: 'TRANSFERENCIA', 4: 'EFECTIVO'
-};
-
 const Dashboard = ({ role = 'student' }) => {
     const data = roleData[role];
     const [stats, setStats] = useState(data?.stats || []);
     const [actividad, setActividad] = useState(data?.activity || []);
     const [isExporting, setIsExporting] = useState(false);
 
-    const [rawPagos, setRawPagos] = useState([]);
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-    const [availableYears, setAvailableYears] = useState([]);
-    const [reporteMaestro, setReporteMaestro] = useState([]);
+    const currentYear = new Date().getFullYear();
+    const availableYears = [currentYear - 2, currentYear - 1, currentYear, currentYear + 1];
 
-    // ESTADO PARA EXPORTACIÓN: Contendrá los datos que el usuario visualiza
+    const [reporteMaestro, setReporteMaestro] = useState([]);
     const [reporteFiltrado, setReporteFiltrado] = useState([]);
 
     const [chartData, setChartData] = useState({
-        ingresos: [], sedes: [], metodosPago: [], alumnosGenero: [], alumnosEdades: [], totalAlumnos: 0
+        ingresos: [], sedes: [], metodosPago: [], alumnosGenero: [], alumnosEdades: [],
+        totalAlumnos: 0, vigentesPorSedeNivel: [], activosPorMes: [],
+        alumnosMultiSede: 0 // 🚩 NUEVO
     });
 
-    // Sincronizar reporte filtrado cuando carga el maestro
     useEffect(() => {
         setReporteFiltrado(reporteMaestro);
     }, [reporteMaestro]);
 
-    const generarAñoCompleto = (año) => {
-        const meses = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
-        return meses.map((mes, idx) => ({ monthIndex: idx, year: año, mes, ingresos: 0 }));
-    };
-
     useEffect(() => {
         const fetchMovimientos = async () => {
             try {
-                // 1. Armamos el rango basado en el año seleccionado en tu UI
                 const fechaInicio = `${selectedYear}-01-01`;
                 const fechaFin = `${selectedYear}-12-31`;
-
-                // 2. Adjuntamos las fechas a la URL
                 const url = `${API_ROUTES.USUARIOS.MOVIMIENTOS}?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
 
                 const response = await apiFetch.get(url);
@@ -65,69 +53,76 @@ const Dashboard = ({ role = 'student' }) => {
         };
 
         fetchMovimientos();
-    }, [selectedYear]); // <-- 3. SUPER IMPORTANTE: Agregar selectedYear como dependencia
+    }, [selectedYear]);
 
     useEffect(() => {
         if (role === 'admin') {
             const fetchDashboardData = async () => {
                 try {
-                    const [resStats, resPagos, resOcupacion, resGraficos] = await Promise.all([
+                    const [resStats, resGraficos] = await Promise.all([
                         apiFetch.get(API_ROUTES.USUARIOS.STATS),
-                        apiFetch.get(API_ROUTES.PAGOS.BASE),
-                        apiFetch.get(API_ROUTES.SEDES.OCUPACION),
-                        apiFetch.get(API_ROUTES.USUARIOS.GRAFICOS_AVANZADOS)
+                        apiFetch.get(`${API_ROUTES.USUARIOS.GRAFICOS_AVANZADOS}?year=${selectedYear}`)
                     ]);
 
-                    const extractArray = (json) => Array.isArray(json?.data?.data) ? json.data.data : (Array.isArray(json?.data) ? json.data : (Array.isArray(json) ? json : []));
-
-                    // --- AQUÍ ESTABA EL FALLO: Extraemos los datos del response antes de usarlos ---
-                    const graficosJson = resGraficos.ok ? await resGraficos.json() : {};
-                    const dataGraficos = graficosJson.data || {};
-                    // ------------------------------------------------------------------------------
-
                     const resultStats = resStats.ok ? await resStats.json() : {};
-                    if (resStats.ok && resultStats.data) {
-                        // ... (tu lógica de stats se mantiene igual)
-                        const d = resultStats.data;
-                        setStats(prevStats => prevStats.map(stat => {
-                            switch (stat.id) {
-                                case "alumnos": return { ...stat, value: (d.alumno || 0).toString() };
-                                case "coordinadores": return { ...stat, value: (d.coordinador || 0).toString() };
-                                case "sedes": return { ...stat, value: (d.sedes || 0).toString() };
-                                case "pendientes": return { ...stat, value: `S/ ${d.deudaPendiente || '0.00'}` };
-                                default: return stat;
-                            }
-                        }));
-                        if (d.actividadReciente) setActividad(d.actividadReciente);
-                    }
+                    const graficosJson = resGraficos.ok ? await resGraficos.json() : {};
 
-                    const ocupacionJson = resOcupacion.ok ? await resOcupacion.json() : {};
-                    let distribucionSedes = extractArray(ocupacionJson);
-                    const alumnosActivosTotales = distribucionSedes.reduce((acc, curr) => acc + (curr.valor === 1 && curr.nombre === 'Sin Datos' ? 0 : curr.valor), 0);
+                    const statsData = resultStats.data || {};
+                    const dataGraficos = graficosJson.data || {};
 
-                    const pagosJson = resPagos.ok ? await resPagos.json() : {};
-                    const dPagos = extractArray(pagosJson);
-                    const años = new Set();
-                    dPagos.forEach(p => { if (p.fecha_pago) años.add(new Date(p.fecha_pago).getFullYear()); });
-                    const arrayAños = Array.from(años).sort((a, b) => b - a);
-                    if (arrayAños.length === 0) arrayAños.push(new Date().getFullYear());
+                    setStats(prevStats => prevStats.map(stat => {
+                        switch (stat.id) {
+                            case "alumnos":
+                                return {
+                                    ...stat,
+                                    title: "Alumnos Activos / FTE",
+                                    value: `${statsData.alumnosFisicosActivos || 0} (${Number(statsData.alumno || statsData.alumnosFteActivos || 0).toFixed(1)})`
+                                };
+                            case "coordinadores": return { ...stat, value: (statsData.coordinador || 0).toString() };
+                            case "sedes": return { ...stat, value: (statsData.sedes || 0).toString() };
+                            case "pendientes": return { ...stat, value: `S/ ${statsData.deudaPendiente || '0.00'}` };
+                            default: return stat;
+                        }
+                    }));
 
-                    setAvailableYears(arrayAños);
-                    setRawPagos(dPagos);
+                    if (statsData.actividadReciente) setActividad(statsData.actividadReciente);
 
-                    const genderStats = resultStats.data?.alumnosGenero || {};
-                    const genderData = [{ nombre: 'Femenino', valor: genderStats.F || 0, color: '#f97316' }, { nombre: 'Masculino', valor: genderStats.M || 0, color: '#1e3a8a' }].filter(g => g.valor > 0);
+                    // 🔥 1. RESCATE DE GÉNEROS PERDIDOS (Añadimos "Sin Especificar" para que cuadre el FTE total)
+                    // 🔥 1. GÉNEROS: USAMOS CABEZAS FÍSICAS COMO PRINCIPAL Y FTE COMO SECUNDARIO
+                    const genderFisico = statsData.alumnosGenero?.activoFisico || {};
+                    const genderFte = statsData.alumnosGenero?.activoFte || {};
 
-                    // Ahora dataGraficos ya está definida y funciona aquí:
+                    const genderData = [
+                        { nombre: 'Femenino', valor: genderFisico.F || 0, fte: genderFte.F || 0, color: '#f97316' },
+                        { nombre: 'Masculino', valor: genderFisico.M || 0, fte: genderFte.M || 0, color: '#1e3a8a' },
+                        { nombre: 'Sin Especificar', valor: genderFisico.NOCONF || 0, fte: genderFte.NOCONF || 0, color: '#94a3b8' }
+                    ].filter(g => g.valor > 0 || g.fte > 0);
+
+                    // 🔥 2. OCUPACIÓN BASADA EN CABEZAS FÍSICAS (Dejamos el FTE como extra)
+                    const distribucionSedes = (dataGraficos.ocupacionSedes || []).map(s => ({
+                        nombre: s.sede,
+                        valor: s.fisicos, // El gráfico ahora usará alumnos físicos reales
+                        fte: s.ftes       // Guardamos el FTE para mostrarlo en el texto chiquito
+                    }));
+                    const totalAlumnosFisicos = distribucionSedes.reduce((acc, curr) => acc + curr.valor, 0);
+
+                    const tendencia = dataGraficos.tendenciaMensual || [];
+                    const ingresosMensuales = tendencia.map(t => ({ mes: t.mes, ingresos: t.ingresos }));
+                    const ftesMensuales = tendencia.map(t => ({ mes: t.mes, activos: t.ftes, fisicos: t.fisicos }));
+
                     setChartData(prev => ({
                         ...prev,
                         sedes: distribucionSedes,
-                        totalAlumnos: alumnosActivosTotales,
+                        totalAlumnos: totalAlumnosFisicos, // Centramos la cantidad de alumnos
                         alumnosGenero: genderData,
-                        alumnosEdades: resultStats.data?.alumnosEdades || [],
-                        vigentesPorSedeNivel: dataGraficos.vigentesPorSedeNivel || [],
-                        activosPorMes: dataGraficos.activosPorMes || []
+                        alumnosEdades: statsData.alumnosEdades || [],
+                        vigentesPorSedeNivel: dataGraficos.nivelesSedes || [],
+                        activosPorMes: ftesMensuales,
+                        ingresos: ingresosMensuales,
+                        metodosPago: dataGraficos.recaudacionMetodos || [],
+                        alumnosMultiSede: dataGraficos.alumnosMultiSede || 0 // 🚩 NUEVO
                     }));
+
                 } catch (error) {
                     console.error("Error analíticas:", error);
                 }
@@ -136,44 +131,19 @@ const Dashboard = ({ role = 'student' }) => {
         } else {
             setStats(data?.stats || []);
         }
-    }, [role, data]);
-
-    useEffect(() => {
-        if (rawPagos.length === 0) return;
-        const historialAnual = generarAñoCompleto(selectedYear);
-        const metodosData = {};
-        rawPagos.forEach(pago => {
-            if (pago.estado_validacion === 'APROBADO' && pago.fecha_pago) {
-                const datePago = new Date(pago.fecha_pago);
-                const monto = parseFloat(pago.monto_pagado) || 0;
-                if (datePago.getFullYear() === selectedYear) {
-                    const mesIndex = datePago.getMonth();
-                    historialAnual[mesIndex].ingresos += monto;
-                    let nombreMetodo = pago.metodos_pago?.nombre ? pago.metodos_pago.nombre.toUpperCase() : MAPA_METODOS[pago.metodo_pago_id] || 'OTROS';
-                    metodosData[nombreMetodo] = (metodosData[nombreMetodo] || 0) + monto;
-                }
-            }
-        });
-        setChartData(prev => ({ ...prev, ingresos: historialAnual, metodosPago: Object.keys(metodosData).map(key => ({ nombre: key, monto: metodosData[key] })).filter(item => item.monto > 0).sort((a, b) => b.monto - a.monto) }));
-    }, [rawPagos, selectedYear]);
+    }, [role, data, selectedYear]);
 
     const handleExportExcel = () => {
-        // Usamos el estado recién creado
         const reportData = reporteFiltrado;
-
         if (!reportData || reportData.length === 0) {
             toast.error("No hay datos para exportar");
             return;
         }
-
         try {
             setIsExporting(true);
             const workbook = XLSX.utils.book_new();
             const ws = XLSX.utils.json_to_sheet(reportData);
-
-            // Configuración de estilo y columnas
             ws['!cols'] = [{ wch: 15 }, { wch: 15 }, { wch: 25 }, { wch: 30 }, { wch: 12 }, { wch: 15 }, { wch: 25 }, { wch: 15 }, { wch: 12 }, { wch: 15 }, { wch: 18 }, { wch: 20 }, { wch: 30 }];
-
             XLSX.utils.book_append_sheet(workbook, ws, "Reporte_Maestro");
             XLSX.writeFile(workbook, `Reporte_Maestro_${new Date().toISOString().split('T')[0]}.xlsx`);
             toast.success("Excel exportado exitosamente");
@@ -204,7 +174,7 @@ const Dashboard = ({ role = 'student' }) => {
                 actividad={actividad}
                 data={data}
                 reporte={reporteMaestro}
-                setReporteFiltrado={setReporteFiltrado} // Pasamos el setter para que el componente hijo actualice el estado
+                setReporteFiltrado={setReporteFiltrado}
                 handleExportExcel={handleExportExcel}
                 isExporting={isExporting}
             />

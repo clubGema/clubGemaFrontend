@@ -20,8 +20,8 @@ export const IncomeTable = ({
                                 <th className="p-3 font-black w-24">Fecha</th>
                                 <th className="p-3 font-black w-28">Sede</th>
                                 <th className="p-3 font-black min-w-[320px]">Concepto</th>
-                                <th className="p-3 font-black text-right w-24">Monto</th>
-                                <th className="p-3 font-black text-center w-20">Acción</th>
+                                <th className="p-3 font-black text-right w-28">Monto</th>
+                                <th className="p-3 font-black text-center w-16">Acción</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 text-[11px]">
@@ -29,40 +29,48 @@ export const IncomeTable = ({
                             {/* --- INGRESOS CONSOLIDADOS (SISTEMA AUTOMÁTICO) --- */}
                             {ingresosConsolidados.map(m => (
                                 <tr key={m.id} className="hover:bg-slate-50 bg-slate-50/30 transition-colors">
-                                    <td className="p-3 text-slate-500 font-bold uppercase text-[9px] italic align-top pt-4">Consolidado</td>
-                                    <td className="p-3 text-[#f97316] font-bold text-[9px] uppercase align-top pt-4">
+                                    <td className="p-3 text-slate-500 font-bold uppercase text-[9px] italic align-middle">Consolidado</td>
+                                    <td className="p-3 text-[#f97316] font-bold text-[9px] uppercase align-middle">
                                         <div className="flex items-center gap-1 mt-0.5"><MapPin size={10} className="shrink-0" /> <span className="leading-tight">{m.sede}</span></div>
                                     </td>
-                                    
-                                    <td className="p-3 align-top pt-3.5 pb-4">
+
+                                    <td className="p-3 align-middle">
                                         {m.detallesRender && m.detallesRender.length > 0 ? (
                                             <div className="flex flex-col gap-1.5 w-full">
                                                 <div className="text-[#0f172a] font-black uppercase text-[11px]">
-                                                    Ingresos Acumulados | <span className="text-blue-600">{m.fteTotal} FTE</span> 
+                                                    Ingresos Acumulados | <span className="text-blue-600">{m.fteTotal} FTE</span>
                                                     <span className="text-slate-400 font-bold text-[9px] ml-1">({m.cantidad} PAGO{m.cantidad !== 1 ? 'S' : ''})</span>
                                                 </div>
-                                                
-                                                <div className="flex flex-col pl-2 border-l-2 border-orange-200 ml-1 gap-1.5 mt-1">
+
+                                                {/* ✅ FIX: un solo grid por bloque de sede (no uno por fila).
+                                                    Todas las filas (BÁSICO, PRE INTERMEDIO, PLAN INDIVIDUAL...)
+                                                    son celdas DIRECTAS de este mismo grid vía React.Fragment,
+                                                    así comparten el mismo ancho de columna sin importar
+                                                    cuán largo sea el nombre del nivel más largo. */}
+                                                <div className="grid grid-cols-[12px_minmax(70px,1fr)_auto_auto] gap-x-2 gap-y-1.5 items-center pl-2 border-l-2 border-orange-200 ml-1 mt-1">
                                                     {m.detallesRender.map((det, index) => (
-                                                        // ✨ ACÁ SE APLICA EL COLOR DEPENDIENDO SI ES INDIVIDUAL O NO
-                                                        <div key={index} className={`grid grid-cols-[12px_minmax(70px,1fr)_auto_auto] gap-2 items-center text-[10px] uppercase ${det.esIndividual ? 'bg-indigo-50/50 -ml-1 pl-1 py-0.5 rounded-r-lg' : ''}`}>
-                                                            
-                                                            <span className={`${det.esIndividual ? 'text-indigo-400' : 'text-slate-400'} font-bold`}>↳</span>
-                                                            
-                                                            <span className={`font-bold truncate ${det.esIndividual ? 'text-indigo-600 font-black' : 'text-slate-600'}`} title={det.nivel}>
+                                                        <React.Fragment key={index}>
+                                                            <span className={`text-[10px] uppercase font-bold ${det.esIndividual ? 'text-indigo-400' : 'text-slate-400'}`}>
+                                                                ↳
+                                                            </span>
+
+                                                            <span
+                                                                className={`text-[10px] uppercase font-bold truncate ${det.esIndividual ? 'text-indigo-600 font-black' : 'text-slate-600'}`}
+                                                                title={det.nivel}
+                                                            >
                                                                 {det.nivel}
                                                             </span>
-                                                            
-                                                            <span className="text-slate-500 whitespace-nowrap">
+
+                                                            <span className="text-[10px] uppercase text-slate-500 whitespace-nowrap">
                                                                 <strong className="text-[#0f172a] font-black">{det.fte} FTE</strong>
                                                                 <span className="opacity-80 text-[8px] ml-1 font-semibold">({det.cantidad} P.)</span>
                                                             </span>
-                                                            
+
                                                             {/* Color de monto: Verde si es normal, Indigo si es individual */}
-                                                            <span className={`font-black text-right whitespace-nowrap px-1.5 py-0.5 rounded ${det.esIndividual ? 'text-indigo-700 bg-indigo-100' : 'text-green-600 bg-green-50'}`}>
+                                                            <span className={`text-[10px] font-black text-right whitespace-nowrap px-1.5 py-0.5 rounded ${det.esIndividual ? 'text-indigo-700 bg-indigo-100' : 'text-green-600 bg-green-50'}`}>
                                                                 + S/ {det.monto ? det.monto.toFixed(2) : "0.00"}
                                                             </span>
-                                                        </div>
+                                                        </React.Fragment>
                                                     ))}
                                                 </div>
                                             </div>
@@ -73,9 +81,9 @@ export const IncomeTable = ({
                                         )}
                                     </td>
 
-                                    <td className="p-3 text-right font-black text-green-600 align-top pt-4">+ S/ {m.monto.toFixed(2)}</td>
-                                    <td className="p-3 text-center align-top pt-4">
-                                        <div className="flex justify-center text-slate-300 mt-1" title="Acumulado automáticamente (No editable)">
+                                    <td className="p-3 text-right font-black text-green-600 align-middle whitespace-nowrap">+ S/ {m.monto.toFixed(2)}</td>
+                                    <td className="p-3 text-center align-middle">
+                                        <div className="flex justify-center text-slate-300" title="Acumulado automáticamente (No editable)">
                                             <Lock size={14} />
                                         </div>
                                     </td>
@@ -116,7 +124,7 @@ export const IncomeTable = ({
                                     <td className="p-3 text-[#0f172a] font-black uppercase align-top">
                                         {m.concepto} <span className="text-[9px] bg-slate-100 text-slate-400 px-1.5 py-0.5 rounded ml-1 font-bold">{m.registrado_por}</span>
                                     </td>
-                                    <td className="p-3 text-right font-black text-green-600 align-top">+ S/ {parseFloat(m.monto).toFixed(2)}</td>
+                                    <td className="p-3 text-right font-black text-green-600 align-top whitespace-nowrap">+ S/ {parseFloat(m.monto).toFixed(2)}</td>
                                     <td className="p-3 text-center align-top">
                                         <div className="flex flex-col gap-1.5">
                                             <button onClick={() => startInlineEdit(m)} className="text-green-600 font-black uppercase text-[9px] hover:bg-green-50 px-2 py-1.5 rounded-lg transition-colors flex items-center justify-center gap-1 mx-auto border border-transparent hover:border-green-200 w-full">

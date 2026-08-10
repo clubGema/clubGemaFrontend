@@ -147,8 +147,9 @@ const StudentSchedule = ({ attendance = [], filtroMes, filtroAnio }) => {
                         <p className="text-[7px] md:text-[8px] font-black text-slate-400 uppercase tracking-widest">Sede</p>
                         <div className="flex items-start gap-1 text-[9px] md:text-[10px] font-bold text-slate-600 uppercase italic">
                           <MapPin size={10} className="text-blue-500 shrink-0 mt-0.5" />
-                          {/* 🔥 SIN TRUNCATE PARA VER LA SEDE COMPLETA */}
-                          <span className="whitespace-normal leading-tight">{horario?.canchas?.nombre || 'T1'}</span>
+                          {/* ✅ FIX: la sede real vive en canchas.sedes.nombre (la cancha pertenece a una sede).
+                              Antes se mostraba horario.canchas.nombre (nombre de la CANCHA, ej. "Campo Techado"). */}
+                          <span className="whitespace-normal leading-tight">{horario?.canchas?.sedes?.nombre || horario?.canchas?.nombre || 'T1'}</span>
                         </div>
                       </div>
 
