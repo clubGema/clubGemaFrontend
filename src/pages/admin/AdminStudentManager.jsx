@@ -90,6 +90,7 @@ const AdminStudentsManager = () => {
                             fechaInscripcion: insc.fecha_inscripcion,
                             fechaCorte: fCorteCalculada,
                             estaVencido: fCorteCalculada ? isPast(fCorteCalculada) : false,
+                            tipoInscripcion: insc.tipo_inscripcion,
                         };
                     });
 
@@ -108,6 +109,7 @@ const AdminStudentsManager = () => {
                         estadoVisual: estadoVisual,
                         multiplesActivas: inscripcionesActivas.length > 1,
                         historialInscripciones: historialInscripciones,
+                        esClaseUnica: ultimaInsc?.tipo_inscripcion === 'INDIVIDUAL',
 
                         // 🔥 Dato clave inyectado para la columna de Monto
                         monto_pendiente: totalDeuda,
@@ -130,7 +132,6 @@ const AdminStudentsManager = () => {
                         }
                     };
                 });
-
                 setAlumnos(formattedData);
             }
         } catch (error) {
@@ -169,6 +170,7 @@ const AdminStudentsManager = () => {
         alum.dni.includes(searchTerm)
     );
     const currentAlumnos = filteredAlumnos.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    console.log(currentAlumnos)
     const totalPages = Math.ceil(filteredAlumnos.length / itemsPerPage);
 
     // --- RENDERIZADOS ---

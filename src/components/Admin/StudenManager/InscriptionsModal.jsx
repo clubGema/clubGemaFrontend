@@ -42,7 +42,7 @@ const InscriptionsModal = ({ isOpen, data, onClose }) => {
                                             </span>
                                             <span className={`text-[9px] font-black px-2 py-1 rounded-md uppercase italic border
                                                 ${insc.estado === 'ACTIVO' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-slate-50 text-slate-500 border-slate-200'}`}>
-                                                {insc.estado}
+                                                {insc.tipoInscripcion === 'INDIVIDUAL' ? 'CLASE ÚNICA' : insc.estado}
                                             </span>
                                         </div>
                                         <p className="text-sm font-black text-slate-700 uppercase italic mt-2">
@@ -58,15 +58,32 @@ const InscriptionsModal = ({ isOpen, data, onClose }) => {
                                     </div>
 
                                     <div className="text-right">
-                                        <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Fecha de Corte</p>
-                                        <div className={`text-base font-black uppercase italic flex items-center justify-end gap-1
+                                        {insc.tipoInscripcion === 'INDIVIDUAL' ? (
+                                            <>
+                                                <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Fecha de la Clase</p>
+                                                <div className={`text-base font-black uppercase italic flex items-center justify-end gap-1 text-slate-800`}
+                                                >
+                                                    <Calendar size={14} />
+                                                    {new Date(insc.fechaInscripcion).toLocaleDateString('es-ES', {
+                                                        day: '2-digit',
+                                                        month: 'short',
+                                                        year: 'numeric'
+                                                    })}
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Fecha de Corte</p>
+                                                <div className={`text-base font-black uppercase italic flex items-center justify-end gap-1
                                             ${insc.estado === 'ACTIVO'
-                                                ? (insc.estaVencido ? 'text-red-500' : 'text-slate-800')
-                                                : 'text-slate-400'}`}
-                                        >
-                                            <Calendar size={14} />
-                                            {insc.fechaCorte ? format(insc.fechaCorte, "dd MMM yyyy", { locale: es }) : '---'}
-                                        </div>
+                                                        ? (insc.estaVencido ? 'text-red-500' : 'text-slate-800')
+                                                        : 'text-slate-400'}`}
+                                                >
+                                                    <Calendar size={14} />
+                                                    {insc.fechaCorte ? format(insc.fechaCorte, "dd MMM yyyy", { locale: es }) : '---'}
+                                                </div>
+                                            </>
+                                        )}
                                         {insc.estado === 'ACTIVO' && insc.estaVencido && (
                                             <p className="text-[8px] font-bold text-red-500 uppercase mt-1 animate-pulse">PAGO PENDIENTE</p>
                                         )}
@@ -77,7 +94,7 @@ const InscriptionsModal = ({ isOpen, data, onClose }) => {
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

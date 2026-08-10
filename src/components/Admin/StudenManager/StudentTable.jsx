@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Fingerprint, MapPin, Phone, Eye, RefreshCw, Zap, ArrowUpDown, Filter, AlertCircle, CreditCard, Search, History } from 'lucide-react';
+import { Fingerprint, MapPin, Phone, Eye, RefreshCw, Zap, ArrowUpDown, Filter, AlertCircle, CreditCard, Search, History, Flame } from 'lucide-react';
 import { format, subDays } from 'date-fns';
 
 const StudentTable = ({ currentAlumnos, onViewDetails, onAttendanceHistory, onOpenInscriptions, onChangeLevel }) => {
@@ -242,13 +242,20 @@ const StudentTable = ({ currentAlumnos, onViewDetails, onAttendanceHistory, onOp
                                         className="inline-flex items-center justify-center gap-1.5 text-[9px] font-black uppercase italic hover:scale-105 transition-transform group-hover:shadow-sm rounded-lg p-1"
                                         title="Ver detalle de inscripciones"
                                     >
-                                        <span className={`px-3 py-1.5 rounded-lg border flex items-center gap-1.5
+                                        {alum.esClaseUnica ? (
+                                            <span className={`px-3 py-1.5 rounded-lg border flex items-center gap-1.5 bg-yellow-50 text-yellow-600 border-yellow-200`}>
+                                                <Flame size={10} fill="currentColor" />
+                                                INDIVIDUAL
+                                            </span>
+                                        ) : (
+                                            <span className={`px-3 py-1.5 rounded-lg border flex items-center gap-1.5
                                             ${alum.estadoVisual === 'ACTIVO' ? (alum.estaVencido ? 'bg-red-50 text-red-600 border-red-200' : 'bg-emerald-50 text-emerald-600 border-emerald-200') : 'bg-slate-50 text-slate-500 border-slate-200'}`}
-                                        >
-                                            <Zap size={10} fill="currentColor" className={alum.multiplesActivas ? "animate-bounce" : ""} />
-                                            {alum.estadoVisual === 'ACTIVO' ? (alum.estaVencido ? 'VENCIDO' : 'ACTIVO') : alum.estadoVisual}
-                                            {alum.multiplesActivas && <span className="bg-orange-500 text-white px-1 rounded ml-1 animate-pulse">+</span>}
-                                        </span>
+                                            >
+                                                <Zap size={10} fill="currentColor" className={alum.multiplesActivas ? "animate-bounce" : ""} />
+                                                {alum.estadoVisual === 'ACTIVO' ? (alum.estaVencido ? 'VENCIDO' : 'ACTIVO') : alum.estadoVisual}
+                                                {alum.multiplesActivas && <span className="bg-orange-500 text-white px-1 rounded ml-1 animate-pulse">+</span>}
+                                            </span>
+                                        )}
                                     </button>
                                 </td>
 
