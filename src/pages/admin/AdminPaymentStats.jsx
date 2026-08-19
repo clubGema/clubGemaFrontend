@@ -59,7 +59,7 @@ const AdminPaymentStats = ({ stats }) => {
                         return (
                             <div key={idx} className="flex-1 flex flex-col items-center group/bar relative h-full justify-end">
 
-                                {/* 🔥 CORRECCIÓN: Contenedor más alto (h-10), con separación (gap-1) y sin decimales visuales */}
+                                {/* Montos siempre visibles arriba de la barra */}
                                 <div className="mb-2 flex flex-col items-center justify-end h-10 gap-1 w-full relative z-20">
                                     {ingresos > 0 && (
                                         <span className="text-[9px] md:text-[10px] font-black text-[#1e3a8a] leading-none whitespace-nowrap">
@@ -73,8 +73,13 @@ const AdminPaymentStats = ({ stats }) => {
                                     )}
                                 </div>
 
-                                {/* Tooltip Pro re-posicionado para que no tape los números */}
-                                <div className="absolute bottom-full mb-10 opacity-0 group-hover/bar:opacity-100 transition-all duration-300 transform translate-y-2 group-hover/bar:translate-y-0 bg-slate-900 text-white text-[10px] px-3 py-2 rounded-xl font-bold z-50 whitespace-nowrap shadow-xl border border-white/10 flex flex-col gap-1 pointer-events-none">
+                                {/* Tooltip Pro — 🔥 FIX: le faltaba left-1/2 -translate-x-1/2 para
+                                    centrarse sobre su propia barra. Sin eso, quedaba anclado a la
+                                    posición que tenía en el flujo normal antes de volverse absolute
+                                    (pegado a la izquierda del contenedor), por eso se veía descuadrado
+                                    al hacer hover — más notorio en barras con ambos valores (ingreso
+                                    + egreso) como Agosto, donde además solapaba los montos vecinos. */}
+                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-10 opacity-0 group-hover/bar:opacity-100 transition-all duration-300 transform translate-y-2 group-hover/bar:translate-y-0 bg-slate-900 text-white text-[10px] px-3 py-2 rounded-xl font-bold z-50 whitespace-nowrap shadow-xl border border-white/10 flex flex-col gap-1 pointer-events-none">
                                     <span className="text-blue-400">Pagos: S/ {(item.ingresosPagos || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                                     <span className="text-slate-300 normal-case">Manual: S/ {(item.ingresosManuales || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                                 </div>
