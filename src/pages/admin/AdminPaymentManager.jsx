@@ -21,6 +21,10 @@ const AdminPaymentManager = () => {
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
     const [selectedMonth, setSelectedMonth] = useState('ALL');
 
+    // 🔥 NUEVO: data del endpoint /caja/resumen-anual (12 meses, desglosado por tipo)
+    const [resumenAnual, setResumenAnual] = useState([]);
+    const [loadingResumen, setLoadingResumen] = useState(true);
+
     const fetchPayments = async () => {
         try {
             setLoading(true);
@@ -31,6 +35,20 @@ const AdminPaymentManager = () => {
             toast.error("Error al sincronizar ingresos");
         } finally {
             setLoading(false);
+        }
+    };
+
+    // 🔥 NUEVA FUNCIÓN: trae el resumen anual (para el gráfico) según el año seleccionado
+    const fetchResumenAnual = async (anio) => {
+        try {
+            setLoadingResumen(true);
+            const response = await apiFetch.get(`${API_ROUTES.CAJA.RESUMEN_ANUAL}?anio=${anio}`);
+            const result = await response.json();
+            if (response.ok) setResumenAnual(result.data || []);
+        } catch (error) {
+            toast.error("Error al cargar el resumen anual");
+        } finally {
+            setLoadingResumen(false);
         }
     };
 
@@ -55,6 +73,9 @@ const AdminPaymentManager = () => {
 
     useEffect(() => { fetchPayments(); }, []);
 
+    // 🔥 NUEVO: cada vez que cambia el año seleccionado, recargamos el resumen anual
+    useEffect(() => { fetchResumenAnual(selectedYear); }, [selectedYear]);
+
     const filteredPayments = useMemo(() => {
         return payments.filter(p => {
             const date = new Date(p.fecha_pago);
@@ -73,32 +94,41 @@ const AdminPaymentManager = () => {
         });
     }, [payments, selectedYear, selectedMonth, statusFilter, searchTerm]);
 
+    // 🔥 REFACTOR: chartData ahora sale del endpoint /caja/resumen-anual, con desglose
+    // por tipo (pagos automáticos, ingresos manuales, egresos) en vez de solo un total
+    // sumado en el cliente. "pendientes" se mantiene igual, calculado desde `payments`.
     const statsData = useMemo(() => {
         const mesesNombres = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-        const recaudacionMes = {};
         let pendientesTotalAno = 0;
 
         payments.forEach(p => {
             const date = new Date(p.fecha_pago);
             if (date.getFullYear().toString() !== selectedYear) return;
             if (p.estado_validacion === 'PENDIENTE') pendientesTotalAno++;
-            if (p.estado_validacion === 'APROBADO') {
-                const mesIdx = date.getMonth();
-                recaudacionMes[mesIdx] = (recaudacionMes[mesIdx] || 0) + parseFloat(p.monto_pagado);
-            }
         });
 
-        const chartData = mesesNombres.map((name, index) => ({
-            name,
-            total: recaudacionMes[index] || 0
-        }));
+        const chartData = mesesNombres.map((name, index) => {
+            const mesData = resumenAnual.find(m => m.mes === index + 1);
+            return {
+                name,
+                // 🔥 FIX: antes solo tomaba ingresosPagos, por eso meses con ingreso
+                // SOLO manual (ej. marzo) no pintaban barra aunque sí tuvieran ingreso real.
+                total: mesData?.totalIngresos || 0,
+                // 🔥 desglose por tipo (se mantiene igual)
+                ingresosPagos: mesData?.ingresosPagos || 0,
+                ingresosManuales: mesData?.ingresosManuales || 0,
+                egresos: mesData?.egresos || 0,
+                totalIngresos: mesData?.totalIngresos || 0,
+                balance: mesData?.balance || 0
+            };
+        });
 
         return {
             chartData,
             pendientes: pendientesTotalAno,
-            maxRecaudacion: Math.max(...chartData.map(d => d.total), 1)
+            maxRecaudacion: Math.max(...chartData.map(d => d.totalIngresos), 1)
         };
-    }, [payments, selectedYear]);
+    }, [payments, selectedYear, resumenAnual]);
 
     const getStatusStyle = (status) => {
         switch (status) {

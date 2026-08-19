@@ -149,5 +149,6 @@ export const API_ROUTES = {
   CAJA: {
     BASE: "/caja",
     RESUMEN: "/caja/resumen",
+     RESUMEN_ANUAL: "/caja/resumen-anual",
   },
 };
