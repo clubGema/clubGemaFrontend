@@ -117,11 +117,15 @@ export const API_ROUTES = {
   BENEFICIOS_PENDIENTES: {
     BASE: "/beneficioPendiente",
   },
-  ALUMNOS: {
+   ALUMNOS: {
     BASE: "/alumno",
     MI_PERFIL: "/alumno/mi-perfil",
     DIA_CORTE: "/alumno/gestion/resumen-cortes",
     DIA_CORTE_COORDINADOR: "/alumno/gestion/cortes-alumnos",
+    CONTACTOS: {
+      BASE: "/alumno/mi-perfil/contactos",
+      BY_ID: (id) => `/alumno/mi-perfil/contactos/${id}`,
+    },
   },
   PUBLICACIONES: {
     BASE: "/publicaciones",

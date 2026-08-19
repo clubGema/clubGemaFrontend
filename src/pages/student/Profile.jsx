@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Phone, MapPin, Edit2, ArrowLeft, HeartPulse, Shield, Calendar, Activity, Loader2 } from 'lucide-react';
+import { Mail, Phone, MapPin, Edit2, ArrowLeft, HeartPulse, Shield, Calendar, Activity, Loader2, Users, Star } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { Link } from 'react-router-dom';
 import apiFetch from '../../interceptors/api.js';
@@ -15,6 +15,10 @@ const Profile = () => {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // 🔥 NUEVO: contactos de emergencia del alumno
+  const [contactos, setContactos] = useState([]);
+  const [loadingContactos, setLoadingContactos] = useState(true);
+
   // 🔄 SINCRONIZACIÓN TOTAL: Trae usuarios + alumnos + direcciones
   const fetchProfile = async () => {
     try {
@@ -28,7 +32,24 @@ const Profile = () => {
     }
   };
 
-  useEffect(() => { fetchProfile(); }, []);
+  // 🔥 NUEVO: trae los contactos de emergencia registrados
+  const fetchContactos = async () => {
+    setLoadingContactos(true);
+    try {
+      const response = await apiFetch.get(API_ROUTES.ALUMNOS.CONTACTOS.BASE);
+      const result = await response.json();
+      if (response.ok) setContactos(result.data || []);
+    } catch (error) {
+      console.error("Error cargando contactos:", error);
+    } finally {
+      setLoadingContactos(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+    fetchContactos();
+  }, []);
 
   if (loading) return (
     <div className="flex h-[60vh] items-center justify-center">
@@ -49,6 +70,7 @@ const Profile = () => {
 
   const handleProfileUpdate = (newData) => {
     fetchProfile();
+    fetchContactos(); // 🔥 refresca contactos también, por si se editaron en el modal
     if (updateUserData) updateUserData(newData);
   };
 
@@ -149,6 +171,32 @@ const Profile = () => {
         </section>
       </div>
 
+      {/* 🔥 NUEVA SECCIÓN: Contactos de Emergencia (ancho completo, debajo del grid) */}
+      <div className="mt-6 md:mt-8">
+        <SectionHeader icon={<Users />} title="Contactos de Emergencia" />
+
+        {loadingContactos ? (
+          <div className="flex items-center justify-center py-10">
+            <Loader2 className="animate-spin text-slate-300" size={28} />
+          </div>
+        ) : contactos.length === 0 ? (
+          <div className="bg-white p-6 sm:p-8 rounded-[2rem] border border-dashed border-slate-200 text-center">
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">
+              Sin contactos de emergencia registrados
+            </p>
+            <p className="text-[10px] font-bold text-slate-300 mt-1">
+              Agrégalos desde "Editar Perfil"
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            {contactos.map((contacto) => (
+              <ContactCard key={contacto.id} contacto={contacto} />
+            ))}
+          </div>
+        )}
+      </div>
+
       <EditProfileModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
@@ -210,5 +258,35 @@ const InfoCard = ({ icon, label, value, color, footer, subText, isLarge }) => {
     </div>
   );
 };
+
+// 🔥 NUEVO: tarjeta de contacto de emergencia — misma familia visual que InfoCard,
+// pero con badge "Principal" cuando corresponde y sin subText/footer genéricos.
+const ContactCard = ({ contacto }) => (
+  <div className={`bg-white p-5 sm:p-6 rounded-[2rem] border shadow-xl shadow-slate-200/40 group transition-all duration-300 relative ${contacto.es_principal ? 'border-orange-100 ring-2 sm:ring-4 ring-orange-50/50' : 'border-slate-100'}`}>
+    <div className="flex items-start gap-4 sm:gap-5">
+      <div className="shrink-0 p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all group-hover:bg-orange-500 group-hover:text-white bg-emerald-50 text-emerald-600">
+        <Phone size={20} className="sm:w-[22px] sm:h-[22px]" strokeWidth={2.5} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <p className="font-black text-[#1e3a8a] tracking-tight text-sm sm:text-base break-words">
+            {contacto.nombre_completo}
+          </p>
+          {contacto.es_principal && (
+            <span className="flex items-center gap-1 bg-orange-500 text-white text-[8px] font-black uppercase px-2 py-0.5 rounded-full shrink-0">
+              <Star size={9} fill="white" /> Principal
+            </span>
+          )}
+        </div>
+        <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-0.5 italic">
+          {contacto.relacion}
+        </p>
+        <p className="text-xs sm:text-sm font-black text-slate-600 mt-2">
+          {contacto.telefono}
+        </p>
+      </div>
+    </div>
+  </div>
+);
 
 export default Profile;

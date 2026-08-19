@@ -3,6 +3,9 @@ import { X, Save, Loader2, Phone, HeartPulse, MapPin, User, ArrowLeft } from 'lu
 import apiFetch from '../../../interceptors/api.js';
 import toast from 'react-hot-toast';
 import { API_ROUTES } from '../../../constants/apiRoutes.js';
+// 🔥 NUEVO: sección de contactos de emergencia, componente aparte para no
+// inflar este modal con toda la lógica de listar/crear/editar/borrar
+import EditProfileContacts from './EditProfileContacts.jsx';
 
 const DISTRITOS_LIMA = [
   "Ancón", "Ate", "Barranco", "Breña", "Carabayllo", "Chaclacayo", "Chorrillos", "Cieneguilla",
@@ -154,6 +157,14 @@ const EditProfileModal = ({ isOpen, onClose, onSuccess }) => {
               </div>
             </div>
           </form>
+
+          {/* 🔥 NUEVO: SECCIÓN 4 — CONTACTOS DE EMERGENCIA
+              Fuera del <form id="profile-form">, a propósito: los contactos se
+              guardan uno por uno contra su propio endpoint (POST/PATCH/DELETE),
+              no dependen del submit de "Guardar Cambios" del perfil general. */}
+          <div className="mt-5">
+            <EditProfileContacts />
+          </div>
         </div>
 
         {/* FOOTER FIJO CON BOTÓN */}
