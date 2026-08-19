@@ -1,9 +1,45 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Calendar, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 const InscriptionsModal = ({ isOpen, data, onClose }) => {
+
+    // 🔥 FIX: agrupamos las inscripciones REGULARES que comparten sede + nivel +
+    // estado + fecha de corte, porque en realidad son LA MISMA inscripción con
+    // varios horarios a la semana (ej: martes y jueves) — no inscripciones
+    // distintas. Antes se pintaba una tarjeta idéntica por cada horario.
+    // Las INDIVIDUALES (clase única) NO se agrupan: cada una tiene su propia
+    // fecha de clase y deben verse por separado.
+    const gruposInscripciones = useMemo(() => {
+        if (!data?.historialInscripciones) return [];
+
+        const mapa = new Map();
+
+        data.historialInscripciones.forEach((insc) => {
+            const esIndividual = insc.tipoInscripcion === 'INDIVIDUAL';
+
+            const fechaCorteKey = insc.fechaCorte ? new Date(insc.fechaCorte).toISOString() : 'sin-fecha';
+            const key = esIndividual
+                ? `IND__${insc.sede}__${insc.nivel}__${insc.fechaInscripcion}__${insc.horario}`
+                : `REG__${insc.sede}__${insc.nivel}__${insc.estado}__${fechaCorteKey}`;
+
+            if (!mapa.has(key)) {
+                mapa.set(key, {
+                    ...insc,
+                    horarios: insc.horario ? [insc.horario] : [],
+                });
+            } else if (insc.horario) {
+                const grupo = mapa.get(key);
+                if (!grupo.horarios.includes(insc.horario)) {
+                    grupo.horarios.push(insc.horario);
+                }
+            }
+        });
+
+        return Array.from(mapa.values());
+    }, [data]);
+
     if (!isOpen || !data) return null;
 
     return (
@@ -27,10 +63,10 @@ const InscriptionsModal = ({ isOpen, data, onClose }) => {
                 </div>
 
                 <div className="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
-                    {data.historialInscripciones.length === 0 ? (
+                    {gruposInscripciones.length === 0 ? (
                         <p className="text-center text-sm font-bold text-slate-400 py-8">No hay registros de inscripciones.</p>
                     ) : (
-                        data.historialInscripciones.map((insc, idx) => (
+                        gruposInscripciones.map((insc, idx) => (
                             <div key={idx} className="bg-white border-2 border-slate-50 rounded-2xl p-5 hover:border-blue-100 hover:shadow-md transition-all group relative overflow-hidden">
                                 <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${insc.estado === 'ACTIVO' ? (insc.estaVencido ? 'bg-red-500' : 'bg-emerald-500') : 'bg-slate-300'}`}></div>
 
@@ -49,10 +85,15 @@ const InscriptionsModal = ({ isOpen, data, onClose }) => {
                                             SEDE {insc.sede}
                                         </p>
 
-                                        {insc.horario && (
-                                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase mt-1">
-                                                <Clock size={12} className="text-blue-400" />
-                                                {insc.horario}
+                                        {/* 🔥 Ahora se listan TODOS los horarios agrupados dentro de la misma tarjeta */}
+                                        {insc.horarios.length > 0 && (
+                                            <div className="flex flex-col gap-1 mt-1">
+                                                {insc.horarios.map((h, i) => (
+                                                    <div key={i} className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase">
+                                                        <Clock size={12} className="text-blue-400" />
+                                                        {h}
+                                                    </div>
+                                                ))}
                                             </div>
                                         )}
                                     </div>
@@ -61,8 +102,7 @@ const InscriptionsModal = ({ isOpen, data, onClose }) => {
                                         {insc.tipoInscripcion === 'INDIVIDUAL' ? (
                                             <>
                                                 <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Fecha de la Clase</p>
-                                                <div className={`text-base font-black uppercase italic flex items-center justify-end gap-1 text-slate-800`}
-                                                >
+                                                <div className="text-base font-black uppercase italic flex items-center justify-end gap-1 text-slate-800">
                                                     <Calendar size={14} />
                                                     {new Date(insc.fechaInscripcion).toLocaleDateString('es-ES', {
                                                         day: '2-digit',
@@ -94,7 +134,7 @@ const InscriptionsModal = ({ isOpen, data, onClose }) => {
                     )}
                 </div>
             </div>
-        </div >
+        </div>
     );
 };
 

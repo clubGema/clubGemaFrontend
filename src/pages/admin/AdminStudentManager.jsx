@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Search, Loader2, ChevronRight, ArrowLeft, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { addDays, isPast, format, parseISO } from 'date-fns';
@@ -27,6 +27,13 @@ const AdminStudentsManager = () => {
     const [modalInscripciones, setModalInscripciones] = useState({ isOpen: false, data: null });
     const [currentPage, setCurrentPage] = useState(1);
 
+    // 🔥 MOVIDO desde StudentTable: filtros avanzados, texto y orden ahora
+    // viven aquí, porque deben aplicarse sobre la lista COMPLETA de alumnos
+    // antes de paginar — no sobre los 10 elementos ya paginados.
+    const [filters, setFilters] = useState({ sede: '', nivel: '', estadoVisual: '' });
+    const [textFilter, setTextFilter] = useState({ field: 'full_name', value: '' });
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+
     const itemsPerPage = 10;
 
     // --- CARGA Y PROCESAMIENTO DE DATOS ---
@@ -50,11 +57,28 @@ const AdminStudentsManager = () => {
 
                     // LÓGICA DE INSCRIPCIONES Y ESTADOS
                     const inscripcionesActivas = inscripciones.filter(i => i.estado === 'ACTIVO');
+
+                    // 🔥 FIX: de las activas, separamos las VIGENTES (no vencidas) de las
+                    // vencidas. Antes se usaban TODAS las activas para calcular sede/nivel,
+                    // por eso un alumno con inscripción activa-pero-vencida en "Independencia"
+                    // seguía apareciendo al filtrar por esa sede, aunque ya no esté vigente.
+                    const inscripcionesConCorte = inscripcionesActivas.map(i => {
+                        const fCorteCalc = i.fecha_inscripcion ? addDays(new Date(i.fecha_inscripcion), 29) : null;
+                        return { ...i, __fechaCorte: fCorteCalc, __vencida: fCorteCalc ? isPast(fCorteCalc) : false };
+                    });
+                    const inscripcionesVigentes = inscripcionesConCorte.filter(i => !i.__vencida);
+
                     let inscripcionesAMostrar = [];
                     let estadoVisual = 'SIN INSCRIPCIÓN';
 
-                    if (inscripcionesActivas.length > 0) {
-                        inscripcionesAMostrar = inscripcionesActivas;
+                    if (inscripcionesVigentes.length > 0) {
+                        // Prioridad 1: activas y vigentes — esta es la sede/nivel "real" del alumno
+                        inscripcionesAMostrar = inscripcionesVigentes;
+                        estadoVisual = 'ACTIVO';
+                    } else if (inscripcionesConCorte.length > 0) {
+                        // Prioridad 2: sigue ACTIVO en BD pero ya vencida (nadie la finalizó aún).
+                        // Se mantiene para no dejar la fila vacía, mostrará el badge VENCIDO.
+                        inscripcionesAMostrar = inscripcionesConCorte;
                         estadoVisual = 'ACTIVO';
                     } else if (inscripciones.length > 0) {
                         inscripcionesAMostrar = [inscripciones[0]];
@@ -154,7 +178,9 @@ const AdminStudentsManager = () => {
 
     // --- EFECTOS ---
     useEffect(() => { fetchAlumnos(); }, [selectedSede]);
-    useEffect(() => { setCurrentPage(1); }, [searchTerm, selectedSede]);
+    // 🔥 Ahora también resetea la página cuando cambian filtros/texto avanzado/orden de sede-select
+    useEffect(() => { setCurrentPage(1); }, [searchTerm, selectedSede, filters, textFilter]);
+
     useEffect(() => {
         const loadSedes = async () => {
             const res = await apiFetch.get(API_ROUTES.SEDES.ACTIVOS);
@@ -164,14 +190,85 @@ const AdminStudentsManager = () => {
         loadSedes();
     }, []);
 
-    // --- FILTROS Y PAGINACIÓN ---
-    const filteredAlumnos = alumnos.filter(alum =>
-        alum.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        alum.dni.includes(searchTerm)
+    // 🔥 Opciones de los selects de filtro: SIEMPRE calculadas sobre la lista
+    // COMPLETA de alumnos (no solo los 10 de la página actual), para que no
+    // "desaparezcan" sedes/niveles válidos según en qué página estés parado.
+    const uniqueSedes = useMemo(
+        () => [...new Set(alumnos.flatMap(a => a.sedes))].filter(Boolean).sort(),
+        [alumnos]
     );
-    const currentAlumnos = filteredAlumnos.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-    console.log(currentAlumnos)
-    const totalPages = Math.ceil(filteredAlumnos.length / itemsPerPage);
+    const uniqueNiveles = useMemo(
+        () => [...new Set(alumnos.flatMap(a => a.niveles))].filter(Boolean).sort(),
+        [alumnos]
+    );
+    const uniqueEstados = useMemo(
+        () => [...new Set(alumnos.map(a => a.estadoVisual))].filter(Boolean).sort(),
+        [alumnos]
+    );
+
+    const requestSort = (key) => {
+        let direction = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') direction = 'desc';
+        setSortConfig({ key, direction });
+    };
+
+    // 🔥 FIX PRINCIPAL: todo el pipeline (búsqueda simple + filtro avanzado de
+    // texto + filtros de sede/nivel/estado + orden) corre AQUÍ, sobre los 767
+    // alumnos completos. Recién con el resultado final se calcula la paginación.
+    const processedAlumnos = useMemo(() => {
+        let result = [...alumnos];
+
+        // A. Búsqueda simple del buscador superior (nombre o DNI)
+        if (searchTerm) {
+            const lower = searchTerm.toLowerCase();
+            result = result.filter(a =>
+                a.full_name.toLowerCase().includes(lower) || a.dni.includes(searchTerm)
+            );
+        }
+
+        // B. Filtro avanzado de texto (nombre / DNI / celular) desde la cabecera de tabla
+        if (textFilter.value) {
+            const lowerValue = textFilter.value.toLowerCase();
+            result = result.filter(a => {
+                const val = String(a[textFilter.field] || '').toLowerCase();
+                return val.includes(lowerValue);
+            });
+        }
+
+        // C. Filtros tipo segmentador (sede, nivel, estado)
+        if (filters.sede) result = result.filter(a => a.sedes.includes(filters.sede));
+        if (filters.nivel) result = result.filter(a => a.niveles.includes(filters.nivel));
+        if (filters.estadoVisual) result = result.filter(a => a.estadoVisual === filters.estadoVisual);
+
+        // D. Ordenamiento
+        if (sortConfig.key) {
+            result.sort((a, b) => {
+                let aValue = a[sortConfig.key];
+                let bValue = b[sortConfig.key];
+
+                if (sortConfig.key === 'monto_pendiente') {
+                    aValue = parseFloat(a.monto_pendiente || 0);
+                    bValue = parseFloat(b.monto_pendiente || 0);
+                }
+
+                if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+                if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        return result;
+    }, [alumnos, searchTerm, textFilter, filters, sortConfig]);
+
+    const currentAlumnos = processedAlumnos.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const totalPages = Math.ceil(processedAlumnos.length / itemsPerPage);
+
+    const hasFilters = filters.sede || filters.nivel || filters.estadoVisual || textFilter.value;
+
+    const clearAllFilters = () => {
+        setFilters({ sede: '', nivel: '', estadoVisual: '' });
+        setTextFilter({ field: 'full_name', value: '' });
+    };
 
     // --- RENDERIZADOS ---
     if (loading) return (
@@ -242,19 +339,30 @@ const AdminStudentsManager = () => {
                 </select>
             </div>
 
-            {/* TABLA PRINCIPAL MODULARIZADA */}
+            {/* TABLA PRINCIPAL — ahora solo presentacional, recibe todo por props */}
             <StudentTable
-                currentAlumnos={currentAlumnos}
+                alumnos={currentAlumnos}
+                sortConfig={sortConfig}
+                requestSort={requestSort}
+                filters={filters}
+                setFilters={setFilters}
+                textFilter={textFilter}
+                setTextFilter={setTextFilter}
+                uniqueSedes={uniqueSedes}
+                uniqueNiveles={uniqueNiveles}
+                uniqueEstados={uniqueEstados}
+                hasFilters={hasFilters}
+                onClearFilters={clearAllFilters}
                 onViewDetails={(alum) => { setSelectedAlumno(alum); setView('details'); }}
                 onAttendanceHistory={(alum) => { setSelectedAlumno(alum); setView('attendanceHistory'); }}
                 onOpenInscriptions={(alum) => setModalInscripciones({ isOpen: true, data: alum })}
                 onChangeLevel={(alum) => { setSelectedAlumno(alum); setView('cambio_nivel'); }}
             />
 
-            {/* Paginación */}
+            {/* Paginación — ahora basada en processedAlumnos (con filtros aplicados) */}
             <div className="bg-slate-50/50 border-t border-slate-100 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                    Mostrando <span className="text-[#1e3a8a]">{currentAlumnos.length}</span> de <span className="text-slate-600">{filteredAlumnos.length}</span> alumnos
+                    Mostrando <span className="text-[#1e3a8a]">{currentAlumnos.length}</span> de <span className="text-slate-600">{processedAlumnos.length}</span> alumnos
                 </p>
 
                 <div className="flex items-center gap-2">

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { 
-    ArrowLeft, Fingerprint, Phone, Mail, Calendar, User, 
-    MapPin, Stethoscope, ShieldAlert, Users, KeyRound, 
-    CalendarClock, Loader2 
+import React, { useState, useEffect, useMemo } from 'react';
+import {
+    ArrowLeft, Fingerprint, Phone, Mail, Calendar, User,
+    MapPin, Stethoscope, ShieldAlert, Users, KeyRound,
+    CalendarClock, Loader2, Layers, DollarSign
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -25,7 +25,7 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
                 setLoadingCiclos(true);
                 const res = await apiFetch.get(API_ROUTES.INSCRIPCIONES.HISTORIAL_CICLOS(selectedAlumno.id));
                 const result = await res.json();
-                
+
                 if (res.ok) {
                     setCiclos(result.data || []);
                 } else {
@@ -41,38 +41,81 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
         fetchCiclos();
     }, [selectedAlumno]);
 
+    // 🔥 FIX: el backend devuelve una fila por cada horario semanal de la
+    // inscripción (join contra horarios_clases), así que un ciclo con 2 clases
+    // por semana llega duplicado (mismo mes, sede, nivel, pago, corte) — solo
+    // cambia el inscripcion_id. Agrupamos por lo que identifica al CICLO real:
+    // sede + nivel + profesor + mes + fechas + estado + pago + monto.
+    // Guardamos cuántos registros se fusionaron para mostrar un pequeño
+    // indicador ("x2 horarios") cuando aplica, sin perder esa información.
+    const ciclosAgrupados = useMemo(() => {
+        const mapa = new Map();
+
+        ciclos.forEach((c) => {
+            // 🔥 FIX: monto_mes SALE de la key. El monto es el que varía y
+            // debe ACUMULARSE entre los registros agrupados (cada horario
+            // semanal es una cuota), no perderse quedándose con el de uno solo.
+            const key = [
+                c.sede,
+                c.nivel,
+                c.profesor,
+                c.numero_mes_ciclo,
+                c.fecha_inicio_ciclo,
+                c.fecha_corte_ciclo,
+                c.estado_inscripcion,
+                c.estado_pago_mes,
+            ].join('__');
+
+            if (!mapa.has(key)) {
+                mapa.set(key, {
+                    ...c,
+                    inscripcion_ids: [c.inscripcion_id],
+                    cantidadHorarios: 1,
+                    montoTotal: Number(c.monto_mes || 0),
+                });
+            } else {
+                const grupo = mapa.get(key);
+                grupo.inscripcion_ids.push(c.inscripcion_id);
+                grupo.cantidadHorarios += 1;
+                grupo.montoTotal += Number(c.monto_mes || 0);
+            }
+        });
+
+        return Array.from(mapa.values()).sort((a, b) => {
+            const fa = a.fecha_inicio_ciclo ? new Date(a.fecha_inicio_ciclo) : 0;
+            const fb = b.fecha_inicio_ciclo ? new Date(b.fecha_inicio_ciclo) : 0;
+            return fb - fa;
+        });
+    }, [ciclos]);
+
     // Helpers para la UI
     const formatearFecha = (fechaString) => {
         if (!fechaString) return "S/F";
         return format(parseISO(fechaString.slice(0, 10)), "dd 'de' MMM, yyyy", { locale: es });
     };
 
-    // 🚀 NUEVO: Extrae "Abril - Mayo 2026" evaluando inicio y corte
+    // 🚀 Extrae "Abril - Mayo 2026" evaluando inicio y corte
     const obtenerMesCiclo = (fechaInicio, fechaCorte) => {
         if (!fechaInicio) return "MES DESCONOCIDO";
-        
+
         const inicioDate = parseISO(fechaInicio.slice(0, 10));
         const mesInicio = format(inicioDate, "MMMM", { locale: es });
         const anioInicio = format(inicioDate, "yyyy");
 
-        // Si no hay fecha de corte, solo mostramos el inicio
         if (!fechaCorte) return `${mesInicio} ${anioInicio}`;
 
         const corteDate = parseISO(fechaCorte.slice(0, 10));
         const mesCorte = format(corteDate, "MMMM", { locale: es });
         const anioCorte = format(corteDate, "yyyy");
 
-        // Si es el mismo mes y año (Ej: 01 Mayo al 30 Mayo)
         if (mesInicio === mesCorte && anioInicio === anioCorte) {
             return `${mesInicio} ${anioInicio}`;
-        } 
-        // Si son meses diferentes pero el mismo año (Ej: 26 Abril al 10 Mayo)
+        }
         else if (anioInicio === anioCorte) {
             return `${mesInicio} - ${mesCorte} ${anioInicio}`;
-        } 
-        // Si cruza de un año a otro (Ej: Diciembre 2025 - Enero 2026)
+        }
         else {
-            return `${mesInicio.slice(0,3)} ${anioInicio} - ${mesCorte.slice(0,3)} ${anioCorte}`;
+            return `${mesInicio.slice(0, 3)} ${anioInicio} - ${mesCorte.slice(0, 3)} ${anioCorte}`;
         }
     };
 
@@ -81,8 +124,8 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
         switch (estado?.toUpperCase()) {
             case 'PAGADA':
             case 'PAGADO': return 'bg-green-100 text-green-700 border-green-200';
-            case 'PENDIENTE': return 'bg-orange-100 text-orange-700 border-orange-200'; 
-            case 'VENCIDO': return 'bg-red-100 text-red-700 border-red-200'; 
+            case 'PENDIENTE': return 'bg-orange-100 text-orange-700 border-orange-200';
+            case 'VENCIDO': return 'bg-red-100 text-red-700 border-red-200';
             default: return 'bg-slate-100 text-slate-500 border-slate-200';
         }
     };
@@ -115,7 +158,7 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                
+
                 {/* COLUMNA IZQUIERDA (Datos Personales y Médicos) */}
                 <div className="lg:col-span-2 space-y-6">
                     {/* Perfil Principal */}
@@ -214,7 +257,7 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
 
                 {/* COLUMNA DERECHA (Emergencia y Ciclos) */}
                 <div className="lg:col-span-1 space-y-6">
-                    
+
                     {/* Contacto de Emergencia */}
                     <div className="bg-red-50 rounded-[2.5rem] border border-red-100 p-8 relative overflow-hidden shrink-0">
                         <div className="absolute -right-4 -bottom-4 text-red-100 opacity-50">
@@ -254,24 +297,36 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
                                 Historial de Ciclos
                             </h3>
                         </div>
-                        
+
                         <div className="p-5 overflow-y-auto custom-scrollbar max-h-[500px] space-y-3 bg-slate-50/30">
                             {loadingCiclos ? (
                                 <div className="flex flex-col justify-center items-center py-10 gap-2">
                                     <Loader2 className="animate-spin text-orange-500" size={24} />
                                     <span className="text-[9px] text-slate-400 uppercase font-bold tracking-widest">Cargando ciclos...</span>
                                 </div>
-                            ) : ciclos.length > 0 ? (
-                                ciclos.map((ciclo, idx) => (
+                            ) : ciclosAgrupados.length > 0 ? (
+                                ciclosAgrupados.map((ciclo, idx) => (
                                     <div key={idx} className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-3 shadow-sm relative transition-all hover:border-orange-200 hover:shadow-md">
                                         <div className="flex justify-between items-start gap-2">
                                             <div>
-                                                <span className="text-[10px] font-black text-[#1e3a8a] uppercase tracking-widest bg-blue-50 px-2 py-1 rounded-md">
-                                                    {obtenerMesCiclo(ciclo.fecha_inicio_ciclo, ciclo.fecha_corte_ciclo)}
-                                                </span>
+                                                <div className="flex items-center gap-1.5 flex-wrap">
+                                                    <span className="text-[10px] font-black text-[#1e3a8a] uppercase tracking-widest bg-blue-50 px-2 py-1 rounded-md">
+                                                        {obtenerMesCiclo(ciclo.fecha_inicio_ciclo, ciclo.fecha_corte_ciclo)}
+                                                    </span>
+                                                    {/* 🔥 Nuevo: indicador de cuántos horarios semanales se fusionaron en esta tarjeta */}
+                                                    {ciclo.cantidadHorarios > 1 && (
+                                                        <span className="flex items-center gap-1 text-[8px] font-black text-indigo-600 bg-indigo-50 px-1.5 py-1 rounded-md border border-indigo-100 uppercase">
+                                                            <Layers size={9} /> x{ciclo.cantidadHorarios} horarios
+                                                        </span>
+                                                    )}
+                                                </div>
                                                 <div className="text-[9px] font-bold text-slate-500 flex items-center gap-1.5 mt-2">
-                                                    <MapPin size={10} className="text-orange-500 shrink-0" /> 
+                                                    <MapPin size={10} className="text-orange-500 shrink-0" />
                                                     <span className="truncate">{ciclo.sede}</span>
+                                                </div>
+                                                <div className="text-[9px] font-bold text-slate-400 flex items-center gap-1.5 mt-1">
+                                                    <User size={10} className="text-slate-400 shrink-0" />
+                                                    <span className="truncate">{ciclo.nivel} {ciclo.profesor ? `· ${ciclo.profesor}` : ''}</span>
                                                 </div>
                                             </div>
 
@@ -284,16 +339,25 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
                                                 </span>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="flex justify-between items-center pt-3 border-t border-slate-100">
                                             <div className="flex flex-col">
                                                 <span className="text-[8px] text-slate-400 uppercase font-black tracking-widest">Inicio</span>
                                                 <span className="text-[10px] font-black text-slate-700">{formatearFecha(ciclo.fecha_inicio_ciclo)}</span>
                                             </div>
-                                            <div className="flex flex-col items-end">
+                                            <div className="flex flex-col items-center">
                                                 <span className="text-[8px] text-slate-400 uppercase font-black tracking-widest">Corte</span>
                                                 <span className="text-[10px] font-black text-slate-700">{ciclo.fecha_corte_ciclo ? formatearFecha(ciclo.fecha_corte_ciclo) : 'N/A'}</span>
                                             </div>
+                                            {/* 🔥 Nuevo: monto del ciclo, útil ahora que ya no está duplicado */}
+                                            {ciclo.montoTotal > 0 && (
+                                                <div className="flex flex-col items-end">
+                                                    <span className="text-[8px] text-slate-400 uppercase font-black tracking-widest">Monto</span>
+                                                    <span className="text-[10px] font-black text-emerald-600 flex items-center gap-0.5">
+                                                        <DollarSign size={10} />{ciclo.montoTotal.toFixed(2)}
+                                                    </span>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 ))
