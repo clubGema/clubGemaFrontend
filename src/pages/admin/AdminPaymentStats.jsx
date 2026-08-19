@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Clock, BarChart3 } from 'lucide-react';
 
-const ALTURA_AREA_PX = 150; 
+const ALTURA_AREA_PX = 150;
 
 const AdminPaymentStats = ({ stats }) => {
-    // Escala combinada (ingreso + egreso apilados)
+    const [seriesVisibles, setSeriesVisibles] = useState({
+        ingresos: true,
+        egresos: true,
+    });
+
+    const toggleSerie = (serie) => {
+        setSeriesVisibles(prev => ({ ...prev, [serie]: !prev[serie] }));
+    };
+
     const scaleMax = Math.max(
-        ...stats.chartData.map(d => (d.totalIngresos || 0) + (d.egresos || 0)),
+        ...stats.chartData.map(d =>
+            (seriesVisibles.ingresos ? (d.totalIngresos || 0) : 0) +
+            (seriesVisibles.egresos ? (d.egresos || 0) : 0)
+        ),
         1
     );
 
@@ -29,7 +40,7 @@ const AdminPaymentStats = ({ stats }) => {
             </div>
 
             {/* 📊 ANÁLISIS DINÁMICO */}
-            <div className="md:col-span-3 bg-white p-6 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col justify-between relative overflow-hidden group">
+            <div className="md:col-span-3 bg-white p-6 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col justify-between relative group">
 
                 {/* Header del Gráfico */}
                 <div className="flex justify-between items-start mb-4 relative z-10">
@@ -46,15 +57,29 @@ const AdminPaymentStats = ({ stats }) => {
                     </div>
                 </div>
 
-                {/* Área de Barras */}
-                <div className="flex items-end gap-2 px-1 relative z-10" style={{ height: ALTURA_AREA_PX + 60 }}>
+                {/* Área de Barras — 🔥 FIX: subí z-10 → z-30. Este contenedor es la
+                    "stacking context" del tooltip (que internamente es z-50). Antes,
+                    con z-10 aquí y z-20 en la leyenda, la leyenda le ganaba a TODO
+                    este bloque (tooltip incluido) sin importar su z-50 interno, porque
+                    esa comparación nunca llegaba a darse: perdía a nivel de contenedor
+                    padre. Subiendo este contenedor a z-30 (por encima del z-20 de la
+                    leyenda), el tooltip ahora sí queda por encima de todo. */}
+                <div className="flex items-end gap-2 px-1 relative z-30" style={{ height: ALTURA_AREA_PX + 60 }}>
                     {stats.chartData.map((item, idx) => {
-                        const ingresos = item.totalIngresos || 0;
-                        const egresos = item.egresos || 0;
+                        const ingresos = seriesVisibles.ingresos ? (item.totalIngresos || 0) : 0;
+                        const egresos = seriesVisibles.egresos ? (item.egresos || 0) : 0;
                         const hayDatos = ingresos > 0 || egresos > 0;
 
                         const alturaIngresoPx = ingresos > 0 ? Math.max((ingresos / scaleMax) * ALTURA_AREA_PX, 4) : 0;
                         const alturaEgresoPx = egresos > 0 ? Math.max((egresos / scaleMax) * ALTURA_AREA_PX, 4) : 0;
+
+                        const esPrimera = idx === 0;
+                        const esUltima = idx === stats.chartData.length - 1;
+                        const posicionTooltip = esPrimera
+                            ? 'left-0 translate-x-0'
+                            : esUltima
+                                ? 'right-0 left-auto translate-x-0'
+                                : 'left-1/2 -translate-x-1/2';
 
                         return (
                             <div key={idx} className="flex-1 flex flex-col items-center group/bar relative h-full justify-end">
@@ -73,13 +98,8 @@ const AdminPaymentStats = ({ stats }) => {
                                     )}
                                 </div>
 
-                                {/* Tooltip Pro — 🔥 FIX: le faltaba left-1/2 -translate-x-1/2 para
-                                    centrarse sobre su propia barra. Sin eso, quedaba anclado a la
-                                    posición que tenía en el flujo normal antes de volverse absolute
-                                    (pegado a la izquierda del contenedor), por eso se veía descuadrado
-                                    al hacer hover — más notorio en barras con ambos valores (ingreso
-                                    + egreso) como Agosto, donde además solapaba los montos vecinos. */}
-                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-10 opacity-0 group-hover/bar:opacity-100 transition-all duration-300 transform translate-y-2 group-hover/bar:translate-y-0 bg-slate-900 text-white text-[10px] px-3 py-2 rounded-xl font-bold z-50 whitespace-nowrap shadow-xl border border-white/10 flex flex-col gap-1 pointer-events-none">
+                                {/* Tooltip Pro */}
+                                <div className={`absolute top-full ${posicionTooltip} mt-3 opacity-0 group-hover/bar:opacity-100 transition-all duration-300 transform -translate-y-2 group-hover/bar:translate-y-0 bg-slate-900 text-white text-[10px] px-3 py-2 rounded-xl font-bold z-50 whitespace-nowrap shadow-xl border border-white/10 flex flex-col gap-1 pointer-events-none`}>
                                     <span className="text-blue-400">Pagos: S/ {(item.ingresosPagos || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                                     <span className="text-slate-300 normal-case">Manual: S/ {(item.ingresosManuales || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                                 </div>
@@ -89,14 +109,14 @@ const AdminPaymentStats = ({ stats }) => {
                                     <motion.div
                                         initial={{ height: 0 }}
                                         animate={{ height: alturaIngresoPx }}
-                                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: idx * 0.04 }}
+                                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                                         className={`w-full ${ingresos > 0 ? 'bg-gradient-to-t from-[#1e3a8a] via-blue-600 to-blue-400' : 'bg-slate-50'} min-h-[4px]`}
                                     />
                                     {egresos > 0 && (
                                         <motion.div
                                             initial={{ height: 0 }}
                                             animate={{ height: alturaEgresoPx }}
-                                            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: idx * 0.04 }}
+                                            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                                             className="w-full bg-gradient-to-t from-red-600 via-red-500 to-red-400 border-b border-white/10"
                                         />
                                     )}
@@ -111,20 +131,40 @@ const AdminPaymentStats = ({ stats }) => {
                     })}
                 </div>
 
-                {/* Leyenda de colores */}
-                <div className="flex items-center justify-center gap-6 mt-4 relative z-10">
-                    <div className="flex items-center gap-2">
+                {/* Leyenda / Toggle — se queda en z-20, por debajo del z-30 del
+                    área de barras, así el tooltip siempre gana. */}
+                <div className="flex items-center justify-center gap-3 mt-4 relative z-20">
+                    <button
+                        type="button"
+                        onClick={() => toggleSerie('ingresos')}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 ${
+                            seriesVisibles.ingresos
+                                ? 'bg-blue-50 border-blue-200 opacity-100'
+                                : 'bg-slate-50 border-slate-200 opacity-40'
+                        }`}
+                    >
                         <span className="w-3 h-3 rounded-md bg-gradient-to-t from-[#1e3a8a] via-blue-600 to-blue-400 shadow-sm" />
-                        <span className="text-[9px] font-black text-slate-500 uppercase tracking-wide">Ingresos</span>
-                    </div>
-                    <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-black text-slate-600 uppercase tracking-wide">Ingresos</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => toggleSerie('egresos')}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 ${
+                            seriesVisibles.egresos
+                                ? 'bg-red-50 border-red-200 opacity-100'
+                                : 'bg-slate-50 border-slate-200 opacity-40'
+                        }`}
+                    >
                         <span className="w-3 h-3 rounded-md bg-gradient-to-t from-red-600 via-red-500 to-red-400 shadow-sm" />
-                        <span className="text-[9px] font-black text-slate-500 uppercase tracking-wide">Egresos</span>
-                    </div>
+                        <span className="text-[9px] font-black text-slate-600 uppercase tracking-wide">Egresos</span>
+                    </button>
                 </div>
 
                 {/* Marca de agua */}
-                <BarChart3 className="absolute -right-6 -bottom-6 text-slate-50 opacity-50 pointer-events-none" size={150} />
+                <div className="absolute inset-0 overflow-hidden rounded-[2.5rem] pointer-events-none">
+                    <BarChart3 className="absolute -right-6 -bottom-6 text-slate-50 opacity-50" size={150} />
+                </div>
             </div>
         </div>
     );
