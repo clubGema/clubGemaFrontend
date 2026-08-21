@@ -204,11 +204,19 @@ const StudentTable = ({
                                                 INDIVIDUAL
                                             </span>
                                         ) : (
+                                            // 🔧 FIX: ahora pinta directo desde estadoDisplay (ya calculado
+                                            // arriba en AdminStudentsManager), en vez de recalcular el
+                                            // ternario estadoVisual + estaVencido acá adentro. Mismo texto
+                                            // que ve el filtro de la cabecera, sin duplicar la lógica.
                                             <span className={`px-3 py-1.5 rounded-lg border flex items-center gap-1.5
-                                            ${alum.estadoVisual === 'ACTIVO' ? (alum.estaVencido ? 'bg-red-50 text-red-600 border-red-200' : 'bg-emerald-50 text-emerald-600 border-emerald-200') : 'bg-slate-50 text-slate-500 border-slate-200'}`}
+                                            ${alum.estadoDisplay === 'ACTIVO'
+                                                ? 'bg-emerald-50 text-emerald-600 border-emerald-200'
+                                                : alum.estadoDisplay === 'NO RENOVADO'
+                                                    ? 'bg-red-50 text-red-600 border-red-200'
+                                                    : 'bg-slate-50 text-slate-500 border-slate-200'}`}
                                             >
                                                 <Zap size={10} fill="currentColor" className={alum.multiplesActivas ? "animate-bounce" : ""} />
-                                                {alum.estadoVisual === 'ACTIVO' ? (alum.estaVencido ? 'VENCIDO' : 'ACTIVO') : alum.estadoVisual}
+                                                {alum.estadoDisplay}
                                                 {alum.multiplesActivas && <span className="bg-orange-500 text-white px-1 rounded ml-1 animate-pulse">+</span>}
                                             </span>
                                         )}

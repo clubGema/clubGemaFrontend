@@ -156,8 +156,14 @@ export const API_ROUTES = {
     RESUMEN: "/caja/resumen",
      RESUMEN_ANUAL: "/caja/resumen-anual",
   },
-   HISTORIAL_ACADEMICO: {
+      HISTORIAL_ACADEMICO: {
     BASE: "/historial-academico",
     ALUMNO: (alumnoId) => `/historial-academico/alumno/${alumnoId}`,
+    RESUMEN_TABLA: (sedeId) => sedeId
+      ? `/historial-academico/resumen-tabla?sede_id=${sedeId}`
+      : `/historial-academico/resumen-tabla`,
+    RESUMEN_INDIVIDUAL: (sedeId) => sedeId
+      ? `/historial-academico/resumen-individual?sede_id=${sedeId}`
+      : `/historial-academico/resumen-individual`,
   },
 };

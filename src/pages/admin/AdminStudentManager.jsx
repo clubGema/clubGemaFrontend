@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Search, Loader2, ChevronRight, ArrowLeft, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { addDays, isPast, format, parseISO } from 'date-fns';
-import { es } from 'date-fns/locale';
 
 import { apiFetch } from '../../interceptors/api';
 import { API_ROUTES } from '../../constants/apiRoutes';
@@ -40,123 +38,28 @@ const AdminStudentsManager = () => {
     const fetchAlumnos = async () => {
         try {
             setLoading(true);
-            const url = selectedSede ? `${API_ROUTES.USUARIOS.ALUMNOS}?sede_id=${selectedSede}` : API_ROUTES.USUARIOS.ALUMNOS;
-            const response = await apiFetch.get(url);
+
+            // 🆕 Una sola llamada: el backend ya calcula sede/nivel vigente,
+            // deuda pendiente y flag de plan individual. Nada de post-procesamiento
+            // de fechas/vigencia en el frontend.
+            const response = await apiFetch.get(API_ROUTES.HISTORIAL_ACADEMICO.RESUMEN_TABLA(selectedSede));
             const result = await response.json();
 
             if (response.ok) {
-                const formattedData = result.data.map(user => {
-                    const alumnoData = user.alumnos || {};
-                    const contacto = alumnoData.alumnos_contactos?.[0] || {};
-                    const inscripciones = alumnoData.inscripciones || [];
-                    const dir = alumnoData.direcciones || {};
-
-                    // 🔥 CÁLCULO DE DEUDA: Sumamos todas las cuentas por cobrar pendientes
-                    const deudasPendientes = alumnoData.cuentas_por_cobrar || [];
-                    const totalDeuda = deudasPendientes.reduce((acc, deuda) => acc + Number(deuda.monto_final || 0), 0);
-
-                    // LÓGICA DE INSCRIPCIONES Y ESTADOS
-                    const inscripcionesActivas = inscripciones.filter(i => i.estado === 'ACTIVO');
-
-                    // 🔥 FIX: de las activas, separamos las VIGENTES (no vencidas) de las
-                    // vencidas. Antes se usaban TODAS las activas para calcular sede/nivel,
-                    // por eso un alumno con inscripción activa-pero-vencida en "Independencia"
-                    // seguía apareciendo al filtrar por esa sede, aunque ya no esté vigente.
-                    const inscripcionesConCorte = inscripcionesActivas.map(i => {
-                        const fCorteCalc = i.fecha_inscripcion ? addDays(new Date(i.fecha_inscripcion), 29) : null;
-                        return { ...i, __fechaCorte: fCorteCalc, __vencida: fCorteCalc ? isPast(fCorteCalc) : false };
-                    });
-                    const inscripcionesVigentes = inscripcionesConCorte.filter(i => !i.__vencida);
-
-                    let inscripcionesAMostrar = [];
-                    let estadoVisual = 'SIN INSCRIPCIÓN';
-
-                    if (inscripcionesVigentes.length > 0) {
-                        // Prioridad 1: activas y vigentes — esta es la sede/nivel "real" del alumno
-                        inscripcionesAMostrar = inscripcionesVigentes;
-                        estadoVisual = 'ACTIVO';
-                    } else if (inscripcionesConCorte.length > 0) {
-                        // Prioridad 2: sigue ACTIVO en BD pero ya vencida (nadie la finalizó aún).
-                        // Se mantiene para no dejar la fila vacía, mostrará el badge VENCIDO.
-                        inscripcionesAMostrar = inscripcionesConCorte;
-                        estadoVisual = 'ACTIVO';
-                    } else if (inscripciones.length > 0) {
-                        inscripcionesAMostrar = [inscripciones[0]];
-                        estadoVisual = inscripciones[0].estado;
-                    }
-
-                    const sedesNombres = [...new Set(inscripcionesAMostrar.map(i => i.horarios_clases?.canchas?.sedes?.nombre).filter(Boolean))];
-                    const nivelesNombres = [...new Set(inscripcionesAMostrar.map(i => i.horarios_clases?.niveles_entrenamiento?.nombre).filter(Boolean))];
-
-                    const ultimaInsc = inscripcionesAMostrar[0];
-                    const fCorte = ultimaInsc?.fecha_inscripcion ? addDays(new Date(ultimaInsc.fecha_inscripcion), 29) : null;
-
-                    const historialInscripciones = inscripcionesAMostrar.map(insc => {
-                        const fCorteCalculada = insc.fecha_inscripcion ? addDays(new Date(insc.fecha_inscripcion), 29) : null;
-                        const hc = insc.horarios_clases || {};
-
-                        const formatTime = (timeStr) => {
-                            if (!timeStr) return '';
-                            if (timeStr.includes('T')) return timeStr.split('T')[1].substring(0, 5);
-                            return timeStr.substring(0, 5);
-                        };
-
-                        const mapaDias = { 0: 'Domingo', 1: 'Lunes', 2: 'Martes', 3: 'Miércoles', 4: 'Jueves', 5: 'Viernes', 6: 'Sábado', 7: 'Domingo' };
-                        const nombreDia = hc.dia_semana !== undefined ? mapaDias[hc.dia_semana] : '';
-                        const horaTexto = hc.hora_inicio && hc.hora_fin ? `${formatTime(hc.hora_inicio)} - ${formatTime(hc.hora_fin)}` : '';
-                        const horarioCompleto = `${nombreDia} ${horaTexto}`.trim();
-
-                        return {
-                            estado: insc.estado,
-                            sede: hc.canchas?.sedes?.nombre || 'S/D',
-                            nivel: hc.niveles_entrenamiento?.nombre || 'SIN NIVEL',
-                            horario: horarioCompleto,
-                            fechaInscripcion: insc.fecha_inscripcion,
-                            fechaCorte: fCorteCalculada,
-                            estaVencido: fCorteCalculada ? isPast(fCorteCalculada) : false,
-                            tipoInscripcion: insc.tipo_inscripcion,
-                        };
-                    });
-
-                    // RETORNO DEL OBJETO FORMATEADO PARA LA TABLA
-                    return {
-                        ...user,
-                        full_name: `${user.nombres} ${user.apellidos}`,
-                        dni: user.numero_documento || '---',
-                        telefono: user.telefono_personal || 'S/N',
-                        cumpleanos: user.fecha_nacimiento ? format(parseISO(user.fecha_nacimiento.slice(0, 10)), "dd 'de' MMM", { locale: es }) : 'S/D',
-
-                        sedes: sedesNombres,
-                        niveles: nivelesNombres,
-                        fechaCorte: fCorte,
-                        estaVencido: fCorte ? isPast(fCorte) : false,
-                        estadoVisual: estadoVisual,
-                        multiplesActivas: inscripcionesActivas.length > 1,
-                        historialInscripciones: historialInscripciones,
-                        esClaseUnica: ultimaInsc?.tipo_inscripcion === 'INDIVIDUAL',
-
-                        // 🔥 Dato clave inyectado para la columna de Monto
-                        monto_pendiente: totalDeuda,
-
-                        direccion: {
-                            completa: dir.direccion_completa || 'No registrada',
-                            distrito: dir.distrito || 'S/D',
-                            referencia: dir.referencia || ''
-                        },
-                        salud: {
-                            condiciones: alumnoData.condiciones_medicas || 'Ninguna',
-                            seguro: alumnoData.seguro_medico || 'S/N',
-                            sangre: alumnoData.grupo_sanguineo || 'S/N',
-                            historial: alumnoData.historial
-                        },
-                        contactoEmergencia: {
-                            nombre: contacto.nombre_completo || 'No registrado',
-                            telefono: contacto.telefono || 'S/N',
-                            relacion: contacto.relacion || 'No especificada'
-                        }
-                    };
-                });
-                setAlumnos(formattedData);
+                // 🆕 estadoDisplay: campo derivado ÚNICO que combina estadoVisual +
+                // estaVencido en un solo valor real. Antes el badge de la tabla
+                // calculaba "NO RENOVADO" al vuelo con un ternario inline, pero el
+                // filtro de "Estado" leía estadoVisual crudo (solo veía "ACTIVO") —
+                // por eso el dropdown nunca mostraba "NO RENOVADO" como opción y
+                // filtrar por "ACTIVO" mezclaba vencidos con al día. Ahora ambos
+                // (badge y filtro) leen este mismo campo, así siempre coinciden.
+                const dataConEstadoDisplay = result.data.map(a => ({
+                    ...a,
+                    estadoDisplay: a.estadoVisual === 'ACTIVO'
+                        ? (a.estaVencido ? 'NO RENOVADO' : 'ACTIVO')
+                        : a.estadoVisual,
+                }));
+                setAlumnos(dataConEstadoDisplay);
             }
         } catch (error) {
             toast.error("Error al sincronizar Base Gema");
@@ -201,8 +104,10 @@ const AdminStudentsManager = () => {
         () => [...new Set(alumnos.flatMap(a => a.niveles))].filter(Boolean).sort(),
         [alumnos]
     );
+    // 🔧 FIX: ahora se calcula sobre estadoDisplay (no estadoVisual crudo), para
+    // que el dropdown de "Estado" muestre "NO RENOVADO" como opción real.
     const uniqueEstados = useMemo(
-        () => [...new Set(alumnos.map(a => a.estadoVisual))].filter(Boolean).sort(),
+        () => [...new Set(alumnos.map(a => a.estadoDisplay))].filter(Boolean).sort(),
         [alumnos]
     );
 
@@ -238,7 +143,8 @@ const AdminStudentsManager = () => {
         // C. Filtros tipo segmentador (sede, nivel, estado)
         if (filters.sede) result = result.filter(a => a.sedes.includes(filters.sede));
         if (filters.nivel) result = result.filter(a => a.niveles.includes(filters.nivel));
-        if (filters.estadoVisual) result = result.filter(a => a.estadoVisual === filters.estadoVisual);
+        // 🔧 FIX: compara contra estadoDisplay, el mismo valor que ve el usuario en el badge
+        if (filters.estadoVisual) result = result.filter(a => a.estadoDisplay === filters.estadoVisual);
 
         // D. Ordenamiento
         if (sortConfig.key) {
