@@ -86,7 +86,8 @@ export const API_ROUTES = {
     HISTORIAL: (id) => `/cuentas-por-cobrar/historial/${id}`,
     SUGERIR_FECHA: (id) => `/cuentas-por-cobrar/renovacion-sugerida/${id}`,
     GENERAR_ADELANTADO: (id) => `/cuentas-por-cobrar/generar-adelantado/${id}`,
-  },
+ GENERAR_ADELANTADO_VALIDADO: (id) => `/cuentas-por-cobrar/generar-adelantado-validado/${id}`,
+},
   CLASES: {
     BASE: "/clases",
     REPROGRAMAR_MASIVO: "/clases/reprogramar-masivo",
@@ -154,5 +155,9 @@ export const API_ROUTES = {
     BASE: "/caja",
     RESUMEN: "/caja/resumen",
      RESUMEN_ANUAL: "/caja/resumen-anual",
+  },
+   HISTORIAL_ACADEMICO: {
+    BASE: "/historial-academico",
+    ALUMNO: (alumnoId) => `/historial-academico/alumno/${alumnoId}`,
   },
 };
