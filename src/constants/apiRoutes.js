@@ -159,6 +159,7 @@ export const API_ROUTES = {
       HISTORIAL_ACADEMICO: {
     BASE: "/historial-academico",
     ALUMNO: (alumnoId) => `/historial-academico/alumno/${alumnoId}`,
+    ALUMNO_DETALLE: (alumnoId) => `/historial-academico/alumno-detalle/${alumnoId}`,
     RESUMEN_TABLA: (sedeId) => sedeId
       ? `/historial-academico/resumen-tabla?sede_id=${sedeId}`
       : `/historial-academico/resumen-tabla`,

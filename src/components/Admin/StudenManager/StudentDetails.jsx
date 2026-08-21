@@ -21,6 +21,35 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
     // 🆕 Clase individual seleccionada para ver su resumen en modal aparte
     const [claseIndividualSeleccionada, setClaseIndividualSeleccionada] = useState(null);
 
+    // 🆕 Detalle completo del alumno (dirección, salud, contacto, email, etc.)
+    // — ya NO viene en selectedAlumno (ese objeto viene de resumen-tabla,
+    // que es liviano). Se pide aparte solo al abrir el expediente.
+    const [detalle, setDetalle] = useState(null);
+    const [loadingDetalle, setLoadingDetalle] = useState(true);
+
+    useEffect(() => {
+        if (!selectedAlumno) return;
+
+        const fetchDetalle = async () => {
+            try {
+                setLoadingDetalle(true);
+                const res = await apiFetch.get(API_ROUTES.HISTORIAL_ACADEMICO.ALUMNO_DETALLE(selectedAlumno.id));
+                const result = await res.json();
+                if (res.ok) {
+                    setDetalle(result.data);
+                } else {
+                    toast.error("No se pudo obtener el detalle del alumno");
+                }
+            } catch (error) {
+                toast.error("Error al conectar con el servidor para obtener el detalle");
+            } finally {
+                setLoadingDetalle(false);
+            }
+        };
+
+        fetchDetalle();
+    }, [selectedAlumno]);
+
     // 🔥 /historial-academico/alumno/:id — el backend YA entrega cada tarjeta
     // agrupada por cuenta_id, con fecha_inicio_real / fecha_fin_real calculadas
     // desde clases realmente generadas en registros_asistencia, ordenadas de
@@ -106,6 +135,17 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
 
     if (!selectedAlumno) return null;
 
+    // 🛡️ Evita el crash: mientras no haya detalle cargado, no renderiza el
+    // cuerpo que depende de direccion/salud/contactoEmergencia/email/etc.
+    if (loadingDetalle || !detalle) {
+        return (
+            <div className="flex flex-col items-center justify-center h-96 gap-4">
+                <Loader2 className="animate-spin text-[#1e3a8a]" size={48} />
+                <p className="font-black text-[#1e3a8a] text-xs uppercase italic tracking-widest animate-pulse">Cargando expediente...</p>
+            </div>
+        );
+    }
+
     return (
         <div className="space-y-6 animate-fade-in-up p-1">
             {/* Header del Expediente */}
@@ -149,16 +189,16 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
                                     <Fingerprint size={16} className="text-blue-500" /> {selectedAlumno.dni}
                                 </div>
                                 <div className="flex items-center gap-2 text-slate-500 text-sm font-bold lowercase">
-                                    <Mail size={16} className="text-blue-500" /> {selectedAlumno.email}
+                                    <Mail size={16} className="text-blue-500" /> {detalle.email}
                                 </div>
                                 <div className="flex items-center gap-2 text-slate-500 text-sm font-bold uppercase tracking-tighter">
-                                    <Calendar size={16} className="text-blue-500" /> {selectedAlumno.cumpleanos}
+                                    <Calendar size={16} className="text-blue-500" /> {detalle.cumpleanos}
                                 </div>
                                 <div className="flex items-center gap-2 text-slate-500 text-sm font-bold uppercase tracking-tighter">
                                     <Phone size={16} className="text-blue-500" /> {selectedAlumno.telefono}
                                 </div>
                                 <div className="flex items-center gap-2 text-slate-500 text-sm font-bold tracking-tighter">
-                                    <User size={16} className="text-blue-500" /> {selectedAlumno.username || 'Sin nombre de usuario'}
+                                    <User size={16} className="text-blue-500" /> {detalle.username || 'Sin nombre de usuario'}
                                 </div>
                             </div>
 
@@ -168,10 +208,10 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
                                     <MapPin size={20} className="text-orange-500 shrink-0 mt-1" />
                                     <div>
                                         <p className="text-sm font-black text-slate-700 uppercase italic leading-tight">
-                                            {selectedAlumno.direccion.distrito} <span className="text-slate-300 font-normal mx-2">|</span> {selectedAlumno.direccion.completa}
+                                            {detalle.direccion.distrito} <span className="text-slate-300 font-normal mx-2">|</span> {detalle.direccion.completa}
                                         </p>
-                                        {selectedAlumno.direccion.referencia && (
-                                            <p className="text-[10px] text-slate-400 mt-1 font-bold italic tracking-wide">Ref: {selectedAlumno.direccion.referencia}</p>
+                                        {detalle.direccion.referencia && (
+                                            <p className="text-[10px] text-slate-400 mt-1 font-bold italic tracking-wide">Ref: {detalle.direccion.referencia}</p>
                                         )}
                                     </div>
                                 </div>
@@ -186,17 +226,17 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
                                 <Stethoscope size={20} />
                                 <span className="text-[11px] font-black uppercase tracking-widest italic">Información de Salud</span>
                             </div>
-                            <span className="bg-[#1e3a8a] text-white text-[8px] font-black px-2 py-1 rounded-md">GRUPO SANGUÍNEO: {selectedAlumno.salud.sangre}</span>
+                            <span className="bg-[#1e3a8a] text-white text-[8px] font-black px-2 py-1 rounded-md">GRUPO SANGUÍNEO: {detalle.salud.sangre}</span>
                         </div>
                         <div className="p-8 grid md:grid-cols-2 gap-8 items-start">
                             <div className="space-y-6">
                                 <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
                                     <p className="text-[9px] font-black text-slate-400 uppercase mb-2 italic">Alergias / Condiciones:</p>
-                                    <p className="text-sm font-bold text-slate-700 italic leading-relaxed">{selectedAlumno.salud.condiciones}</p>
+                                    <p className="text-sm font-bold text-slate-700 italic leading-relaxed">{detalle.salud.condiciones}</p>
                                 </div>
                                 <div className="flex justify-between p-5 bg-white border border-slate-100 rounded-3xl">
                                     <span className="text-[9px] font-black text-slate-400 uppercase">Seguro Médico:</span>
-                                    <span className="text-sm font-black text-[#1e3a8a] italic uppercase">{selectedAlumno.salud.seguro}</span>
+                                    <span className="text-sm font-black text-[#1e3a8a] italic uppercase">{detalle.salud.seguro}</span>
                                 </div>
                             </div>
                             <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
@@ -205,7 +245,7 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
                                     <p className="text-[9px] font-black uppercase italic">Historial Deportivo:</p>
                                 </div>
                                 <select
-                                    value={selectedAlumno.salud?.historial ?? 'Nuevo'}
+                                    value={detalle.salud?.historial ?? 'Nuevo'}
                                     onChange={(e) => onStatusHistoryChange(e.target.value)}
                                     className="w-full text-[11px] font-medium text-slate-500 italic leading-relaxed bg-transparent border border-slate-200 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 >
@@ -233,15 +273,15 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
                             <div className="space-y-4">
                                 <div>
                                     <p className="text-[9px] font-black text-red-400 uppercase mb-1">Responsable</p>
-                                    <p className="text-lg font-black text-red-900 leading-tight uppercase italic">{selectedAlumno.contactoEmergencia.nombre}</p>
-                                    <p className="text-[10px] font-bold text-red-600 uppercase italic mt-1">{selectedAlumno.contactoEmergencia.relacion}</p>
+                                    <p className="text-lg font-black text-red-900 leading-tight uppercase italic">{detalle.contactoEmergencia.nombre}</p>
+                                    <p className="text-[10px] font-bold text-red-600 uppercase italic mt-1">{detalle.contactoEmergencia.relacion}</p>
                                 </div>
                                 <div className="pt-4 border-t border-red-100 flex items-center justify-between">
                                     <div>
                                         <p className="text-[9px] font-black text-red-400 uppercase mb-1">Teléfono Directo</p>
-                                        <p className="text-xl font-black text-red-900 tracking-tighter">{selectedAlumno.contactoEmergencia.telefono}</p>
+                                        <p className="text-xl font-black text-red-900 tracking-tighter">{detalle.contactoEmergencia.telefono}</p>
                                     </div>
-                                    <a href={`tel:${selectedAlumno.contactoEmergencia.telefono}`} className="bg-red-600 text-white p-3 rounded-2xl shadow-lg shadow-red-200 hover:bg-red-700 transition-all active:scale-95">
+                                    <a href={`tel:${detalle.contactoEmergencia.telefono}`} className="bg-red-600 text-white p-3 rounded-2xl shadow-lg shadow-red-200 hover:bg-red-700 transition-all active:scale-95">
                                         <Phone size={20} />
                                     </a>
                                 </div>
