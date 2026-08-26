@@ -41,7 +41,7 @@ const AdminGuestPasses = () => {
   const [metodosPago, setMetodosPago] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  
+
   // 🚀 NUEVO ESTADO PARA EL BOTÓN DE EXCEL
   const [isExporting, setIsExporting] = useState(false);
 
@@ -50,7 +50,7 @@ const AdminGuestPasses = () => {
     idHorario: '',
     fecha_inicio_electiva: '',
     metodo_pago: '',
-    codigo_operacion: '',
+    montoTotal: '',
     usuario_admin_id: ''
   });
   const [formDataList, setFormDataList] = useState([]);
@@ -160,6 +160,21 @@ const AdminGuestPasses = () => {
     }
 
     setFormDataList(prev => [...prev, formActualizado])
+    setFormData({
+      ...formData,
+      fecha_inicio_electiva: '',
+    })
+  }
+
+  const handleInscripcionIndividual = async (e) => {
+    e.preventDefault();
+
+    if (formDataList.length === 0) {
+      toast.error('No hay ninguna clase agregada.');
+      return;
+    }
+    setSubmitting(true);
+    setFormDataList([]);
     setAlumnoSelect(null);
     setTextoBusqueda('');
     setSedeSelect('')
@@ -170,21 +185,9 @@ const AdminGuestPasses = () => {
       idHorario: '',
       fecha_inicio_electiva: '',
       metodo_pago: '',
-      codigo_operacion: '',
+      montoTotal: '',
       usuario_admin_id: ''
     })
-  }
-
-  // 3. PROCESAR LA VENTA EXPRESS
-  const handleInscripcionIndividual = async (e) => {
-    e.preventDefault();
-
-    if (formDataList.length === 0) {
-      toast.error('No hay ninguna clase agregada.');
-      return;
-    }
-    setSubmitting(true);
-    setFormDataList([]);
     try {
       const result = await apiFetch.post('/inscripciones/individual-admin', formDataList);
       const data = await result.json();
@@ -255,7 +258,7 @@ const AdminGuestPasses = () => {
         </div>
 
         {/* 🚀 BOTÓN DE EXCEL A LA DERECHA */}
-        <button 
+        <button
           onClick={handleExportExcel}
           disabled={isExporting}
           className="bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-300 text-white px-5 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/30 transition-all flex items-center gap-2"
@@ -290,9 +293,10 @@ const AdminGuestPasses = () => {
 
                   <div className="relative" onBlur={() => setIsOpen(false)}>
                     <input
+                      disabled={formDataList.length > 0}
                       type="text"
                       placeholder="Ej. Victor Margarito"
-                      className={`w-full rounded-2xl px-5 py-4 text-sm font-bold text-[#1e3a8a] outline-none transition-all uppercase border ${alumnoSelect
+                      className={`w-full rounded-2xl px-5 py-4 text-sm font-bold text-[#1e3a8a] outline-none transition-all uppercase border disabled:cursor-not-allowed ${alumnoSelect
                         ? "bg-green-50/30 border-green-500 focus:ring-4 focus:ring-green-500/20"
                         : "bg-slate-50 border-slate-200 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500"
                         }`}
@@ -464,7 +468,8 @@ const AdminGuestPasses = () => {
                       <CreditCard size={12} /> Método de Pago
                     </label>
                     <select
-                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-[#1e3a8a] focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all uppercase cursor-pointer"
+                      disabled={formDataList.length > 0}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-[#1e3a8a] focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all uppercase cursor-pointer disabled:border-green-500 disabled:text-[#1e3a8a] disabled:opacity-100 disabled:bg-green-50 disabled:cursor-not-allowed"
                       value={formData.metodo_pago}
                       onChange={(e) => setFormData({ ...formData, metodo_pago: e.target.value })}
                     >
@@ -477,14 +482,15 @@ const AdminGuestPasses = () => {
 
                   <div>
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
-                      <DollarSign size={12} /> Código de Pago
+                      <DollarSign size={12} /> Monto
                     </label>
                     <input
+                      disabled={formDataList.length > 0}
                       type="text"
-                      placeholder="Ej. 563"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-black text-[#1e3a8a] focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all placeholder:text-slate-300 placeholder:font-bold"
-                      value={formData.codigo_operacion}
-                      onChange={(e) => setFormData({ ...formData, codigo_operacion: e.target.value })}
+                      placeholder="Ej. 25"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-black text-[#1e3a8a] focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all placeholder:text-slate-300 placeholder:font-bold disabled:border-green-500 disabled:text-[#1e3a8a] disabled:bg-green-50 disabled:cursor-not-allowed"
+                      value={formData.montoTotal}
+                      onChange={(e) => setFormData({ ...formData, montoTotal: e.target.value })}
                     />
                   </div>
                 </div>
@@ -554,7 +560,6 @@ const AdminGuestPasses = () => {
                           </p>
                           <div className="pt-2 mt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-bold text-slate-400">
                             <span>{pago ? pago.nombre : 'Pago'}</span>
-                            <span className="text-slate-500">#{item.codigo_operacion || 'S/C'}</span>
                           </div>
                         </div>
                       </div>
@@ -568,8 +573,15 @@ const AdminGuestPasses = () => {
                 )}
               </div>
 
-              {/* BOTÓN 2: Enviar todo el Formulario al Backend */}
-              <div className="mt-6 pt-4 border-t border-slate-800">
+              <div className="mt-6 pt-4 border-t border-slate-800 space-y-3">
+                {formDataList.length > 0 && (
+                  <div className="flex items-center justify-between px-2 text-sm font-black uppercase italic">
+                    <span className="text-slate-400">Total:</span>
+                    <span className="text-orange-400 text-base">
+                      S/. {formDataList[0]?.montoTotal || '0'}
+                    </span>
+                  </div>
+                )}
                 <button
                   type="submit"
                   disabled={submitting || formDataList.length === 0}
