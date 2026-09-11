@@ -139,6 +139,7 @@ const DiaCorte = () => {
                                 const fechaCorte = alumno.fecha_corte_principal ? new Date(alumno.fecha_corte_principal) : null;
                                 const vencido = fechaCorte && isPast(fechaCorte) && !isToday(fechaCorte);
                                 const esHoy = fechaCorte && isToday(fechaCorte);
+                                const esIndividual = alumno.contratos?.[0].esIndividual;
 
                                 return (
                                     <tr key={alumno.id} className="hover:bg-slate-50/80 transition-all text-center group">
@@ -177,21 +178,40 @@ const DiaCorte = () => {
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-8 py-6">
-                                            <div className={`inline-flex flex-col items-center px-4 py-2 rounded-2xl border ${vencido ? 'border-slate-100 bg-slate-50' : 'border-emerald-100 bg-emerald-50'}`}>
-                                                <span className={`text-xs font-black ${vencido ? 'text-slate-800' : 'text-emerald-500'}`}>
-                                                    {fechaCorte ? format(fechaCorte, "dd 'de' MMMM", { locale: es }) : '---'}
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td className="px-8 py-6">
-                                            <span className={`text-[9px] font-black px-4 py-2 rounded-xl uppercase tracking-widest inline-block w-32 ${vencido ? 'bg-slate-500 text-white shadow-lg shadow-slate-200' :
-                                                esHoy ? 'bg-orange-500 text-white shadow-lg shadow-orange-200' :
-                                                    'bg-emerald-500 text-white shadow-lg shadow-emerald-200'
-                                                }`}>
-                                                {vencido ? 'Ciclo Realizado' : esHoy ? 'Vence Hoy' : 'Ciclo al día'}
-                                            </span>
-                                        </td>
+                                        {esIndividual ? (
+                                            <>
+                                                <td className="px-8 py-6">
+                                                    <div className={`inline-flex flex-col items-center px-4 py-2 rounded-2xl border border-blue-200 bg-blue-100`}>
+                                                        <span className={`text-[9px] text-xs font-black text-blue-500`}>
+                                                            Sin fecha
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-8 py-6">
+                                                    <span className={`text-[9px] font-black px-4 py-2 rounded-xl uppercase tracking-widest inline-block w-32 bg-blue-500 text-white shadow-lg shadow-blue-200'`}>
+                                                        CLASE ÚNICA
+                                                    </span>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td className="px-8 py-6">
+                                                    <div className={`inline-flex flex-col items-center px-4 py-2 rounded-2xl border ${vencido ? 'border-slate-100 bg-slate-50' : 'border-emerald-100 bg-emerald-50'}`}>
+                                                        <span className={`text-xs font-black ${vencido ? 'text-slate-800' : 'text-emerald-500'}`}>
+                                                            {fechaCorte ? format(fechaCorte, "dd 'de' MMMM", { locale: es }) : '---'}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-8 py-6">
+                                                    <span className={`text-[9px] font-black px-4 py-2 rounded-xl uppercase tracking-widest inline-block w-32 ${vencido ? 'bg-slate-500 text-white shadow-lg shadow-slate-200' :
+                                                        esHoy ? 'bg-orange-500 text-white shadow-lg shadow-orange-200' :
+                                                            'bg-emerald-500 text-white shadow-lg shadow-emerald-200'
+                                                        }`}>
+                                                        {vencido ? 'Ciclo Realizado' : esHoy ? 'Vence Hoy' : 'Ciclo al día'}
+                                                    </span>
+                                                </td>
+                                            </>
+                                        )}
                                     </tr>
                                 );
                             })}
