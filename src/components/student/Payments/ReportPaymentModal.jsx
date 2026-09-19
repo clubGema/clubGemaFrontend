@@ -17,7 +17,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
   const CLUB_PHONE = "902585995";
   const BCP_CUENTA = "19411410110063";
   const CCI_CUENTA = "00219411141011006392";
-  
+
   // Lógicas de método de pago
   const esEfectivo = formData.metodo_pago === "EFECTIVO";
   const esTarjeta = formData.metodo_pago === "TARJETA";
@@ -41,10 +41,10 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.monto || parseFloat(formData.monto) <= 0) return toast.error("Ingresa un monto válido");
-    
+
     // Todos requieren voucher excepto Efectivo
     if (!esEfectivo && !voucherFile) {
-       return toast.error(esTarjeta ? "Sube la foto del voucher del POS" : "Sube la captura de tu pago");
+      return toast.error(esTarjeta ? "Sube la foto del voucher del POS" : "Sube la captura de tu pago");
     }
 
     setLoading(true);
@@ -53,12 +53,12 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
       paymentData.append('deuda_id', parseInt(debt.id));
       paymentData.append('monto', parseFloat(formData.monto));
       paymentData.append('metodo_pago', formData.metodo_pago);
-      
+
       // 🚩 HARDCODEO DE CÓDIGO DE OPERACIÓN PARA LA BASE DE DATOS
       let codigoGenerico = 'POR_VERIFICAR';
       if (esEfectivo) codigoGenerico = 'PAGO_PRESENCIAL';
       if (esTarjeta) codigoGenerico = 'VOUCHER_POS';
-      
+
       paymentData.append('codigo_operacion', codigoGenerico);
 
       if (voucherFile && !esEfectivo) paymentData.append('voucher', voucherFile);
@@ -83,7 +83,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
 
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center p-2 md:p-6 bg-[#0f172a]/90 backdrop-blur-sm animate-in fade-in duration-300">
-      <div className={`bg-white w-full ${hideRightPanel ? 'max-w-md' : 'max-w-5xl'} 
+      <div className={`bg-white w-full ${hideRightPanel ? 'max-w-md' : 'max-w-md'} 
         max-h-[95vh] overflow-y-auto md:overflow-hidden rounded-[2.5rem] md:rounded-[4rem] shadow-2xl flex flex-col md:flex-row border border-white/20 custom-scrollbar`}>
 
         {/* LADO IZQUIERDO: Formulario Simplificado */}
@@ -95,15 +95,15 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
           </div>
 
           <form onSubmit={handleSubmit} className="p-5 md:p-8 space-y-4 md:space-y-6 flex-1 md:overflow-y-auto custom-scrollbar">
-            
+
             <div className="grid grid-cols-2 gap-3">
               {/* MONTO */}
               <div className="space-y-1">
-                 <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                   <Banknote size={12} className="text-orange-500" /> Monto (S/)
-                 </label>
-                 <input type="number" step="0.01" value={formData.monto} onChange={(e) => setFormData({ ...formData, monto: e.target.value })}
-                   className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl px-4 py-2.5 text-lg font-black text-[#1e3a8a] outline-none focus:border-orange-500 transition-all" />
+                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                  <Banknote size={12} className="text-orange-500" /> Monto (S/)
+                </label>
+                <input type="number" step="0.01" value={formData.monto} onChange={(e) => setFormData({ ...formData, monto: e.target.value })}
+                  className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl px-4 py-2.5 text-lg font-black text-[#1e3a8a] outline-none focus:border-orange-500 transition-all" />
               </div>
 
               {/* MÉTODO DE PAGO CON FLECHITA */}
@@ -126,25 +126,25 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
 
             {/* SECCIÓN VOUCHER */}
             {!esEfectivo && (
-               <div className="space-y-1">
-                 <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
-                    {esTarjeta ? "Sube la foto del POS" : "Sube la captura de tu pago"}
-                 </label>
-                 <input type="file" accept="image/*" className="hidden" id="voucher-input" onChange={(e) => { if (e.target.files[0]) { setVoucherFile(e.target.files[0]); setPreviewUrl(URL.createObjectURL(e.target.files[0])); } }} />
-                 <label htmlFor="voucher-input" className="block bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl py-8 md:py-12 text-center cursor-pointer hover:bg-orange-50 hover:border-orange-200 transition-all group overflow-hidden">
-                   {previewUrl ? <img src={previewUrl} className="h-24 md:h-32 mx-auto rounded-lg shadow-md object-contain" alt="Voucher" /> :
-                     <div className="py-2"><Upload size={32} className="mx-auto text-slate-300 mb-2 group-hover:text-orange-500 transition-colors" /><p className="text-[10px] font-black text-slate-400 uppercase italic leading-none group-hover:text-orange-600 transition-colors">Seleccionar Imagen</p></div>}
-                 </label>
-               </div>
+              <div className="space-y-1">
+                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                  {esTarjeta ? "Sube la foto del POS" : "Sube la captura de tu pago"}
+                </label>
+                <input type="file" accept="image/*" className="hidden" id="voucher-input" onChange={(e) => { if (e.target.files[0]) { setVoucherFile(e.target.files[0]); setPreviewUrl(URL.createObjectURL(e.target.files[0])); } }} />
+                <label htmlFor="voucher-input" className="block bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl py-8 md:py-12 text-center cursor-pointer hover:bg-orange-50 hover:border-orange-200 transition-all group overflow-hidden">
+                  {previewUrl ? <img src={previewUrl} className="h-24 md:h-32 mx-auto rounded-lg shadow-md object-contain" alt="Voucher" /> :
+                    <div className="py-2"><Upload size={32} className="mx-auto text-slate-300 mb-2 group-hover:text-orange-500 transition-colors" /><p className="text-[10px] font-black text-slate-400 uppercase italic leading-none group-hover:text-orange-600 transition-colors">Seleccionar Imagen</p></div>}
+                </label>
+              </div>
             )}
 
             {/* INDICADOR PARA EFECTIVO */}
             {esEfectivo && (
-               <div className="bg-orange-50 border border-orange-100 rounded-2xl p-6 text-center">
-                 <Coins size={32} className="text-orange-500 mx-auto mb-2" />
-                 <h4 className="text-orange-700 font-black uppercase tracking-tighter text-sm italic">Pago en Sede</h4>
-                 <p className="text-[9px] text-orange-600 uppercase font-bold mt-1">Acércate a recepción para cancelar este monto.</p>
-               </div>
+              <div className="bg-orange-50 border border-orange-100 rounded-2xl p-6 text-center">
+                <Coins size={32} className="text-orange-500 mx-auto mb-2" />
+                <h4 className="text-orange-700 font-black uppercase tracking-tighter text-sm italic">Pago en Sede</h4>
+                <p className="text-[9px] text-orange-600 uppercase font-bold mt-1">Acércate a recepción para cancelar este monto.</p>
+              </div>
             )}
 
             <div className="pt-4 flex gap-2 pb-2">
@@ -158,7 +158,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
         </div>
 
         {/* LADO DERECHO: QR e Info */}
-        {!hideRightPanel && (
+        {/* {!hideRightPanel && (
           <div className="flex-1 bg-[#f8fafc] p-6 md:p-8 flex flex-col items-center justify-start md:justify-center md:overflow-y-auto custom-scrollbar border-t md:border-t-0 md:border-l border-slate-100">
             <div className="text-center space-y-4 w-full max-w-[260px] pb-10 md:pb-0">
               
@@ -205,7 +205,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, onSuccess }) => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

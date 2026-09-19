@@ -68,7 +68,7 @@ const Payments = () => {
         <div className="h-2 w-24 bg-orange-500 rounded-full mt-3 mx-auto md:mx-0"></div>
       </div>
 
-      <PaymentMethodCard />
+      {/* <PaymentMethodCard /> */}
 
       {/* 🔥 AVISO DE CONTINUIDAD GEMA PREMIUM - VERSIÓN FINAL ALINEADA 🔥 */}
       {activeDebts.length > 0 && (
