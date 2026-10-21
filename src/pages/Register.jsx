@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-    User, CreditCard, Mail, Lock, EyeOff, Eye, ChevronDown,
-    Hash, ArrowLeft, ShieldCheck, CheckCircle2, Heart
+    User, Mail, Lock, EyeOff, Eye, ArrowLeft, ShieldCheck, CheckCircle2, Phone
 } from 'lucide-react';
 import { registerService } from '../services/auth.service';
 import toast from 'react-hot-toast';
@@ -37,28 +36,19 @@ function Register() {
     const [loading, setLoading] = useState(false);
     const [rolIdAlumno, setRolIdAlumno] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
-    const [tiposDocumento, setTiposDocumento] = useState([]);
 
     const [formData, setFormData] = useState({
-        nombres: '', apellidos: '', email: '', tipo_documento_id: '',
-        numero_documento: '', password: '', telefono_personal: '',
-        fecha_nacimiento: '', genero: '', contacto_emergencia: '', parentesco: ''
+        nombres: '',
+        apellidos: '',
+        email: '',
+        password: '',
+        telefono_personal: ''
     });
 
     useEffect(() => {
         const fetchInitialData = async () => {
             try {
-                const [resDocs, resRol] = await Promise.all([
-                    fetch(`${import.meta.env.VITE_API_URL}/tipos-documento`),
-                    fetch(`${import.meta.env.VITE_API_URL}/roles/nombre/Alumno`)
-                ]);
-                const dataDocs = await resDocs.json();
-                if (resDocs.ok && dataDocs.data) {
-                    setTiposDocumento(dataDocs.data);
-                    if (dataDocs.data.length > 0) {
-                        setFormData(prev => ({ ...prev, tipo_documento_id: dataDocs.data[0].id }));
-                    }
-                }
+                const resRol = await fetch(`${import.meta.env.VITE_API_URL}/roles/nombre/Alumno`);
                 const dataRol = await resRol.json();
                 if (resRol.ok && dataRol.data) setRolIdAlumno(dataRol.data.id);
             } catch (error) {
@@ -70,7 +60,7 @@ function Register() {
 
     const handleChange = useCallback((e) => {
         const { name, value } = e.target;
-        if (name === "telefono_personal" || name === "contacto_emergencia") {
+        if (name === "telefono_personal") {
             const onlyNums = value.replace(/\D/g, "").slice(0, 9);
             setFormData((prev) => ({ ...prev, [name]: onlyNums }));
         } else {
@@ -90,17 +80,13 @@ function Register() {
         const toastId = toast.loading('Procesando inscripción...');
         setLoading(true);
         try {
-
-            // Separamos los datos básicos de los específicos del rol
-            const { contacto_emergencia, parentesco, ...datosBasicos } = formData;
-
             const payloadFinal = {
-                ...datosBasicos,
-                rol_id: rolIdAlumno,
-                datosRolEspecifico: {
-                    contacto_emergencia,
-                    parentesco
-                }
+                nombres: formData.nombres.trim(),
+                apellidos: formData.apellidos.trim(),
+                email: formData.email.trim(),
+                password: formData.password,
+                telefono_personal: formData.telefono_personal.trim(),
+                rol_id: rolIdAlumno
             };
 
             const response = await registerService(payloadFinal);
@@ -149,7 +135,7 @@ function Register() {
                     </div>
                 </div>
 
-                {/* LADO DERECHO: Formulario (Scroll interno solo en desktop, natural en móvil) */}
+                {/* LADO DERECHO: Formulario */}
                 <div className="w-full md:w-2/3 p-6 md:p-14 bg-brand-surface md:max-h-[90vh] md:overflow-y-auto custom-scrollbar">
                     <div className="mb-8 text-left border-b border-brand-border-soft pb-4">
                         <h3 className="text-2xl md:text-3xl font-black text-brand-primary uppercase italic tracking-tighter leading-none">
@@ -186,76 +172,39 @@ function Register() {
                             </div>
                         </div>
 
-                        {/* Grupo 2: Nombres y Género */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+                        {/* Grupo 2: Nombres y Apellidos */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
                             <div className="space-y-1.5 md:space-y-2 text-left">
                                 <label className="text-[9px] md:text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Nombres *</label>
-                                <input type="text" name="nombres" required value={formData.nombres} onChange={handleChange} placeholder="Juan Alberto"
-                                    className="w-full px-4 py-3 md:py-3.5 bg-brand-bg border border-brand-border-soft rounded-xl focus:border-brand-accent outline-none transition-all text-sm font-semibold shadow-sm" />
-                            </div>
-                            <div className="space-y-1.5 md:space-y-2 text-left">
-                                <label className="text-[9px] md:text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Apellidos *</label>
-                                <input type="text" name="apellidos" required value={formData.apellidos} onChange={handleChange} placeholder="Pérez García"
-                                    className="w-full px-4 py-3 md:py-3.5 bg-brand-bg border border-brand-border-soft rounded-xl focus:border-brand-accent outline-none transition-all text-sm font-semibold shadow-sm" />
-                            </div>
-                            <div className="space-y-1.5 md:space-y-2 text-left sm:col-span-2 md:col-span-1">
-                                <label className="text-[9px] md:text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Género *</label>
-                                <select name="genero" required value={formData.genero} onChange={handleChange} className="w-full px-4 py-3 md:py-3.5 bg-brand-bg border border-brand-border-soft rounded-xl outline-none font-bold text-sm">
-                                    <option value="">Elegir...</option>
-                                    <option value="M">Masculino</option>
-                                    <option value="F">Femenino</option>
-                                    <option value="O">Otro</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        {/* Grupo 3: Documentación */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
-                            <div className="space-y-1.5 md:space-y-2 text-left">
-                                <label className="text-[9px] md:text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Tipo Doc. *</label>
-                                <div className="relative">
-                                    <select name="tipo_documento_id" required value={formData.tipo_documento_id} onChange={handleChange} className="w-full px-4 py-3 md:py-3.5 bg-brand-bg border border-brand-border-soft rounded-xl outline-none appearance-none font-bold text-sm">
-                                        {tiposDocumento.map((doc) => <option key={doc.id} value={doc.id}>{doc.id}</option>)}
-                                    </select>
-                                    <ChevronDown size={14} className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-muted pointer-events-none" />
+                                <div className="relative group">
+                                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-300 group-focus-within:text-brand-accent transition-colors" />
+                                    <input type="text" name="nombres" required value={formData.nombres} onChange={handleChange} placeholder="Juan Alberto"
+                                        className="w-full pl-10 md:pl-12 pr-4 py-3 md:py-3.5 bg-brand-bg border border-brand-border-soft rounded-xl focus:border-brand-accent outline-none transition-all text-sm font-semibold shadow-sm" />
                                 </div>
                             </div>
                             <div className="space-y-1.5 md:space-y-2 text-left">
-                                <label className="text-[9px] md:text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Número Doc *</label>
-                                <input type="text" name="numero_documento" required value={formData.numero_documento} onChange={handleChange} placeholder="70001000"
-                                    className="w-full px-4 py-3 md:py-3.5 bg-brand-bg border border-brand-border-soft rounded-xl focus:border-brand-accent outline-none text-sm font-semibold shadow-sm" />
-                            </div>
-                            <div className="space-y-1.5 md:space-y-2 text-left sm:col-span-2 md:col-span-1">
-                                <label className="text-[9px] md:text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Fecha Nac. *</label>
-                                <input type="date" name="fecha_nacimiento" required value={formData.fecha_nacimiento} onChange={handleChange} className="w-full px-4 py-3 md:py-3.5 bg-brand-bg border border-brand-border-soft rounded-xl outline-none font-bold text-sm" />
-                            </div>
-                        </div>
-
-                        {/* Grupo 4: Contacto */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
-                            <div className="space-y-1.5 md:space-y-2 text-left">
-                                <label className="text-[9px] md:text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Mi Celular *</label>
-                                <input type="tel" name="telefono_personal" required value={formData.telefono_personal} onChange={handleChange} placeholder="999888777"
-                                    className="w-full px-4 py-3 md:py-3.5 bg-brand-bg border border-brand-border-soft rounded-xl focus:border-brand-accent outline-none text-sm font-semibold shadow-sm" />
-                            </div>
-                            <div className="space-y-1.5 md:space-y-2 text-left">
-                                <label className="text-[9px] md:text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Emergencia *</label>
-                                <input type="tel" name="contacto_emergencia" required value={formData.contacto_emergencia} onChange={handleChange} placeholder="944555666"
-                                    className="w-full px-4 py-3 md:py-3.5 bg-brand-bg border border-brand-border-soft rounded-xl focus:border-brand-accent outline-none text-sm font-semibold shadow-sm" />
-                            </div>
-                            <div className="space-y-1.5 md:space-y-2 text-left sm:col-span-2 md:col-span-1">
-                                <label className="text-[9px] md:text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Parentesco *</label>
-                                <select name="parentesco" required value={formData.parentesco} onChange={handleChange} className="w-full px-4 py-3 md:py-3.5 bg-brand-bg border border-brand-border-soft rounded-xl outline-none font-bold text-sm">
-                                    <option value="">Elegir...</option>
-                                    <option value="familiar">Familiar</option>
-                                    <option value="pareja">Pareja</option>
-                                    <option value="amistad">Amistad</option>
-                                    <option value="otro">Otro</option>
-                                </select>
+                                <label className="text-[9px] md:text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Apellidos *</label>
+                                <div className="relative group">
+                                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-300 group-focus-within:text-brand-accent transition-colors" />
+                                    <input type="text" name="apellidos" required value={formData.apellidos} onChange={handleChange} placeholder="Pérez García"
+                                        className="w-full pl-10 md:pl-12 pr-4 py-3 md:py-3.5 bg-brand-bg border border-brand-border-soft rounded-xl focus:border-brand-accent outline-none transition-all text-sm font-semibold shadow-sm" />
+                                </div>
                             </div>
                         </div>
 
-                        {/* TÉRMINOS Y CONDICIONES - Ajuste de padding en móvil */}
+                        {/* Grupo 3: Celular */}
+                        <div className="grid grid-cols-1 gap-4 md:gap-5">
+                            <div className="space-y-1.5 md:space-y-2 text-left">
+                                <label className="text-[9px] md:text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Mi Celular / WhatsApp *</label>
+                                <div className="relative group">
+                                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-300 group-focus-within:text-brand-accent transition-colors" />
+                                    <input type="tel" name="telefono_personal" required value={formData.telefono_personal} onChange={handleChange} placeholder="999888777"
+                                        className="w-full pl-10 md:pl-12 pr-4 py-3 md:py-3.5 bg-brand-bg border border-brand-border-soft rounded-xl focus:border-brand-accent outline-none text-sm font-semibold shadow-sm" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* TÉRMINOS Y CONDICIONES */}
                         <div className="pt-2">
                             <div className={`p-4 md:p-5 rounded-[1.5rem] md:rounded-[2.5rem] border-2 transition-all flex items-center gap-3 md:gap-5 ${lecturaCompletada ? 'bg-brand-accent-soft border-orange-200' : 'bg-brand-bg border-brand-border-soft'}`}>
                                 <ShieldCheck className={lecturaCompletada ? 'text-brand-accent' : 'text-slate-300'} size={20} md:size={24} />

@@ -3,7 +3,7 @@ import { NavLink, useLocation, Link } from 'react-router-dom';
 import { 
   LayoutDashboard, CreditCard, User, 
   Menu, X, Activity, Ticket, LogOut, 
-  Megaphone, UserPlus, Calendar, Star
+  Megaphone, UserPlus, Calendar, Star, Sparkles
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { apiFetch } from "../interceptors/api";
@@ -54,11 +54,11 @@ const MobileNavbar = () => {
         ></div>
         
         {/* Contenedor del Menú */}
-        <div className={`absolute right-0 top-0 h-full w-[280px] bg-gradient-to-b from-brand-primary to-brand-primary-dark shadow-2xl transition-transform duration-300 transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className={`absolute right-0 top-0 h-full w-[310px] max-w-[88vw] bg-gradient-to-b from-brand-primary to-brand-primary-dark shadow-2xl transition-transform duration-300 transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="flex flex-col h-full">
             
             {/* Botón Cerrar (X) */}
-            <button onClick={toggleMenu} className="absolute top-4 right-4 text-white/50 hover:text-white bg-white/5 p-2 rounded-full">
+            <button onClick={toggleMenu} className="absolute top-4 right-4 text-white/50 hover:text-white bg-white/5 p-2 rounded-full cursor-pointer">
               <X size={20} />
             </button>
 
@@ -77,71 +77,203 @@ const MobileNavbar = () => {
             </div>
 
             {/* 🌟 BOTÓN DE ACCIÓN PRINCIPAL DENTRO DEL MENÚ */}
-            <div className="px-5 pb-6 pt-5 border-b border-white/10">
+            <div className="px-4 pb-5 pt-4 border-b border-white/10">
               <Link 
                 to="/dashboard/student/enrollment" 
                 onClick={toggleMenu}
-                className="w-full flex items-center justify-center gap-3 py-3.5 bg-gradient-to-r from-brand-accent to-brand-accent-dark text-white rounded-xl shadow-accent-glow active:scale-95 transition-transform"
+                className="group relative w-full flex flex-col items-center justify-center py-3.5 px-3 bg-gradient-to-r from-amber-500 via-brand-accent to-orange-600 text-white rounded-2xl shadow-[0_4px_25px_rgba(249,115,22,0.45)] hover:shadow-[0_4px_35px_rgba(249,115,22,0.7)] active:scale-95 transition-all border-2 border-white/30 overflow-hidden"
               >
-                <UserPlus size={18} />
-                <span className="text-[12px] font-black uppercase tracking-widest italic">Nueva Matrícula</span>
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent ease-in-out"></div>
+                
+                <span className="relative z-10 px-2.5 py-0.5 rounded-full bg-black/30 text-[8.5px] font-black uppercase tracking-widest text-amber-200 border border-amber-300/30 mb-1 flex items-center gap-1">
+                  <Sparkles size={10} className="animate-pulse" />
+                  <span>Primera vez o Renovar</span>
+                </span>
+                <div className="relative z-10 flex items-center gap-2">
+                  <UserPlus size={18} className="text-white" />
+                  <span className="text-[13px] font-black uppercase tracking-wider italic leading-none">Matricúlate Aquí</span>
+                </div>
+                <span className="relative z-10 text-[9px] font-bold text-orange-100 uppercase tracking-widest mt-1">
+                  Inscríbete a tus clases
+                </span>
               </Link>
             </div>
 
-            {/* NAVEGACIÓN EXTENDIDA */}
-            <nav className="flex-1 px-4 py-6 space-y-6 overflow-y-auto [scrollbar-width:none]">
+            {/* NAVEGACIÓN EXTENDIDA CON DESCRIPCIONES */}
+            <nav className="flex-1 px-3 py-5 space-y-5 overflow-y-auto [scrollbar-width:none]">
               
               {/* Grupo Principal */}
-              <div className="space-y-2">
-                <p className="text-[9px] font-black text-blue-300/40 uppercase tracking-[0.3em] ml-2 mb-3">Principal</p>
+              <div className="space-y-1.5">
+                <p className="text-[9px] font-black text-blue-300/40 uppercase tracking-[0.3em] ml-2 mb-2">Principal</p>
                 
-                <NavLink to="/dashboard/student/myRegistrations" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 hover:text-white py-2.5 px-3 rounded-xl hover:bg-white/5 transition-colors font-bold text-[13px] uppercase tracking-wide">
-                  <Calendar size={18} className="text-blue-400"/> Mis Inscripciones
+                <NavLink 
+                  to="/dashboard/student" 
+                  end 
+                  onClick={toggleMenu} 
+                  className={({ isActive }) => `flex items-start gap-3 py-2.5 px-3 rounded-2xl transition-all ${
+                    isActive ? 'bg-blue-500/20 text-white border border-blue-400/30' : 'text-blue-100/70 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 mt-0.5 text-blue-400">
+                    <LayoutDashboard size={17} />
+                  </div>
+                  <div className="space-y-0.5 min-w-0">
+                    <span className="block font-black text-[12px] uppercase tracking-wide text-white">Inicio</span>
+                    <span className="block text-[10px] font-medium text-blue-200/60 leading-tight">
+                      Resumen de tu servicio, próximas clases y accesos rápidos.
+                    </span>
+                  </div>
+                </NavLink>
+
+                <NavLink 
+                  to="/dashboard/student/myRegistrations" 
+                  onClick={toggleMenu} 
+                  className={({ isActive }) => `flex items-start gap-3 py-2.5 px-3 rounded-2xl transition-all ${
+                    isActive ? 'bg-blue-500/20 text-white border border-blue-400/30' : 'text-blue-100/70 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 mt-0.5 text-blue-400">
+                    <Calendar size={17} />
+                  </div>
+                  <div className="space-y-0.5 min-w-0">
+                    <span className="block font-black text-[12px] uppercase tracking-wide text-white">Mis Inscripciones</span>
+                    <span className="block text-[10px] font-medium text-blue-200/60 leading-tight">
+                      Días de asistencia e historial de planes para reinscribirte rápido.
+                    </span>
+                  </div>
                 </NavLink>
                 
-                <NavLink to="/dashboard/student/news" onClick={toggleMenu} className="flex items-center justify-between text-blue-100/70 hover:text-white py-2.5 px-3 rounded-xl hover:bg-white/5 transition-colors font-bold text-[13px] uppercase tracking-wide">
-                  <div className="flex items-center gap-4">
-                    <Megaphone size={18}/> Muro de Noticias
+                <NavLink 
+                  to="/dashboard/student/news" 
+                  onClick={toggleMenu} 
+                  className={({ isActive }) => `flex items-start justify-between gap-3 py-2.5 px-3 rounded-2xl transition-all ${
+                    isActive ? 'bg-blue-500/20 text-white border border-blue-400/30' : 'text-blue-100/70 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <div className="flex items-start gap-3 min-w-0">
+                    <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 mt-0.5 text-blue-400">
+                      <Megaphone size={17} />
+                    </div>
+                    <div className="space-y-0.5 min-w-0">
+                      <span className="block font-black text-[12px] uppercase tracking-wide text-white">Muro de Noticias</span>
+                      <span className="block text-[10px] font-medium text-blue-200/60 leading-tight">
+                        Novedades, eventos y anuncios oficiales de la academia.
+                      </span>
+                    </div>
                   </div>
                   {hasNewNews && (
-                    <div className="relative flex h-2.5 w-2.5">
+                    <div className="relative flex h-2.5 w-2.5 mt-2 shrink-0">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-accent shadow-accent-dot"></span>
                     </div>
                   )}
                 </NavLink>
 
-                <NavLink to="/dashboard/student/merch" onClick={toggleMenu} className="flex items-center gap-4 bg-gold-premium text-brand-primary-dark border border-gold-premium-end shadow-gold-glow hover:shadow-gold-glow-hover hover:brightness-110 py-2.5 px-3 rounded-xl transition-all font-black text-[13px] uppercase tracking-wide">
-                  <Star size={18} className="text-brand-primary-dark"/> Club Merch
+                <NavLink 
+                  to="/dashboard/student/merch" 
+                  onClick={toggleMenu} 
+                  className={({ isActive }) => `flex items-start gap-3 py-2.5 px-3 rounded-2xl bg-gold-premium text-brand-primary-dark border border-gold-premium-end shadow-gold-glow hover:brightness-110 transition-all ${
+                    isActive ? 'ring-2 ring-white/70' : ''
+                  }`}
+                >
+                  <div className="w-8 h-8 rounded-xl bg-black/10 flex items-center justify-center shrink-0 mt-0.5 text-brand-primary-dark">
+                    <Star size={17} />
+                  </div>
+                  <div className="space-y-0.5 min-w-0">
+                    <span className="block font-black text-[12px] uppercase tracking-wide text-brand-primary-dark">Club Merch</span>
+                    <span className="block text-[10px] font-bold text-brand-primary-dark/80 leading-tight">
+                      Indumentaria, accesorios y coleccionables oficiales GEMA.
+                    </span>
+                  </div>
                 </NavLink>
               </div>
 
               {/* Grupo Rendimiento */}
-              <div className="space-y-2">
-                <p className="text-[9px] font-black text-blue-300/40 uppercase tracking-[0.3em] ml-2 mb-3">Salud y Rendimiento</p>
-                <NavLink to="/dashboard/student/injuries" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 hover:text-white py-2.5 px-3 rounded-xl hover:bg-white/5 transition-colors font-bold text-[13px] uppercase tracking-wide">
-                  <Activity size={18}/> Mis Lesiones
+              <div className="space-y-1.5">
+                <p className="text-[9px] font-black text-blue-300/40 uppercase tracking-[0.3em] ml-2 mb-2">Salud y Rendimiento</p>
+                
+                <NavLink 
+                  to="/dashboard/student/injuries" 
+                  onClick={toggleMenu} 
+                  className={({ isActive }) => `flex items-start gap-3 py-2.5 px-3 rounded-2xl transition-all ${
+                    isActive ? 'bg-orange-500/20 text-orange-300 border border-orange-400/30' : 'text-blue-100/70 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0 mt-0.5 text-orange-400">
+                    <Activity size={17} />
+                  </div>
+                  <div className="space-y-0.5 min-w-0">
+                    <span className="block font-black text-[12px] uppercase tracking-wide text-white">Mis Lesiones</span>
+                    <span className="block text-[10px] font-medium text-blue-200/60 leading-tight">
+                      Registro de lesiones para activar suspensión y recuperación médica.
+                    </span>
+                  </div>
                 </NavLink>
-                <NavLink to="/dashboard/student/recoveries" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 hover:text-white py-2.5 px-3 rounded-xl hover:bg-white/5 transition-colors font-bold text-[13px] uppercase tracking-wide">
-                  <Ticket size={18}/> Recuperaciones
+
+                <NavLink 
+                  to="/dashboard/student/recoveries" 
+                  onClick={toggleMenu} 
+                  className={({ isActive }) => `flex items-start gap-3 py-2.5 px-3 rounded-2xl transition-all ${
+                    isActive ? 'bg-orange-500/20 text-orange-300 border border-orange-400/30' : 'text-blue-100/70 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0 mt-0.5 text-orange-400">
+                    <Ticket size={17} />
+                  </div>
+                  <div className="space-y-0.5 min-w-0">
+                    <span className="block font-black text-[12px] uppercase tracking-wide text-white">Mis Recuperaciones</span>
+                    <span className="block text-[10px] font-medium text-blue-200/60 leading-tight">
+                      Revisa clases pendientes y agenda reprogramaciones por faltas o salud.
+                    </span>
+                  </div>
                 </NavLink>
               </div>
 
               {/* Grupo Administración */}
-              <div className="space-y-2 pb-6">
-                <p className="text-[9px] font-black text-blue-300/40 uppercase tracking-[0.3em] ml-2 mb-3">Administración</p>
-                <NavLink to="/dashboard/student/payments" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 hover:text-white py-2.5 px-3 rounded-xl hover:bg-white/5 transition-colors font-bold text-[13px] uppercase tracking-wide">
-                  <CreditCard size={18}/> Mis Pagos
+              <div className="space-y-1.5 pb-4">
+                <p className="text-[9px] font-black text-blue-300/40 uppercase tracking-[0.3em] ml-2 mb-2">Administración</p>
+                
+                <NavLink 
+                  to="/dashboard/student/payments" 
+                  onClick={toggleMenu} 
+                  className={({ isActive }) => `flex items-start gap-3 py-2.5 px-3 rounded-2xl transition-all ${
+                    isActive ? 'bg-blue-500/20 text-white border border-blue-400/30' : 'text-blue-100/70 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 mt-0.5 text-blue-400">
+                    <CreditCard size={17} />
+                  </div>
+                  <div className="space-y-0.5 min-w-0">
+                    <span className="block font-black text-[12px] uppercase tracking-wide text-white">Mis Pagos</span>
+                    <span className="block text-[10px] font-medium text-blue-200/60 leading-tight">
+                      Historial de pagos, estado de tus deudas y comprobantes.
+                    </span>
+                  </div>
                 </NavLink>
-                <NavLink to="/dashboard/student/profile" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 hover:text-white py-2.5 px-3 rounded-xl hover:bg-white/5 transition-colors font-bold text-[13px] uppercase tracking-wide">
-                  <User size={18}/> Mi Perfil
+
+                <NavLink 
+                  to="/dashboard/student/profile" 
+                  onClick={toggleMenu} 
+                  className={({ isActive }) => `flex items-start gap-3 py-2.5 px-3 rounded-2xl transition-all ${
+                    isActive ? 'bg-blue-500/20 text-white border border-blue-400/30' : 'text-blue-100/70 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 mt-0.5 text-blue-400">
+                    <User size={17} />
+                  </div>
+                  <div className="space-y-0.5 min-w-0">
+                    <span className="block font-black text-[12px] uppercase tracking-wide text-white">Mi Perfil</span>
+                    <span className="block text-[10px] font-medium text-blue-200/60 leading-tight">
+                      Consulta y edita tus datos personales y credenciales de acceso.
+                    </span>
+                  </div>
                 </NavLink>
               </div>
             </nav>
 
             {/* FOOTER: CERRAR SESIÓN */}
             <div className="flex-none p-4 bg-black/20 border-t border-white/10">
-              <button onClick={logout} className="w-full flex items-center justify-center gap-3 py-3 text-red-400 bg-red-500/10 hover:bg-red-500 hover:text-white rounded-xl transition-colors font-black uppercase italic text-[11px] tracking-widest">
+              <button onClick={logout} className="w-full flex items-center justify-center gap-3 py-3 text-red-400 bg-red-500/10 hover:bg-red-500 hover:text-white rounded-xl transition-colors font-black uppercase italic text-[11px] tracking-widest cursor-pointer">
                 <LogOut size={16}/> Cerrar Sesión
               </button>
             </div>

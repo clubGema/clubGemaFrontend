@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
-  Home, CreditCard, User, LogOut, Activity, Ticket,
-  ChevronDown, LayoutDashboard, Megaphone, UserPlus, Calendar, Star // Importación de Calendar para el nuevo icono
+  CreditCard, User, LogOut, Activity, Ticket,
+  ChevronDown, LayoutDashboard, Megaphone, UserPlus, Calendar, Star, Sparkles
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { apiFetch } from "../../interceptors/api";
@@ -14,11 +14,26 @@ const StudentSidebar = () => {
   const location = useLocation();
   const { logout, user } = useAuth();
   const [hasNewNews, setHasNewNews] = useState(false);
+  const [hoveredTooltip, setHoveredTooltip] = useState(null);
 
   const [openMenus, setOpenMenus] = useState({
     'Salud y Rendimiento': false,
     'Administración': false
   });
+
+  const showTooltip = (e, item) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setHoveredTooltip({
+      title: item.title ?? item.label,
+      icon: item.icon,
+      description: item.description,
+      top: rect.top + rect.height / 2,
+    });
+  };
+
+  const hideTooltip = () => {
+    setHoveredTooltip(null);
+  };
 
   useEffect(() => {
     const checkNewsAlert = async () => {
@@ -53,18 +68,21 @@ const StudentSidebar = () => {
   const menuGroups = [
     {
       title: "Inicio",
+      description: "Resumen de tu servicio contratado, próximas clases y accesos rápidos.",
       type: "link",
       icon: LayoutDashboard,
       path: "/dashboard/student"
     },
     {
-      title: "Mis Inscripciones", // 👈 Texto corregido para mayor claridad operativa
+      title: "Mis Inscripciones",
+      description: "Consulta tus días de asistencia por semana (en paquetes o clases individuales) y revisa tu historial para reinscribirte rápidamente.",
       type: "link",
-      icon: Calendar, // 👈 Usamos el icono de Calendario para que se vea más profesional
+      icon: Calendar,
       path: "/dashboard/student/myRegistrations"
     },
     {
       title: "Muro de Noticias",
+      description: "Novedades, eventos y anuncios oficiales publicados por la academia.",
       type: "link",
       icon: Megaphone,
       path: "/dashboard/student/news",
@@ -72,6 +90,7 @@ const StudentSidebar = () => {
     },
     {
       title: "Club Merch",
+      description: "Catálogo exclusivo de indumentaria, accesorios deportivos y coleccionables oficiales GEMA.",
       type: "link",
       icon: Star,
       path: "/dashboard/student/merch",
@@ -81,16 +100,36 @@ const StudentSidebar = () => {
       title: "Salud y Rendimiento",
       type: "dropdown",
       items: [
-        { icon: Activity, label: "Mis Lesiones", path: "/dashboard/student/injuries" },
-        { icon: Ticket, label: "Mis Recuperaciones", path: "/dashboard/student/recoveries" },
+        {
+          icon: Activity,
+          label: "Mis Lesiones",
+          description: "Registra lesiones médicas para activar la cláusula de suspensión y posterior recuperación de tus clases.",
+          path: "/dashboard/student/injuries"
+        },
+        {
+          icon: Ticket,
+          label: "Mis Recuperaciones",
+          description: "Revisa tus clases pendientes y agenda reprogramaciones por faltas justificadas o motivos de salud.",
+          path: "/dashboard/student/recoveries"
+        },
       ]
     },
     {
       title: "Administración",
       type: "dropdown",
       items: [
-        { icon: CreditCard, label: "Mis Pagos", path: "/dashboard/student/payments" },
-        { icon: User, label: "Mi Perfil", path: "/dashboard/student/profile" },
+        {
+          icon: CreditCard,
+          label: "Mis Pagos",
+          description: "Historial completo de pagos realizados, estado de tus deudas y registro de comprobantes.",
+          path: "/dashboard/student/payments"
+        },
+        {
+          icon: User,
+          label: "Mi Perfil",
+          description: "Consulta y edita tus datos personales, información médica y credenciales de acceso.",
+          path: "/dashboard/student/profile"
+        },
       ]
     }
   ];
@@ -101,7 +140,6 @@ const StudentSidebar = () => {
 
         {/* HEADER LOGO */}
         <div className="flex-none pt-8 pb-6 px-4 flex flex-col items-center bg-white/5 relative">
-          {/* 🌟 LOGO AHORA ES TOTALMENTE CIRCULAR */}
           <div className="relative z-10 w-[160px] aspect-square bg-brand-surface rounded-full p-3 shadow-2xl flex items-center justify-center border-[6px] border-white/10 overflow-hidden mb-4 hover:border-brand-accent/20 transition-colors">
             <Link to="/" className="relative z-10 hover:scale-105 transition-transform duration-300">
               <img src={THEME_ASSETS.logoFramed} alt="Logo Club Gema" className="w-full h-full object-cover" />
@@ -114,17 +152,39 @@ const StudentSidebar = () => {
           </div>
         </div>
 
-        {/* 🌟 BOTÓN DE ACCIÓN PRINCIPAL (BAJADO PARA QUE RESPIRE MEJOR) */}
-        <div className="px-5 pb-8 pt-4 border-b border-white/10 relative z-20"> {/* pb-8 pt-4 para bajarlo */}
+        {/* 🌟 BOTÓN DE ACCIÓN PRINCIPAL (SÚPER VISTOSO: PRIMERA VEZ O RE-INSCRIPCIÓN) */}
+        <div className="px-4 pb-6 pt-3 border-b border-white/10 relative z-20">
           <Link
             to="/dashboard/student/enrollment"
-            className="group relative w-full flex items-center justify-center gap-3 py-4 bg-gradient-to-r from-brand-accent to-brand-accent-dark text-white rounded-2xl shadow-accent-glow hover:shadow-accent-glow-hover transition-all duration-300 active:scale-95 overflow-hidden"
+            onMouseEnter={(e) => showTooltip(e, {
+              title: "Matrícula Gema",
+              icon: UserPlus,
+              description: "Inscríbete por primera vez a la academia o adquiere y renueva un nuevo paquete de clases.",
+            })}
+            onMouseLeave={hideTooltip}
+            className="group relative w-full flex flex-col items-center justify-center py-3.5 px-3 bg-gradient-to-r from-amber-500 via-brand-accent to-orange-600 text-white rounded-2xl shadow-[0_4px_25px_rgba(249,115,22,0.45)] hover:shadow-[0_4px_35px_rgba(249,115,22,0.7)] hover:scale-[1.02] active:scale-95 transition-all duration-300 border-2 border-white/30 overflow-hidden"
           >
-            {/* Efecto de brillo interior */}
-            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+            {/* Efecto de brillo interior animado */}
+            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent ease-in-out"></div>
             
-            <UserPlus size={20} className="relative z-10 group-hover:scale-110 transition-transform" />
-            <span className="relative z-10 text-[13px] font-black uppercase tracking-widest italic">Nueva Matrícula</span>
+            {/* Badge superior distintivo */}
+            <span className="relative z-10 px-2.5 py-0.5 rounded-full bg-black/30 text-[8.5px] font-black uppercase tracking-widest text-amber-200 border border-amber-300/30 mb-1 flex items-center gap-1">
+              <Sparkles size={10} className="animate-pulse" />
+              <span>Primera vez o Renovar</span>
+            </span>
+
+            {/* Texto principal */}
+            <div className="relative z-10 flex items-center gap-2">
+              <UserPlus size={18} className="group-hover:rotate-6 transition-transform text-white" />
+              <span className="text-[13px] font-black uppercase tracking-wider italic leading-none">
+                Matricúlate Aquí
+              </span>
+            </div>
+            
+            {/* Subtítulo explicativo */}
+            <span className="relative z-10 text-[9px] font-bold text-orange-100 uppercase tracking-widest mt-1">
+              Inscríbete a tus clases
+            </span>
           </Link>
         </div>
 
@@ -139,8 +199,9 @@ const StudentSidebar = () => {
               {group.type === 'link' ? (
                 <Link
                   to={group.path}
+                  onMouseEnter={(e) => showTooltip(e, group)}
+                  onMouseLeave={hideTooltip}
                   className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all group/link ${group.gold
-                    // Club Merch: dorado metálico; la ruta activa suma un anillo blanco.
                     ? `bg-gold-premium text-brand-primary-dark border border-gold-premium-end shadow-gold-glow hover:shadow-gold-glow-hover hover:brightness-110 ${location.pathname === group.path ? 'ring-2 ring-white/70' : ''}`
                     : location.pathname === group.path
                       ? 'bg-blue-500/20 text-white shadow-inner border border-blue-400/20'
@@ -152,7 +213,6 @@ const StudentSidebar = () => {
                     <span className="text-[12px] font-bold uppercase tracking-wider">{group.title}</span>
                   </div>
 
-                  {/* ALERTA NOTICIAS (Ahora en el primer nivel) */}
                   {group.hasAlert && (
                     <div className="relative flex h-2.5 w-2.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
@@ -178,6 +238,8 @@ const StudentSidebar = () => {
                           <Link
                             key={item.path}
                             to={item.path}
+                            onMouseEnter={(e) => showTooltip(e, item)}
+                            onMouseLeave={hideTooltip}
                             className={`flex items-center justify-between px-4 py-2.5 rounded-xl transition-all text-[11px] font-bold uppercase tracking-wide ${isActive
                               ? 'text-orange-400 bg-orange-400/10'
                               : 'text-blue-100/50 hover:text-white hover:bg-white/5'
@@ -200,12 +262,35 @@ const StudentSidebar = () => {
 
         {/* FOOTER */}
         <div className="flex-none p-4 bg-black/20 border-t border-white/10">
-          <button onClick={logout} className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl text-red-400 hover:bg-red-500 hover:text-white transition-all font-black text-[11px] uppercase tracking-widest active:scale-95">
+          <button onClick={logout} className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl text-red-400 hover:bg-red-500 hover:text-white transition-all font-black text-[11px] uppercase tracking-widest active:scale-95 cursor-pointer">
             <LogOut size={16} />
             <span>Cerrar Sesión</span>
           </button>
         </div>
       </aside>
+
+      {/* 💡 TOOLTIP FLOTANTE INTELIGENTE (VISIBLE EN HOVER) */}
+      {hoveredTooltip && (
+        <div
+          style={{ top: `${hoveredTooltip.top}px` }}
+          className="hidden md:block fixed left-[268px] -translate-y-1/2 z-[100] w-72 pointer-events-none transition-all duration-200 animate-in fade-in zoom-in-95"
+        >
+          <div className="relative bg-slate-900/95 backdrop-blur-md border border-white/20 text-white p-3.5 rounded-2xl shadow-2xl">
+            {/* Puntero que apunta a la opción correspondiente */}
+            <div className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-slate-900 border-l border-b border-white/20 -rotate-45"></div>
+
+            <div className="flex items-center gap-2 mb-1.5">
+              {hoveredTooltip.icon && <hoveredTooltip.icon size={15} className="text-orange-400 shrink-0" />}
+              <h4 className="text-xs font-black uppercase tracking-wider text-white italic">
+                {hoveredTooltip.title}
+              </h4>
+            </div>
+            <p className="text-[11px] font-medium text-slate-300 leading-snug">
+              {hoveredTooltip.description}
+            </p>
+          </div>
+        </div>
+      )}
     </>
   );
 };

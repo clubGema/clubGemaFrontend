@@ -9,7 +9,7 @@ import { feriadoService } from '../../../services/feriado.service';
 import { enrollmentService } from '../../../services/enrollment.service';
 import { merchService } from '../../../services/merch.service';
 import { ESTADO_COLECCION } from '../../../config/merch';
-import { qtyMapToIds } from '../../../utils/merchCart';
+import { qtyMapToIds, cartLines } from '../../../utils/merchCart';
 import { precioClaseUnica, precioMensual } from '../../../utils/enrollmentPricing';
 import LoadingSpinner from '../../shared/LoadingSpinner';
 import StepIndicator from './StepIndicator';
@@ -69,6 +69,11 @@ const EnrollmentStepper = ({ userId, onSuccess }) => {
   const precioBase = state.modalidad === MODALIDAD.MENSUAL
     ? precioMensual(planes, derived.horariosElegidos.length)
     : precioClaseUnica(planes);
+
+  const totalMerch = useMemo(() => {
+    return cartLines(catalogoMerch, extras.merchQty).reduce((acc, line) => acc + line.subtotal, 0);
+  }, [catalogoMerch, extras.merchQty]);
+  const totalAPagar = precioBase != null ? precioBase + totalMerch : null;
 
   const volver = () => {
     // Tras un rechazo la fecha única elegida ya no sirve: se descarta al volver
@@ -153,10 +158,16 @@ const EnrollmentStepper = ({ userId, onSuccess }) => {
             type="button"
             onClick={confirmar}
             disabled={submitting || faltaSedeRecojo}
-            className="pointer-events-auto flex items-center justify-center gap-4 px-12 py-5 rounded-full font-black uppercase italic transition-all duration-500 shadow-2xl bg-brand-accent text-white hover:scale-105 active:scale-95 border-4 border-white w-full max-w-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            className="pointer-events-auto flex items-center justify-center gap-4 px-10 py-5 rounded-full font-black uppercase italic transition-all duration-500 shadow-2xl bg-brand-accent text-white hover:scale-105 active:scale-95 border-4 border-white w-full max-w-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             {submitting ? <Loader2 className="animate-spin" size={24} /> : <Send size={24} />}
-            <span className="tracking-widest text-[12px]">Confirmar matrícula</span>
+            <span className="tracking-widest text-[12px]">
+              {submitting
+                ? 'Procesando...'
+                : totalAPagar != null
+                  ? `Confirmar matrícula · S/ ${totalAPagar.toFixed(2)}`
+                  : 'Confirmar matrícula'}
+            </span>
           </button>
         )}
       </div>

@@ -53,21 +53,30 @@ export const ForgotPassword = () => {
                         </p>
                     </div>
 
-                    <div className="p-10">
-                        <p className="text-slate-500 text-center mb-10 text-sm leading-relaxed font-medium">
-                            Ingresa tu <span className="text-brand-primary font-bold italic">nombre de usuario</span> para recibir el enlace de restauración en tu correo vinculado.
-                        </p>
+                    <div className="p-8 md:p-10 space-y-6">
+                        {/* Nota amigable */}
+                        <div className="p-4 rounded-2xl bg-blue-50/80 border border-blue-100 text-left space-y-1.5">
+                            <p className="text-xs font-black text-blue-950 uppercase tracking-wide">
+                                📩 Revisa primero tu correo
+                            </p>
+                            <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                                Recuerda que tus credenciales de bienvenida fueron enviadas a tu correo al registrarte. Revisa tu bandeja de entrada o <b>Spam / No deseados</b>.
+                            </p>
+                            <p className="text-[11px] text-slate-500 font-medium pt-1 border-t border-blue-100">
+                                💡 <b>Nota:</b> Si te registraron presencialmente en sede, tu contraseña es tu mismo <b>nombre de usuario</b>.
+                            </p>
+                        </div>
 
-                        <form onSubmit={handleSubmit} className="space-y-7">
-                            <div className="group">
-                                <label className="block text-[0.7rem] font-black text-brand-muted uppercase tracking-[0.15em] mb-2.5 ml-1 group-focus-within:text-blue-600 transition-colors">
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            <div className="group text-left">
+                                <label className="block text-[0.7rem] font-black text-brand-muted uppercase tracking-[0.15em] mb-2 ml-1 group-focus-within:text-blue-600 transition-colors">
                                     Nombre de Usuario
                                 </label>
                                 <div className="relative">
                                     <input
                                         type="text"
                                         placeholder="Ej: usuario.gema"
-                                        className="w-full pl-5 pr-5 py-4 bg-brand-bg border-2 border-brand-border-soft rounded-2xl focus:ring-0 focus:border-blue-500 outline-none transition-all placeholder:text-slate-300 text-brand-body font-medium"
+                                        className="w-full px-4 py-3.5 bg-brand-bg border-2 border-brand-border-soft rounded-2xl focus:border-brand-accent outline-none transition-all placeholder:text-slate-300 text-brand-body text-sm font-semibold"
                                         value={username}
                                         onChange={(e) => setUsername(e.target.value)}
                                         required
@@ -78,7 +87,7 @@ export const ForgotPassword = () => {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className={`w-full bg-brand-accent hover:bg-brand-accent-dark text-white font-black py-4 rounded-2xl transition-all shadow-accent-lift active:scale-[0.97] uppercase tracking-widest text-sm ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+                                className={`w-full bg-brand-accent hover:bg-brand-accent-dark text-white font-black py-4 rounded-2xl transition-all shadow-accent-lift active:scale-[0.97] uppercase tracking-widest text-xs ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
                                     }`}
                             >
                                 {isLoading ? (
@@ -90,12 +99,30 @@ export const ForgotPassword = () => {
                                         Procesando...
                                     </span>
                                 ) : (
-                                    'Enviar Instrucciones'
+                                    'Enviar Enlace de Restauración'
                                 )}
                             </button>
                         </form>
 
-                        <div className="mt-10 pt-8 border-t border-slate-50 text-center">
+                        {/* Banner de Soporte */}
+                        <div className="p-4 rounded-2xl bg-brand-primary-dark text-white text-left space-y-2 border border-white/10 shadow-md">
+                            <span className="text-[10px] font-black text-brand-accent uppercase tracking-widest block">
+                                ¿Perdiste acceso a tu correo?
+                            </span>
+                            <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                                Si no tienes acceso a tu correo registrado, comunícate directamente con nuestro equipo de soporte para ayudarte.
+                            </p>
+                            <a
+                                href="https://wa.me/51999888777?text=Hola%20Club%20Gema,%20necesito%20ayuda%20para%20recuperar%20el%20acceso%20a%20mi%20cuenta"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center gap-2 w-full mt-1 px-4 py-2.5 bg-brand-accent hover:bg-brand-accent-dark text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all"
+                            >
+                                Contactar Soporte
+                            </a>
+                        </div>
+
+                        <div className="pt-4 border-t border-brand-border-soft text-center">
                             <Link
                                 to="/login"
                                 className="text-brand-muted hover:text-brand-primary font-bold text-xs transition-all uppercase tracking-widest flex items-center justify-center gap-2 group"

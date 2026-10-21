@@ -46,19 +46,40 @@ const EnrollmentSummary = ({ modalidad, sede, nivelNombre, horarios, fechaInicio
         )}
       </div>
 
-      <div className="border-t border-brand-border-soft pt-5 space-y-2">
+      <div className="border-t border-brand-border-soft pt-5 space-y-3">
         {precioBase != null && (
-          <div className="flex justify-between text-[11px] font-black uppercase italic text-brand-muted">
-            <span>{esMensual ? 'Matrícula' : 'Clase única'}</span><span>{soles(precioBase)}</span>
+          <div className="flex justify-between text-xs font-black uppercase italic text-slate-700">
+            <span>{esMensual ? 'Servicio de clases (Mensual)' : 'Clase única'}</span>
+            <span className="text-brand-primary">{soles(precioBase)}</span>
           </div>
         )}
-        {extras.map(e => (
-          <div key={e.label} className="flex justify-between text-[11px] font-black uppercase italic text-brand-muted">
-            <span>{e.label}</span><span>{soles(e.price)}</span>
+
+        {extras.length > 0 && (
+          <div className="bg-brand-gold-soft/60 border border-brand-gold/30 rounded-2xl p-3.5 space-y-2">
+            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-brand-gold-dark border-b border-brand-gold/20 pb-1.5">
+              <span>🛍️ Productos oficiales añadidos</span>
+              <span>Subtotal Merch</span>
+            </div>
+            {extras.map(e => (
+              <div key={e.label} className="flex justify-between text-xs font-bold text-slate-800 pl-1">
+                <span className="truncate pr-2">{e.label}</span>
+                <span className="font-black text-brand-primary shrink-0">+ {soles(e.price)}</span>
+              </div>
+            ))}
           </div>
-        ))}
-        <div className="flex justify-between items-end pt-2">
-          <span className="text-[10px] font-black uppercase tracking-widest text-brand-muted">Total</span>
+        )}
+
+        <div className="flex justify-between items-end pt-3 border-t-2 border-brand-border">
+          <div>
+            <span className="text-[10px] font-black uppercase tracking-widest text-brand-muted block">
+              Total final a pagar
+            </span>
+            {extras.length > 0 && (
+              <span className="text-[9px] font-bold text-brand-gold-dark block">
+                (Matrícula + Productos oficiales)
+              </span>
+            )}
+          </div>
           <span className="text-3xl font-black italic text-brand-primary leading-none">
             {total == null ? 'Se confirma al generar' : soles(total)}
           </span>

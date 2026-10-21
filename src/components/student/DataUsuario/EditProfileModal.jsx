@@ -20,6 +20,7 @@ const DISTRITOS_LIMA = [
 const EditProfileModal = ({ isOpen, onClose, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
+    nombres: '', apellidos: '',
     email: '', telefono_personal: '', tipo_documento_id: '', numero_documento: '',
     fecha_nacimiento: '', genero: '', condiciones_medicas: '', seguro_medico: '',
     grupo_sanguineo: '', direccion_completa: '', distrito: '', ciudad: 'Lima', referencia: ''
@@ -37,6 +38,8 @@ const EditProfileModal = ({ isOpen, onClose, onSuccess }) => {
             const alumno = user.alumnos || {};
             const dir = alumno.direcciones || {};
             setFormData({
+              nombres: user.nombres || '',
+              apellidos: user.apellidos || '',
               email: user.email || '', telefono_personal: user.telefono_personal || '',
               tipo_documento_id: user.tipo_documento_id || '', numero_documento: user.numero_documento || '',
               fecha_nacimiento: user.fecha_nacimiento ? user.fecha_nacimiento.split('T')[0] : '',
@@ -74,7 +77,7 @@ const EditProfileModal = ({ isOpen, onClose, onSuccess }) => {
       if (!response.ok) throw new Error(result.errors ? result.errors[0].message : result.message);
       
       toast.success("¡Perfil actualizado!");
-      if (onSuccess) onSuccess(result.data);
+      if (onSuccess) onSuccess(result.data?.usuarios || result.data);
       onClose();
     } catch (error) {
       toast.error(error.message);
@@ -112,14 +115,16 @@ const EditProfileModal = ({ isOpen, onClose, onSuccess }) => {
                 <span className="text-[10px] font-black text-brand-muted uppercase tracking-widest">Personales</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <input type="text" placeholder="Teléfono" value={formData.telefono_personal} onChange={e => setFormData({ ...formData, telefono_personal: e.target.value })} className="col-span-2 sm:col-span-1 bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-brand-accent" />
+                <input type="text" placeholder="Nombres" value={formData.nombres} onChange={e => setFormData({ ...formData, nombres: e.target.value })} className="col-span-2 sm:col-span-1 bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-brand-accent" />
+                <input type="text" placeholder="Apellidos" value={formData.apellidos} onChange={e => setFormData({ ...formData, apellidos: e.target.value })} className="col-span-2 sm:col-span-1 bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-brand-accent" />
+                <input type="text" placeholder="Teléfono" value={formData.telefono_personal} onChange={e => setFormData({ ...formData, telefono_personal: e.target.value.replace(/\D/g, "").slice(0, 9) })} className="col-span-2 sm:col-span-1 bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-brand-accent" />
                 <input type="email" placeholder="Email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="col-span-2 sm:col-span-1 bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-brand-accent" />
                 <select value={formData.tipo_documento_id} onChange={e => setFormData({ ...formData, tipo_documento_id: e.target.value })} className="bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-brand-accent">
                   <option value="">Documento</option>{['DNI', 'PAS', 'CE'].map(g => <option key={g} value={g}>{g}</option>)}
                 </select>
                 <input type="text" placeholder="N° Documento" value={formData.numero_documento} onChange={e => setFormData({ ...formData, numero_documento: e.target.value })} className="bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-brand-accent" />
                 <select value={formData.genero} onChange={e => setFormData({ ...formData, genero: e.target.value })} className="bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-brand-accent">
-                  <option value="">Género</option><option value="M">Masculino (M)</option><option value="F">Femenino (F)</option>
+                  <option value="">Género</option><option value="M">Masculino (M)</option><option value="F">Femenino (F)</option><option value="O">Otro (O)</option>
                 </select>
                 <div className="relative">
                   <label className="text-[8px] font-black text-brand-muted uppercase absolute -top-1.5 left-2 bg-brand-surface px-1">Nacimiento</label>
