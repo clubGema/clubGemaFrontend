@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-    User, Mail, Lock, EyeOff, Eye, ArrowLeft, ShieldCheck, CheckCircle2, Phone
+    User, Mail, Lock, EyeOff, Eye, ArrowLeft, ShieldCheck, CheckCircle2, Phone, Calendar
 } from 'lucide-react';
 import { registerService } from '../services/auth.service';
 import toast from 'react-hot-toast';
@@ -42,7 +42,8 @@ function Register() {
         apellidos: '',
         email: '',
         password: '',
-        telefono_personal: ''
+        telefono_personal: '',
+        fecha_nacimiento: ''
     });
 
     useEffect(() => {
@@ -76,6 +77,7 @@ function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!rolIdAlumno) return toast.error("Error del sistema: Perfil de Alumno no disponible.");
+        if (!formData.fecha_nacimiento) return toast.error("La fecha de cumpleaños es obligatoria.");
         if (!aceptarTerminos) return toast.error("Debes aceptar los términos y condiciones.");
         const toastId = toast.loading('Procesando inscripción...');
         setLoading(true);
@@ -86,6 +88,7 @@ function Register() {
                 email: formData.email.trim(),
                 password: formData.password,
                 telefono_personal: formData.telefono_personal.trim(),
+                fecha_nacimiento: formData.fecha_nacimiento,
                 rol_id: rolIdAlumno
             };
 
@@ -192,13 +195,22 @@ function Register() {
                             </div>
                         </div>
 
-                        {/* Grupo 3: Celular */}
-                        <div className="grid grid-cols-1 gap-4 md:gap-5">
+                        {/* Grupo 3: Celular y Fecha de Cumpleaños */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
                             <div className="space-y-1.5 md:space-y-2 text-left">
                                 <label className="text-[9px] md:text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Mi Celular / WhatsApp *</label>
                                 <div className="relative group">
                                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-300 group-focus-within:text-brand-accent transition-colors" />
                                     <input type="tel" name="telefono_personal" required value={formData.telefono_personal} onChange={handleChange} placeholder="999888777"
+                                        className="w-full pl-10 md:pl-12 pr-4 py-3 md:py-3.5 bg-brand-bg border border-brand-border-soft rounded-xl focus:border-brand-accent outline-none text-sm font-semibold shadow-sm" />
+                                </div>
+                            </div>
+                            <div className="space-y-1.5 md:space-y-2 text-left">
+                                <label className="text-[9px] md:text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Fecha de Cumpleaños *</label>
+                                <div className="relative group">
+                                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-300 group-focus-within:text-brand-accent transition-colors" />
+                                    <input type="date" name="fecha_nacimiento" required value={formData.fecha_nacimiento} onChange={handleChange}
+                                        max={new Date().toISOString().split('T')[0]}
                                         className="w-full pl-10 md:pl-12 pr-4 py-3 md:py-3.5 bg-brand-bg border border-brand-border-soft rounded-xl focus:border-brand-accent outline-none text-sm font-semibold shadow-sm" />
                                 </div>
                             </div>

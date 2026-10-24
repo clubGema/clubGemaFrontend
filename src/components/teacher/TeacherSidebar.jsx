@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ClipboardList, LogOut, User } from 'lucide-react';
+import { ClipboardList, LogOut, User, CalendarClock } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { THEME_ASSETS } from "../../config/themeAssets.js";
 
@@ -21,9 +21,9 @@ const TeacherSidebar = ({ isOpen, onClose }) => {
   }, [isOpen]);
 
   const menuItems = [
-    { icon: ClipboardList, label: 'Mis Clases', path: '/dashboard/teacher' },
+    { icon: ClipboardList, label: 'Mis Clases y Agenda', path: '/dashboard/teacher' },
+    { icon: CalendarClock, label: 'Días de Corte', path: '/dashboard/teacher/DiaCorte' },
     { icon: User, label: 'Mi Perfil', path: '/dashboard/teacher/profile' },
-    { icon: User, label: 'Dias de corte', path: '/dashboard/teacher/DiaCorte' },
   ];
 
   return (
@@ -38,7 +38,7 @@ const TeacherSidebar = ({ isOpen, onClose }) => {
 
         {/* SECCIÓN LOGO: Branding oficial unificado */}
         <div className="flex-none py-8 px-6 flex flex-col items-center border-b border-white/10">
-          <div className="relative z-10 w-[180px] aspect-square bg-brand-surface rounded-full p-2 shadow-2xl flex items-center justify-center border-4 border-white/20 overflow-hidden">
+          <div className="relative z-10 w-[170px] aspect-square bg-brand-surface rounded-full p-2 shadow-2xl flex items-center justify-center border-4 border-white/20 overflow-hidden">
             <Link to="/" className="relative z-10">
               <img src={THEME_ASSETS.logoFramed} alt="Logo Club Gema" className="w-full h-full object-cover" />
             </Link>

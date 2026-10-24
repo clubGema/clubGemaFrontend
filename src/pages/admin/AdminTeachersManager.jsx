@@ -36,7 +36,7 @@ const AdminTeachersManager = () => {
                     telefono_personal: user.telefono_personal || 'No registrado',
                     tipo_documento_id: user.tipo_documento_id,
                     numero_documento: user.numero_documento,
-                    fecha_nacimiento: user.fecha_nacimiento ? new Date(user.fecha_nacimiento).toLocaleDateString('es-PE') : '---',
+                    fecha_nacimiento: user.fecha_nacimiento ? new Date(user.fecha_nacimiento).toLocaleDateString('es-PE', { timeZone: 'UTC' }) : '---',
                     genero: user.genero,
                     datosRolEspecifico: {
                         especializacion: user.coordinadores?.especializacion || 'Coordinador General'
