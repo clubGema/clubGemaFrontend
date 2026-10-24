@@ -26,8 +26,8 @@ const AdminPaymentStats = ({ stats }) => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
 
             {/* ⏳ CONTROL OPERATIVO */}
-            <div className="md:col-span-1 bg-brand-surface p-6 rounded-[2.5rem] border border-brand-border shadow-sm flex items-center gap-5 group hover:border-orange-400 transition-all duration-300">
-                <div className="p-4 bg-orange-100 text-brand-accent-dark rounded-3xl group-hover:bg-brand-accent group-hover:text-white transition-all shadow-inner">
+            <div className="md:col-span-1 bg-brand-surface p-6 rounded-[2.5rem] border border-brand-border shadow-sm flex items-center gap-5 group hover:border-brand-accent transition-all duration-300">
+                <div className="p-4 bg-brand-accent-soft text-brand-accent-dark rounded-3xl group-hover:bg-brand-accent group-hover:text-white transition-all shadow-inner">
                     <Clock size={32} />
                 </div>
                 <div>
@@ -100,7 +100,7 @@ const AdminPaymentStats = ({ stats }) => {
 
                                 {/* Tooltip Pro */}
                                 <div className={`absolute top-full ${posicionTooltip} mt-3 opacity-0 group-hover/bar:opacity-100 transition-all duration-300 transform -translate-y-2 group-hover/bar:translate-y-0 bg-brand-primary-dark text-white text-[10px] px-3 py-2 rounded-xl font-bold z-50 whitespace-nowrap shadow-xl border border-white/10 flex flex-col gap-1 pointer-events-none`}>
-                                    <span className="text-blue-400">Pagos: S/ {(item.ingresosPagos || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+                                    <span className="text-brand-accent">Pagos: S/ {(item.ingresosPagos || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                                     <span className="text-slate-300 normal-case">Manual: S/ {(item.ingresosManuales || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                                 </div>
 
@@ -110,7 +110,7 @@ const AdminPaymentStats = ({ stats }) => {
                                         initial={{ height: 0 }}
                                         animate={{ height: alturaIngresoPx }}
                                         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                                        className={`w-full ${ingresos > 0 ? 'bg-gradient-to-t from-brand-primary via-blue-600 to-blue-400' : 'bg-brand-bg'} min-h-[4px]`}
+                                        className={`w-full ${ingresos > 0 ? 'bg-gradient-to-t from-brand-primary via-brand-primary to-brand-primary-light' : 'bg-brand-bg'} min-h-[4px]`}
                                     />
                                     {egresos > 0 && (
                                         <motion.div
@@ -139,11 +139,11 @@ const AdminPaymentStats = ({ stats }) => {
                         onClick={() => toggleSerie('ingresos')}
                         className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 ${
                             seriesVisibles.ingresos
-                                ? 'bg-brand-primary-soft border-blue-200 opacity-100'
+                                ? 'bg-brand-primary-soft border-brand-primary/20 opacity-100'
                                 : 'bg-brand-bg border-brand-border opacity-40'
                         }`}
                     >
-                        <span className="w-3 h-3 rounded-md bg-gradient-to-t from-brand-primary via-blue-600 to-blue-400 shadow-sm" />
+                        <span className="w-3 h-3 rounded-md bg-gradient-to-t from-brand-primary via-brand-primary to-brand-primary-light shadow-sm" />
                         <span className="text-[9px] font-black text-slate-600 uppercase tracking-wide">Ingresos</span>
                     </button>
 

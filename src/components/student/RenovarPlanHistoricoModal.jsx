@@ -69,7 +69,7 @@ const RenovarPlanHistoricoModal = ({ plan, alumnoId, onClose, onSuccess }) => {
         </div>
 
         {sinVigente ? (
-          <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 flex gap-2 text-[11px] font-bold text-orange-700">
+          <div className="bg-brand-accent-soft border border-brand-accent/30 rounded-2xl p-4 flex gap-2 text-[11px] font-bold text-brand-accent-dark">
             <AlertTriangle size={16} className="shrink-0" />
             <span>Este plan ya no existe en el catálogo vigente, por eso no se puede renovar.</span>
           </div>
@@ -84,13 +84,13 @@ const RenovarPlanHistoricoModal = ({ plan, alumnoId, onClose, onSuccess }) => {
           {original.map((h, idx) => {
             const noDisp = h.disponible === false;
             return (
-              <div key={h.id} className={`rounded-2xl p-4 border-2 ${noDisp ? 'border-orange-200 bg-orange-50' : 'border-brand-border-soft bg-brand-bg'}`}>
+              <div key={h.id} className={`rounded-2xl p-4 border-2 ${noDisp ? 'border-brand-accent/30 bg-brand-accent-soft' : 'border-brand-border-soft bg-brand-bg'}`}>
                 <p className="text-[11px] font-black text-brand-primary uppercase flex items-center gap-2">
                   <Clock size={12} className="text-brand-accent" /> {etiqueta(h)}
                 </p>
                 {noDisp && (
                   <>
-                    <p className="text-[10px] font-bold text-orange-700 mt-1">{h.motivo_no_disponible || 'Horario no disponible'}</p>
+                    <p className="text-[10px] font-bold text-brand-accent-dark mt-1">{h.motivo_no_disponible || 'Horario no disponible'}</p>
                     <select
                       value={seleccion[idx]}
                       onChange={(e) => cambiarSlot(idx, e.target.value)}

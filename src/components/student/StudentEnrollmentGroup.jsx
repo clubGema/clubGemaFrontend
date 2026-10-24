@@ -25,7 +25,7 @@ const StudentEnrollmentGroup = ({ group, selectedIds, onToggle }) => {
 
       {/* Nivel Badge */}
       <div className="flex flex-col items-center justify-center md:border-r md:border-brand-border-soft md:pr-8 min-w-[120px]">
-        <span className="text-[7px] font-black text-slate-300 uppercase tracking-[0.3em] mb-1 italic">Nivel Gema</span>
+        <span className="text-[7px] font-black text-slate-300 uppercase tracking-[0.3em] mb-1 italic">Nivel Imperio 7</span>
         <div className={`px-4 py-1.5 rounded-xl transition-all duration-500 ${todoSeleccionado ? 'bg-green-500' : 'bg-brand-primary'} text-white`}>
           <span className="font-black uppercase italic text-[10px] tracking-tighter">
             {group.nivel}
@@ -54,7 +54,7 @@ const StudentEnrollmentGroup = ({ group, selectedIds, onToggle }) => {
                 ? 'bg-green-500 text-white'
                 : faltaSeleccionar
                   ? 'bg-brand-accent text-white animate-pulse'
-                  : 'bg-brand-surface-alt text-brand-muted hover:bg-blue-100 hover:text-brand-primary'
+                  : 'bg-brand-surface-alt text-brand-muted hover:bg-brand-primary-soft hover:text-brand-primary'
               }`}
           >
             {todoSeleccionado ? <CheckCircle2 size={14} /> : faltaSeleccionar ? <AlertTriangle size={14} /> : <Zap size={14} fill="currentColor" />}
@@ -79,7 +79,7 @@ const StudentEnrollmentGroup = ({ group, selectedIds, onToggle }) => {
               onClick={() => onToggle(horario.id)}
               className={`h-14 w-14 md:h-16 md:w-16 rounded-2xl font-black text-[10px] transition-all duration-300 flex flex-col items-center justify-center relative border-2 ${isSelected
                   ? 'bg-brand-primary border-brand-primary text-white shadow-xl scale-110 z-10'
-                  : 'bg-brand-surface border-transparent text-brand-muted hover:border-orange-400'
+                  : 'bg-brand-surface border-transparent text-brand-muted hover:border-brand-accent'
                 }`}
             >
               <span className="italic">{daysShort[horario.dia_semana]}</span>

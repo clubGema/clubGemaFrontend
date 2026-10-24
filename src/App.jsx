@@ -40,7 +40,7 @@ function App() {
           success: {
             style: {
               background: BRAND_COLORS.bg,
-              borderLeft: `6px solid ${BRAND_COLORS.primary}`, // Blue representing Gema successful operations
+              borderLeft: `6px solid ${BRAND_COLORS.primary}`, // Vinotinto representing Imperio 7 operations
             },
             iconTheme: {
               primary: BRAND_COLORS.primary,
@@ -53,12 +53,12 @@ function App() {
           error: {
             style: {
               background: '#fff',
-              borderLeft: '6px solid #f97316', // Orange indicating errors
-              color: '#f97316',
-              borderColor: '#f97316'
+              borderLeft: '6px solid #D4AF37', // Orange indicating errors
+              color: '#D4AF37',
+              borderColor: '#D4AF37'
             },
             iconTheme: {
-              primary: '#f97316',
+              primary: '#D4AF37',
               secondary: '#fff',
             },
           },

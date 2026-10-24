@@ -92,7 +92,7 @@ const AdminLevelsManager = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="BUSCAR NIVEL..."
                 wrapperClassName="relative group"
-                className="w-full bg-brand-surface border border-brand-border rounded-2xl pl-12 pr-4 py-3 text-xs font-bold uppercase outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="w-full bg-brand-surface border border-brand-border rounded-2xl pl-12 pr-4 py-3 text-xs font-bold uppercase outline-none focus:ring-2 focus:ring-brand-accent/20"
             />
 
             {loading ? (

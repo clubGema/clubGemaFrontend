@@ -157,7 +157,7 @@ const ChangeLevelStudent = ({ alumno, onBack }) => {
                 {/* Horarios Actuales del Alumno */}
                 <div className="bg-brand-surface rounded-3xl border border-brand-border shadow-sm overflow-hidden p-6">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="w-8 h-8 rounded-full bg-orange-100 text-brand-accent flex items-center justify-center font-black">1</div>
+                        <div className="w-8 h-8 rounded-full bg-brand-accent-soft text-brand-accent flex items-center justify-center font-black">1</div>
                         <div>
                             <h2 className="text-sm font-black uppercase italic tracking-tighter text-slate-800">
                                 Horarios del Alumno

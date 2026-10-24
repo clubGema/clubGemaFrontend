@@ -19,63 +19,68 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 export const BRAND_COLORS = {
-  // Primario — navy institucional
-  primary: '#1e3a8a',        // = blue-900
-  'primary-dark': '#0f172a', // = slate-900  · hover, gradientes, backdrops
-  'primary-soft': '#eff6ff', // = blue-50    · fondos de aviso/info
+  // Primario — Vinotinto Imperial / Sangre Real (según camiseta y escudo Imperio 7)
+  primary: '#581220',        // Vinotinto noble profundo
+  'primary-dark': '#0C0608', // Negro Obsidiana Imperial · hover, gradientes, backdrops
+  'primary-light': '#7A1A2E',// Garnet imperial brillante
+  'primary-soft': '#FDF2F4', // Blanco marfil con velo borgoña · fondos de aviso/info
 
-  // Acento — CTA naranja
-  accent: '#f97316',         // = orange-500
-  'accent-dark': '#ea580c',  // = orange-600 · hover
-  'accent-soft': '#fff7ed',  // = orange-50  · fondos de badge/pill
+  // Acento — Oro Real / Imperial Gold (Corona y detalles dorados)
+  accent: '#D4AF37',         // Oro imperial heráldico (corona y espada)
+  'accent-dark': '#A67C1E',  // Oro noble profundo · hover
+  'accent-light': '#F5D77F', // Oro claro brillante
+  'accent-soft': '#FCF8ED',  // Oro champagne suave · fondos de badge/pill
 
-  // Dorado — coleccionables / Tienda GEMA (token nuevo, no sustituye a ningún color existente)
-  gold: '#d4a017',           // · iconos, bordes y badges de merch
-  'gold-dark': '#a67c00',    // · texto sobre fondos claros
-  'gold-soft': '#fef9e7',    // · fondos de badge/pill
+  // Dorado — Coleccionables / Tienda Merch Imperio 7
+  gold: '#D4AF37',           // Oro metálico heráldico
+  'gold-dark': '#8A6712',    // Oro profundo · texto sobre fondos claros
+  'gold-soft': '#FCF7EA',    // Champagne perlado · fondos de badge/pill
+
+  // Tonos Vinotinto complementarios
+  wine: '#7A162B',           // Vinotinto vibrante
+  'wine-dark': '#3D0A14',    // Borgoña de sombra
+  'wine-soft': '#F7EBEF',    // Fondo vino sutil
 
   // Neutros estructurales
-  bg: '#f8fafc',             // = slate-50   · fondo de página
-  surface: '#ffffff',        // = white      · tarjetas, modales
-  'surface-alt': '#f1f5f9',  // = slate-100  · botón neutro, chips
-  border: '#e2e8f0',         // = slate-200  · divisor estándar
-  'border-soft': '#f1f5f9',  // = slate-100  · divisor sutil
+  bg: '#F8F9FA',             // Fondo de página
+  surface: '#FFFFFF',        // Tarjetas, modales
+  'surface-alt': '#F3F4F6',  // Botón neutro, chips
+  border: '#E5E7EB',         // Divisor estándar
+  'border-soft': '#F1F3F5',  // Divisor sutil
 
   // Tipografía
-  heading: '#0f172a',        // = slate-900  · títulos
-  body: '#334155',           // = slate-700  · cuerpo
-  muted: '#94a3b8',          // = slate-400  · secundario, placeholders
+  heading: '#14080B',        // Títulos
+  body: '#362E32',           // Cuerpo
+  muted: '#888289',          // Secundario, placeholders
 };
 
 
 // ─────────────────────────────────────────────────────────────────────────
-// DORADO PREMIUM — botón metálico del Club Merch
-// Tres paradas del gradiente (sombra → brillo → sombra). tailwind.config.js arma
-// con ellas bg-gold-premium y las sombras shadow-gold-glow*.
+// DORADO PREMIUM — botón metálico y detalles de distinción Imperio 7
 // ─────────────────────────────────────────────────────────────────────────
 export const GOLD_PREMIUM = {
-  start: '#BF953F', // bronce dorado
-  mid: '#FCF6BA',   // reflejo claro del metal
-  end: '#B38728',   // dorado profundo
+  start: '#BF953F', // Bronce dorado imperial
+  mid: '#FCF6BA',   // Reflejo metálico de oro pulido
+  end: '#B38728',   // Dorado regio profundo
 };
 
 
 // ─────────────────────────────────────────────────────────────────────────
-// COLORES EXCLUSIVOS DEL LOGIN
+// COLORES EXCLUSIVOS DEL LOGIN / AUTH
 // ─────────────────────────────────────────────────────────────────────────
 export const LOGIN_COLORS = {
-  // Gradiente del panel izquierdo
-  'grad-start': '#2563eb', // = blue-600
-  'grad-mid': '#1e40af',   // = blue-800
-  'grad-end': '#1e1b4b',   // = indigo-950
+  // Gradiente del panel izquierdo (Vinotinto Imperial -> Obsidiana)
+  'grad-start': '#4E0F1A',
+  'grad-mid': '#24060C',
+  'grad-end': '#0A0305',
 
   // Textos decorativos del branding
-  'highlight': '#bfdbfe',  // = blue-200
-  'slogan': '#60a5fa',     // = blue-400
+  'highlight': '#F5E4B3',
+  'slogan': '#E5B842',
 
   // Botón principal
-  'btn': '#2563eb',        // = blue-600
-  'btn-hover': '#1d4ed8',  // = blue-700
+  'btn': '#D4AF37',
+  'btn-hover': '#B89326',
 };
 
 

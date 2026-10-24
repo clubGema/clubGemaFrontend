@@ -42,7 +42,7 @@ const MerchCard = ({ item, ownedCount = 0, qty = 0, onQtyChange }) => {
           </p>
           <h3 className="text-sm font-black uppercase italic leading-tight text-white">{item.nombre}</h3>
           {item.descripcion && (
-            <p className="mt-1 line-clamp-2 text-[11px] font-bold text-blue-100/60">{item.descripcion}</p>
+            <p className="mt-1 line-clamp-2 text-[11px] font-bold text-brand-primary-soft/60">{item.descripcion}</p>
           )}
         </div>
         <div className="flex items-center justify-between gap-3">

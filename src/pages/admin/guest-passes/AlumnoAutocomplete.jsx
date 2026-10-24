@@ -30,7 +30,7 @@ const AlumnoAutocomplete = ({
                 placeholder="Ej. Victor Margarito"
                 className={`w-full rounded-2xl px-5 py-4 text-sm font-bold text-brand-primary outline-none transition-all uppercase border disabled:cursor-not-allowed ${alumnoSelect
                     ? "bg-green-50/30 border-green-500 focus:ring-4 focus:ring-green-500/20"
-                    : "bg-brand-bg border-brand-border focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500"
+                    : "bg-brand-bg border-brand-border focus:ring-4 focus:ring-brand-accent/20 focus:border-brand-accent"
                     }`}
                 value={textoBusqueda}
                 onFocus={() => onOpenChange(true)}

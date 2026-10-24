@@ -21,19 +21,19 @@ const Pricing = () => {
 
             let config = {
               badge: isUnitario ? "Pago Único" : "Membresía",
-              icon: <Rocket className="text-blue-600" size={26} />,
+              icon: <Rocket className="text-brand-accent" size={26} />,
               features: [plan.nombre, "Acceso prioritario", "Comunidad oficial"],
               color: "border-brand-border bg-brand-surface",
               textColor: "text-brand-primary",
-              btnStyle: "bg-brand-surface-alt text-brand-primary hover:bg-blue-100",
+              btnStyle: "bg-brand-surface-alt text-brand-primary hover:bg-brand-primary-soft",
               recommended: false
             };
 
             if (index === 1) { // El del medio por defecto
               config.badge = "Más Versátil";
-              config.icon = <MapPin className="text-blue-600" size={26} />;
-              config.color = "border-blue-200 shadow-accent-card scale-105 bg-brand-surface";
-              config.btnStyle = "bg-brand-primary text-white hover:bg-[#162a63] shadow-lg shadow-brand-primary/20";
+              config.icon = <MapPin className="text-brand-primary" size={26} />;
+              config.color = "border-brand-accent/40 shadow-accent-card scale-105 bg-brand-surface";
+              config.btnStyle = "bg-brand-primary text-white hover:bg-brand-primary/90 shadow-lg shadow-brand-primary/20";
             }
 
             if (index === 2 || plan.precio_base >= 180) { // El más caro o el tercero
@@ -41,7 +41,7 @@ const Pricing = () => {
               config.recommended = true;
               config.icon = <Star className="text-brand-accent" size={26} />;
               config.color = "border-brand-accent shadow-accent-card scale-105 bg-brand-surface z-10";
-              config.btnStyle = "bg-brand-accent text-white hover:bg-[#ea580c] shadow-xl shadow-brand-accent/30";
+              config.btnStyle = "bg-gradient-to-r from-brand-accent to-brand-accent-dark text-white hover:brightness-110 shadow-accent-glow";
             }
 
             // Si el plan tiene metadata de clases semanales de la DB, lo usamos
@@ -91,18 +91,18 @@ const Pricing = () => {
       <section className="relative pt-20 pb-40 md:pt-24 md:pb-48 bg-brand-primary-dark px-6 overflow-hidden">
         {/* Unificación de luces de fondo con la paleta */}
         <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-accent/10 blur-[120px] rounded-full"></div>
-          <div className="absolute top-1/2 -left-24 w-80 h-80 bg-blue-600/10 blur-[100px] rounded-full"></div>
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-accent/15 blur-[120px] rounded-full"></div>
+          <div className="absolute top-1/2 -left-24 w-80 h-80 bg-brand-primary/30 blur-[100px] rounded-full"></div>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full mb-6 md:mb-8 backdrop-blur-md">
-            <Trophy size={14} className="text-orange-400" />
-            <span className="text-white text-[10px] font-black uppercase tracking-[0.3em]">Temporada 2026</span>
+            <Trophy size={14} className="text-brand-accent" />
+            <span className="text-white text-[10px] font-black uppercase tracking-[0.3em]">Temporada 2026 · Imperio 7</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-white uppercase italic tracking-tighter leading-none mb-6">
-            Elige tu <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-brand-accent-dark">Plan de Juego</span>
+            Elige tu <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-brand-accent to-amber-400">Plan de Juego</span>
           </h1>
           <p className="text-brand-muted max-w-2xl mx-auto text-base md:text-xl font-medium leading-relaxed px-4">
             Entrenamiento de excelencia con la misma pasión en cada nivel.

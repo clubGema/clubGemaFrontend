@@ -107,7 +107,7 @@ const AdminMerchDeliveries = () => {
                         aria-label="Sede"
                         value={sedeId}
                         onChange={cambiarSede}
-                        className="w-full appearance-none bg-brand-bg rounded-xl pl-11 pr-9 py-2.5 text-[10px] font-black uppercase text-slate-600 outline-none cursor-pointer focus:ring-2 focus:ring-blue-500/20"
+                        className="w-full appearance-none bg-brand-bg rounded-xl pl-11 pr-9 py-2.5 text-[10px] font-black uppercase text-slate-600 outline-none cursor-pointer focus:ring-2 focus:ring-brand-accent/20"
                     >
                         <option value="">Todas las sedes</option>
                         {uniqueSedes(sedes).map(s => <option key={s.id} value={s.id}>{s.nombre}</option>)}
@@ -119,7 +119,7 @@ const AdminMerchDeliveries = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="NOMBRE O DNI DEL ALUMNO..."
                     wrapperClassName="flex-1 relative"
-                    className="w-full bg-brand-bg border-none rounded-xl pl-12 pr-4 py-2.5 text-[10px] font-black uppercase outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full bg-brand-bg border-none rounded-xl pl-12 pr-4 py-2.5 text-[10px] font-black uppercase outline-none focus:ring-2 focus:ring-brand-accent/20"
                 />
             </div>
 

@@ -10,7 +10,7 @@ const DashboardChartsBase = ({ chartData, selectedYear, setSelectedYear, availab
     <div className="mb-16 pt-8 border-t border-brand-border/60">
         <div className="mb-10">
             <h2 className="text-4xl font-black text-brand-primary uppercase tracking-tighter italic">
-                Inteligencia <span className="text-brand-accent underline decoration-orange-500/20 underline-offset-8">Financiera y Operativa</span>
+                Inteligencia <span className="text-brand-accent underline decoration-brand-accent/20 underline-offset-8">Financiera y Operativa</span>
             </h2>
             <p className="text-brand-muted text-xs font-black uppercase tracking-[0.2em] mt-3">
                 Análisis de Resultados ({selectedYear})

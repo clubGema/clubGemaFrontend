@@ -77,7 +77,7 @@ const AdminCatalogManager = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="BUSCAR NOMBRE O CÓDIGO..."
                     wrapperClassName="flex-1 relative"
-                    className="w-full bg-brand-bg border-none rounded-xl pl-12 pr-4 py-2.5 text-[10px] font-black uppercase outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full bg-brand-bg border-none rounded-xl pl-12 pr-4 py-2.5 text-[10px] font-black uppercase outline-none focus:ring-2 focus:ring-brand-accent/20"
                 />
 
                 <div className="flex items-center gap-2 bg-brand-bg px-4 py-2 rounded-xl border border-brand-border-soft">
@@ -113,7 +113,7 @@ const AdminCatalogManager = () => {
 
                                 <div className="space-y-1 mb-3">
                                     <div className="flex flex-wrap gap-1">
-                                        <span className="text-[8px] font-black text-blue-600 bg-brand-primary-soft px-1.5 py-0.5 rounded uppercase">
+                                        <span className="text-[8px] font-black text-brand-primary bg-brand-primary-soft px-1.5 py-0.5 rounded uppercase">
                                             {item.codigo_interno}
                                         </span>
                                         {!item.es_vigente && (

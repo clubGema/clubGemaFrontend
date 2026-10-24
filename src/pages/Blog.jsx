@@ -46,7 +46,7 @@ const Blog = () => {
   if (loading) return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-brand-primary-dark">
       <Loader2 className="animate-spin text-brand-accent mb-4" size={48} />
-      <p className="font-black text-white uppercase italic text-xs tracking-widest">ADN GEMA CARGANDO...</p>
+      <p className="font-black text-white uppercase italic text-xs tracking-widest">ADN IMPERIO 7 CARGANDO...</p>
     </div>
   );
 
@@ -56,8 +56,8 @@ const Blog = () => {
       {/* --- HERO SECTION --- */}
       <section className="relative bg-brand-primary-dark min-h-[45vh] md:min-h-[50vh] flex items-center py-8 md:py-12 px-6 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full -z-10">
-          <div className="absolute -top-[10%] -right-[5%] w-[600px] h-[600px] bg-brand-accent/10 blur-[130px] rounded-full"></div>
-          <div className="absolute -bottom-[10%] -left-[5%] w-[500px] h-[500px] bg-blue-500/10 blur-[130px] rounded-full"></div>
+          <div className="absolute -top-[10%] -right-[5%] w-[600px] h-[600px] bg-brand-accent/15 blur-[130px] rounded-full"></div>
+          <div className="absolute -bottom-[10%] -left-[5%] w-[500px] h-[500px] bg-brand-primary/30 blur-[130px] rounded-full"></div>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto text-center">
@@ -67,9 +67,9 @@ const Blog = () => {
           </div>
 
           <h1 className="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter leading-[0.85]">
-            ADN <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-brand-accent-dark">GEMA</span>
+            ADN <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-brand-accent to-amber-400">IMPERIO 7</span>
           </h1>
-          <p className="mt-8 text-brand-muted max-w-2xl mx-auto text-lg font-medium italic">
+          <p className="mt-8 text-stone-300 max-w-2xl mx-auto text-lg font-medium italic">
             "Donde el talento se encuentra con la disciplina para crear leyendas."
           </p>
         </div>
@@ -78,7 +78,7 @@ const Blog = () => {
       {/* --- ARTÍCULO DESTACADO DINÁMICO --- */}
       {featuredPost && (
         <section className="relative z-20 -mt-16 max-w-7xl mx-auto px-6">
-          <div className="bg-brand-surface rounded-[50px] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] border border-brand-border-soft flex flex-col lg:flex-row group transition-all duration-500 hover:border-orange-200">
+          <div className="bg-brand-surface rounded-[50px] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] border border-brand-border-soft flex flex-col lg:flex-row group transition-all duration-500 hover:border-brand-accent/40">
             <div className="lg:w-1/2 h-[400px] lg:h-auto overflow-hidden bg-brand-surface-alt relative">
               <img
                 src={featuredPost.imagen_url || "https://images.unsplash.com/photo-1592656094267-764a45160876?w=1200"}
@@ -103,9 +103,9 @@ const Blog = () => {
                 <div className="flex items-center gap-3 text-brand-primary">
                   {/* LOGO MÁS GRANDE CON FONDO BLANCO */}
                   <div className="w-12 h-12 bg-brand-surface border-2 border-brand-border-soft rounded-2xl p-1.5 shadow-md">
-                    <img src={THEME_ASSETS.logoFramed} alt="Gema" className="w-full h-full object-contain" />
+                    <img src={THEME_ASSETS.logoFramed} alt="Imperio 7" className="w-full h-full object-contain" />
                   </div>
-                  <span className="font-black italic text-sm">Club Gema Oficial</span>
+                  <span className="font-black italic text-sm">Imperio 7 Oficial</span>
                 </div>
               </div>
             </div>
@@ -142,9 +142,9 @@ const Blog = () => {
                   {/* LOGO EN CARDS: MÁS GRANDE Y FONDO BLANCO */}
                   <div className="absolute top-6 left-6 bg-brand-surface px-4 py-2 rounded-2xl flex items-center gap-3 shadow-2xl border border-brand-border-soft">
                     <div className="w-8 h-8 bg-brand-surface rounded-lg p-0.5">
-                      <img src={THEME_ASSETS.logoFramed} alt="Gema" className="w-full h-full object-contain" />
+                      <img src={THEME_ASSETS.logoFramed} alt="Imperio 7" className="w-full h-full object-contain" />
                     </div>
-                    <span className="text-[10px] font-black uppercase text-brand-primary italic tracking-widest">Gema News</span>
+                    <span className="text-[10px] font-black uppercase text-brand-primary italic tracking-widest">Imperio 7 News</span>
                   </div>
                 </div>
 

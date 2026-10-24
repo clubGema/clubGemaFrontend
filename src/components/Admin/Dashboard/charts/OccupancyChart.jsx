@@ -8,7 +8,7 @@ const OccupancyChart = ({ sedes, totalAlumnos, alumnosMultiSede }) => (
     <div className="lg:col-span-1 bg-brand-surface rounded-[2.5rem] border border-brand-border-soft shadow-[0_20px_60px_rgba(0,0,0,0.03)] p-5 md:p-8 flex flex-col">
         <div className="mb-6">
             <ChartHeader
-                barClassName="w-1.5 h-6 bg-blue-600 rounded-full"
+                barClassName="w-1.5 h-6 bg-brand-primary rounded-full"
                 title="Ocupación"
                 subtitle="Plazas Ocupadas por Sede (Hoy)"
             >

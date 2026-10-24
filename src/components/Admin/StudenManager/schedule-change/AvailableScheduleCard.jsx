@@ -7,7 +7,7 @@ const AvailableScheduleCard = ({ horario, isSelected, onSelect }) => (
         onClick={onSelect}
         className={`cursor-pointer border-2 rounded-2xl p-4 transition-all relative overflow-hidden group ${isSelected
             ? 'border-brand-primary bg-brand-primary-soft/30'
-            : 'border-brand-border-soft hover:border-blue-200 hover:bg-brand-bg'
+            : 'border-brand-border-soft hover:border-brand-primary/20 hover:bg-brand-bg'
             }`}
     >
         {isSelected && (
@@ -21,7 +21,7 @@ const AvailableScheduleCard = ({ horario, isSelected, onSelect }) => (
                     }`}>
                     {horario.nivel.nombre || 'Sin Nivel'}
                 </span>
-                <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md ${isSelected ? 'bg-blue-200 text-brand-primary' : 'bg-brand-surface-alt text-slate-500'
+                <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md ${isSelected ? 'bg-brand-primary/20 text-brand-primary' : 'bg-brand-surface-alt text-slate-500'
                     }`}>
                     {horario.cancha.sede.nombre || 'Sin Sede'}
                 </span>

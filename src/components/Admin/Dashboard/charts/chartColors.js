@@ -12,10 +12,10 @@ import { BRAND_COLORS } from "../../../../config/themeColors.js";
  * (p.ej. `chart-1..n`) en themeColors.js, no reutilizar tokens de marca.
  */
 export const CHART_COLORS = [
-  BRAND_COLORS.primary, // navy de marca
-  BRAND_COLORS.accent,  // naranja de marca
-  '#3b82f6',            // = blue-500   · relleno
-  BRAND_COLORS.muted,   // gris de marca
-  '#cbd5e1',            // = slate-300  · relleno
-  '#facc15',            // = yellow-400 · relleno
+  BRAND_COLORS.primary, // Vinotinto Imperial
+  BRAND_COLORS.accent,  // Oro Imperial
+  BRAND_COLORS['primary-light'], // Garnet Imperial
+  BRAND_COLORS.muted,   // Gris noble
+  '#cbd5e1',            // Slate sutil
+  '#BF953F',            // Bronce dorado
 ];

@@ -31,9 +31,9 @@ const NextClassHero = ({ nextClass, now }) => {
           <p className="mt-1 text-[10px] font-bold text-brand-muted uppercase tracking-widest not-italic">Reserva tu próximo entrenamiento</p>
           <Link
             to="/dashboard/student/enrollment"
-            className="inline-flex items-center gap-2 mt-4 px-6 py-3 rounded-2xl bg-brand-accent text-white text-[10px] font-black uppercase tracking-widest shadow-accent-glow hover:shadow-accent-glow-hover transition-all active:scale-95"
+            className="inline-flex items-center gap-2 mt-4 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-brand-primary to-brand-primary-light text-white text-[10px] font-black uppercase tracking-widest border border-brand-accent/50 shadow-xl hover:border-brand-accent hover:brightness-110 transition-all active:scale-95 group"
           >
-            <CalendarPlus size={14} /> Inscribirme
+            <CalendarPlus size={14} className="text-brand-accent" /> Inscribirme
           </Link>
         </EmptyState>
       </section>

@@ -202,17 +202,17 @@ const StudentRecoveries = () => {
 
                     {/* Alerta si no hay paquete activo */}
                     {horariosPatron.length === 0 && !loading && (
-                        <div className="mb-8 p-6 bg-brand-accent-soft border border-orange-200 rounded-[2rem] flex items-center gap-4">
+                        <div className="mb-8 p-6 bg-brand-accent-soft border border-brand-accent/30 rounded-[2rem] flex items-center gap-4">
                             <AlertCircle className="text-brand-accent shrink-0" size={32} />
                             <div>
-                                <h4 className="text-orange-800 font-black uppercase italic text-sm tracking-widest">Atención</h4>
-                                <p className="text-orange-700 font-medium text-xs">No tienes una inscripción vigente. Para agendar una recuperación, necesitas tener un paquete activo.</p>
+                                <h4 className="text-brand-primary font-black uppercase italic text-sm tracking-widest">Atención</h4>
+                                <p className="text-brand-body font-medium text-xs">No tienes una inscripción vigente. Para agendar una recuperación, necesitas tener un paquete activo.</p>
                             </div>
                         </div>
                     )}
 
                     <div className="mb-10">
-                        <h3 className="text-blue-500 font-bold uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
+                        <h3 className="text-brand-accent-dark font-black uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
                             1. Selecciona una falta pendiente
                         </h3>
                         <RecoveryTicketList

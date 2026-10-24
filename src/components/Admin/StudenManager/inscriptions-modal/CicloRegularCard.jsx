@@ -6,7 +6,7 @@ const CicloRegularCard = ({ ciclo }) => {
     const estadosInscripcion = [...new Set((ciclo.inscripciones || []).map(i => i.estado))];
 
     return (
-        <div className="bg-brand-surface border-2 border-slate-50 rounded-2xl p-5 hover:border-blue-100 hover:shadow-md transition-all relative overflow-hidden">
+        <div className="bg-brand-surface border-2 border-slate-50 rounded-2xl p-5 hover:border-brand-primary/10 hover:shadow-md transition-all relative overflow-hidden">
             <div className="flex justify-between items-start gap-2">
                 <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
@@ -14,7 +14,7 @@ const CicloRegularCard = ({ ciclo }) => {
                             {obtenerRangoCiclo(ciclo.fecha_inicio_real, ciclo.fecha_fin_real)}
                         </span>
                         {ciclo.horarios?.length > 1 && (
-                            <span className="flex items-center gap-1 text-[8px] font-black text-indigo-600 bg-indigo-50 px-1.5 py-1 rounded-md border border-indigo-100 uppercase">
+                            <span className="flex items-center gap-1 text-[8px] font-black text-brand-primary bg-brand-primary-soft px-1.5 py-1 rounded-md border border-brand-primary-soft uppercase">
                                 <Layers size={9} /> x{ciclo.horarios.length} horarios
                             </span>
                         )}
@@ -36,7 +36,7 @@ const CicloRegularCard = ({ ciclo }) => {
                         <div className="flex flex-col gap-1 mt-2">
                             {ciclo.horarios.map((h, i) => (
                                 <div key={i} className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase">
-                                    <Clock size={12} className="text-blue-400" />
+                                    <Clock size={12} className="text-brand-accent" />
                                     {h.dia} {h.hora_inicio}-{h.hora_fin}
                                 </div>
                             ))}

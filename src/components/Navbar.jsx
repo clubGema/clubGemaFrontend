@@ -42,24 +42,22 @@ const Navbar = () => {
         {/* Altura ajustada a h-20 para un look más compacto y moderno */}
         <div className="flex justify-between items-center h-24">
 
-          {/* --- BLOQUE LOGO --- */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="relative flex-shrink-0">
-              {/* Logo reducido a w-14 h-14 */}
-              <div className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg shadow-brand-primary/10 group-hover:scale-105 transition-transform overflow-hidden border border-slate-50">
-                <img
-                  src={THEME_ASSETS.logoPublic}
-                  alt="Logo"
-                  className="w-full h-full object-contain p-1.5 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
-                />
-              </div>
-              {/* Punto naranja decorativo escalado */}
-              <div className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-brand-accent rounded-full border-2 border-white shadow-sm"></div>
+          {/* --- BLOQUE LOGO IMPERIO 7 --- */}
+          <Link to="/" className="flex items-center gap-3.5 group">
+            <div className="relative flex-shrink-0 flex items-center justify-center">
+              <img
+                src={THEME_ASSETS.logoFramed}
+                alt="Imperio 7 Club Deportivo"
+                className="w-14 h-14 object-contain filter drop-shadow-[0_4px_12px_rgba(88,18,32,0.18)] group-hover:scale-105 transition-all duration-300"
+              />
             </div>
 
             <div className="flex flex-col">
-              <span className="text-2xl font-black text-brand-primary tracking-tighter uppercase italic leading-none">
-                Club<span className="text-brand-accent">Gema</span>
+              <span className="text-2xl font-black text-brand-primary tracking-tighter uppercase italic leading-none group-hover:text-brand-primary-light transition-colors">
+                Imperio<span className="text-brand-accent">7</span>
+              </span>
+              <span className="text-[8.5px] font-black uppercase tracking-[0.28em] text-brand-accent-dark italic mt-1">
+                Club Deportivo
               </span>
             </div>
           </Link>
@@ -70,9 +68,9 @@ const Navbar = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${location.pathname === link.path
-                  ? 'text-brand-primary bg-brand-primary-soft'
-                  : 'text-slate-500 hover:text-brand-accent hover:bg-brand-accent-soft'
+                className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${location.pathname === link.path
+                  ? 'text-brand-accent bg-brand-primary shadow-sm'
+                  : 'text-stone-600 hover:text-brand-primary hover:bg-brand-primary-soft'
                   }`}
               >
                 {link.label}
@@ -102,7 +100,7 @@ const Navbar = () => {
           <div className="md:hidden flex items-center gap-3">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className={`p-2 rounded-xl transition-all ${isOpen ? 'bg-brand-accent text-white shadow-lg shadow-orange-200' : 'bg-brand-surface-alt text-brand-primary'
+              className={`p-2 rounded-xl transition-all ${isOpen ? 'bg-brand-primary text-brand-accent shadow-lg shadow-brand-primary/20' : 'bg-brand-surface-alt text-brand-primary'
                 }`}
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -134,7 +132,7 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
                 className={`w-full flex items-center justify-center gap-3 py-3.5 rounded-xl font-black uppercase tracking-widest text-sm shadow-lg transition-all
                   ${currentUser
-                    ? 'bg-gradient-to-br from-[#1e40af] to-brand-primary-dark text-white shadow-brand-primary/20'
+                    ? 'bg-gradient-to-br from-brand-primary to-brand-primary-dark text-white shadow-brand-primary/20'
                     : 'bg-brand-primary text-white shadow-brand-primary/20'}`}
               >
                 <UserCircle size={20} />

@@ -142,7 +142,7 @@ const AdminPaymentValidation = ({ onBack, paymentData, onSuccess }) => {
                 <div className="fixed inset-0 z-modal flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-sm">
                     <div className="bg-brand-surface rounded-[3rem] p-10 w-full max-w-md shadow-2xl border-t-[12px] border-brand-accent animate-bounce-in">
                         <div className="text-center mb-8">
-                            <div className="bg-orange-100 w-20 h-20 rounded-3xl text-brand-accent-dark flex items-center justify-center mx-auto mb-4">
+                            <div className="bg-brand-accent-soft w-20 h-20 rounded-3xl text-brand-accent-dark flex items-center justify-center mx-auto mb-4">
                                 <Calendar size={40} />
                             </div>
                             <h3 className="text-2xl font-black uppercase italic text-slate-800">Definir Inicio de Clases</h3>
@@ -171,12 +171,12 @@ const AdminPaymentValidation = ({ onBack, paymentData, onSuccess }) => {
             <div className="flex flex-col md:flex-row justify-between items-center bg-brand-surface p-4 rounded-[2.5rem] shadow-sm border border-brand-border-soft gap-4">
                 <div className="flex items-center gap-3 w-full md:w-auto">
                     <button onClick={onBack} className="p-3 bg-brand-bg rounded-2xl text-slate-600 hover:bg-slate-200 transition-all"><ArrowLeft size={20} /></button>
-                    <h1 className="text-xl font-black text-slate-800 uppercase italic">Revisión de <span className="text-blue-600">Pago</span></h1>
+                    <h1 className="text-xl font-black text-slate-800 uppercase italic">Revisión de <span className="text-brand-primary">Pago</span></h1>
                 </div>
 
                 <div className="flex items-center gap-4 w-full md:w-auto">
                     {validationStatus === 'APROBADO' && (
-                        <div className={`flex-1 md:flex-none px-5 py-2.5 rounded-2xl text-[9px] font-black uppercase italic border-2 text-center ${infoFinanciera.esPagoCompleto ? 'bg-green-50 border-green-200 text-green-700' : 'bg-orange-50 border-orange-200 text-orange-700 animate-pulse'}`}>
+                        <div className={`flex-1 md:flex-none px-5 py-2.5 rounded-2xl text-[9px] font-black uppercase italic border-2 text-center ${infoFinanciera.esPagoCompleto ? 'bg-green-50 border-green-200 text-green-700' : 'bg-brand-accent-soft border-brand-accent/30 text-brand-accent-dark animate-pulse'}`}>
                             {infoFinanciera.esPagoCompleto ? '✅ Deuda Saldada' : `⚠️ Restante: ${formatCurrency(infoFinanciera.saldoRestante)}`}
                         </div>
                     )}
@@ -194,7 +194,7 @@ const AdminPaymentValidation = ({ onBack, paymentData, onSuccess }) => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 space-y-6">
                     <div className="bg-brand-surface p-6 rounded-[2.5rem] border border-brand-border-soft shadow-sm flex items-center gap-6 relative overflow-hidden">
-                        <div className="bg-blue-600 p-4 rounded-[2.5rem] text-white shadow-lg"><User size={38} /></div>
+                        <div className="bg-brand-primary p-4 rounded-[2.5rem] text-white shadow-lg"><User size={38} /></div>
                         <div className="flex-1">
                             <p className="text-[10px] font-black text-brand-muted uppercase italic tracking-widest leading-none mb-1">Alumno</p>
                             <h2 className="text-2xl font-black uppercase italic text-slate-800 leading-none">{alumno?.nombres} {alumno?.apellidos}</h2>
@@ -219,13 +219,13 @@ const AdminPaymentValidation = ({ onBack, paymentData, onSuccess }) => {
                                 </button>
                             )}
                             {paymentData?.estado_validacion === 'APROBADO' ? null : infoFinanciera.esPrimerPago ? (
-                                <button onClick={() => setShowDateModal(true)} className="bg-brand-accent text-white px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase italic hover:bg-brand-primary-dark transition-all flex items-center gap-2 shadow-lg shadow-orange-200">
+                                <button onClick={() => setShowDateModal(true)} className="bg-brand-accent text-white px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase italic hover:bg-brand-primary-dark transition-all flex items-center gap-2 shadow-lg shadow-brand-accent/25">
                                     <Calendar size={14} /> AJUSTAR FECHA DE INICIO
                                 </button>
                             ) : (
-                                <div className="bg-brand-primary-soft px-5 py-3 rounded-2xl border border-blue-100 flex items-center gap-2">
-                                    <ShieldCheck size={16} className="text-blue-500" />
-                                    <span className="text-[9px] font-black text-blue-600 uppercase italic">Ciclo ya iniciado (Abono previo)</span>
+                                <div className="bg-brand-primary-soft px-5 py-3 rounded-2xl border border-brand-primary/10 flex items-center gap-2">
+                                    <ShieldCheck size={16} className="text-brand-primary" />
+                                    <span className="text-[9px] font-black text-brand-primary uppercase italic">Ciclo ya iniciado (Abono previo)</span>
                                 </div>
                             )}
                         </div>
@@ -237,7 +237,7 @@ const AdminPaymentValidation = ({ onBack, paymentData, onSuccess }) => {
                                 const tipoInsc = link.inscripciones?.tipo_inscripcion;
 
                                 return (
-                                    <div key={idx} className="bg-brand-bg p-6 rounded-[2.5rem] border-2 border-slate-50 hover:bg-brand-surface hover:border-blue-200 transition-all">
+                                    <div key={idx} className="bg-brand-bg p-6 rounded-[2.5rem] border-2 border-slate-50 hover:bg-brand-surface hover:border-brand-primary/20 transition-all">
                                         <div className="space-y-4">
                                             {tipoInsc === 'REGULAR' ? (
                                                 <div className="flex items-center justify-between gap-2 bg-brand-surface p-3 rounded-2xl border border-brand-border-soft shadow-sm">
@@ -262,7 +262,7 @@ const AdminPaymentValidation = ({ onBack, paymentData, onSuccess }) => {
 
                                             <div className="space-y-2 pt-2">
                                                 <div className="flex items-start gap-2">
-                                                    <MapPin size={14} className="text-blue-500 mt-0.5" />
+                                                    <MapPin size={14} className="text-brand-primary mt-0.5" />
                                                     <div>
                                                         <p className="text-[10px] font-black text-slate-800 uppercase leading-none">{h?.canchas?.sedes?.nombre}</p>
                                                         <p className="text-[9px] font-bold text-brand-muted uppercase">{h?.canchas?.nombre}</p>
@@ -276,7 +276,7 @@ const AdminPaymentValidation = ({ onBack, paymentData, onSuccess }) => {
 
                                             <div className="flex items-center justify-between border-t border-brand-border-soft pt-4">
                                                 <div className="flex items-center gap-2">
-                                                    <Clock size={16} className="text-blue-600" />
+                                                    <Clock size={16} className="text-brand-primary" />
                                                     <div>
                                                         <p className="text-[9px] font-black text-brand-muted uppercase tracking-tighter leading-none">{diasSemana[h?.dia_semana]}</p>
                                                         <p className="text-sm font-black italic text-brand-primary mt-0.5">
@@ -296,7 +296,7 @@ const AdminPaymentValidation = ({ onBack, paymentData, onSuccess }) => {
                     <div className="bg-brand-surface rounded-[3rem] border border-brand-border-soft shadow-sm p-8 text-center relative overflow-hidden">
                         <p className="text-[10px] font-black text-brand-muted uppercase tracking-[0.3em] mb-4 italic">Evidencia de Operación</p>
                         <img src={paymentData?.url_comprobante} alt="Voucher" className="max-h-[600px] mx-auto rounded-[2rem] shadow-2xl border-4 border-white transition-transform hover:scale-[1.01]" />
-                        <a href={paymentData?.url_comprobante} target="_blank" rel="noreferrer" className="absolute top-12 right-12 p-3 bg-white/90 backdrop-blur rounded-2xl text-blue-600 shadow-xl hover:bg-brand-primary hover:text-white transition-all"><ExternalLink size={20} /></a>
+                        <a href={paymentData?.url_comprobante} target="_blank" rel="noreferrer" className="absolute top-12 right-12 p-3 bg-white/90 backdrop-blur rounded-2xl text-brand-primary shadow-xl hover:bg-brand-primary hover:text-white transition-all"><ExternalLink size={20} /></a>
                     </div>
                 </div>
 
@@ -311,11 +311,11 @@ const AdminPaymentValidation = ({ onBack, paymentData, onSuccess }) => {
                             <label className="text-[9px] font-black text-brand-muted uppercase ml-2 tracking-widest">Monto Confirmado (S/)</label>
                             <div className="relative">
                                 <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted" size={18} />
-                                <input type="number" className="w-full bg-brand-bg border-4 border-brand-border-soft rounded-[1.5rem] pl-12 pr-6 py-4 font-black text-2xl text-brand-primary outline-none focus:border-blue-200 transition-all" value={montoConfirmado} onChange={(e) => setMontoConfirmado(e.target.value)} />
+                                <input type="number" className="w-full bg-brand-bg border-4 border-brand-border-soft rounded-[1.5rem] pl-12 pr-6 py-4 font-black text-2xl text-brand-primary outline-none focus:border-brand-primary/20 transition-all" value={montoConfirmado} onChange={(e) => setMontoConfirmado(e.target.value)} />
                             </div>
                         </div>
 
-                        <textarea className="w-full bg-brand-bg border-2 border-brand-border-soft rounded-xl p-4 text-[11px] font-bold min-h-[120px] resize-none outline-none focus:border-blue-100" placeholder="Escribir notas de validación..." value={notas} onChange={(e) => setNotas(e.target.value)} />
+                        <textarea className="w-full bg-brand-bg border-2 border-brand-border-soft rounded-xl p-4 text-[11px] font-bold min-h-[120px] resize-none outline-none focus:border-brand-primary/10" placeholder="Escribir notas de validación..." value={notas} onChange={(e) => setNotas(e.target.value)} />
                     </div>
 
                     {/* ALCANCÍA DINÁMICA */}
@@ -323,20 +323,20 @@ const AdminPaymentValidation = ({ onBack, paymentData, onSuccess }) => {
                         <div className="relative z-10">
                             <div className="flex justify-between items-start mb-6">
                                 <h4 className="font-black uppercase italic text-xl leading-none">Control de<br />Alcancía</h4>
-                                {infoFinanciera.esPagoCompleto ? <ShieldCheck size={32} className="text-green-400" /> : <AlertCircle size={32} className="text-orange-200 animate-pulse" />}
+                                {infoFinanciera.esPagoCompleto ? <ShieldCheck size={32} className="text-green-400" /> : <AlertCircle size={32} className="text-brand-accent-soft animate-pulse" />}
                             </div>
 
                             <div className="space-y-4 text-[11px] font-black uppercase italic opacity-90">
                                 <div className="flex justify-between opacity-60"><span>Costo del Ciclo:</span><span>{formatCurrency(infoFinanciera.deudaTotal)}</span></div>
 
                                 {infoFinanciera.otrosPagosAprobados > 0 && (
-                                    <div className="flex justify-between text-blue-200 bg-white/5 p-2 rounded-xl border border-white/10">
+                                    <div className="flex justify-between text-brand-primary-soft bg-white/5 p-2 rounded-xl border border-white/10">
                                         <span>Ya pagado (abonos):</span>
                                         <span>+ {formatCurrency(infoFinanciera.otrosPagosAprobados)}</span>
                                     </div>
                                 )}
 
-                                <div className="flex justify-between text-orange-200 pt-3 border-t border-white/10">
+                                <div className="flex justify-between text-brand-accent-soft pt-3 border-t border-white/10">
                                     <span>Ingreso de Hoy:</span>
                                     <span>+ {formatCurrency(montoConfirmado)}</span>
                                 </div>

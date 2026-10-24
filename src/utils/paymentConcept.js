@@ -20,7 +20,7 @@ export const getPaymentConcept = (pago) => {
 
   return {
     detalle,
-    // "Merch: Polo GEMA x1" → "Orden Merch: Polo GEMA x1". Una cuenta mixta ("… | Merch: …") va tal cual.
+    // "Merch: Polo IMPERIO 7 x1" → "Orden Merch: Polo IMPERIO 7 x1". Una cuenta mixta ("… | Merch: …") va tal cual.
     titulo: detalle && PREFIJO_MERCH.test(detalle) ? `Orden ${detalle}` : detalle,
     plan,
     esMerch,

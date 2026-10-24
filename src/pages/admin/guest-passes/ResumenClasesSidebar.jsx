@@ -6,7 +6,7 @@ const ResumenClasesSidebar = ({ formDataList, alumnos, horarios, metodosPago, on
 
         <div className="flex items-center justify-between mb-6 border-b border-slate-800 pb-4">
             <div>
-                <h3 className="font-black uppercase italic text-lg text-orange-400">Resumen de Clases</h3>
+                <h3 className="font-black uppercase italic text-lg text-brand-accent">Resumen de Clases</h3>
             </div>
             <div className="bg-slate-800 px-3 py-2 rounded-xl text-xs font-black text-white border border-slate-700">
                 {formDataList.length}
@@ -31,7 +31,7 @@ const ResumenClasesSidebar = ({ formDataList, alumnos, horarios, metodosPago, on
                                 <X size={16} />
                             </button>
 
-                            <p className="text-xs font-black text-orange-400 uppercase tracking-wide mb-1 truncate max-w-[85%]">
+                            <p className="text-xs font-black text-brand-accent uppercase tracking-wide mb-1 truncate max-w-[85%]">
                                 {alumno ? `${alumno.nombres} ${alumno.apellidos}` : "Alumno Indefinido"}
                             </p>
 
@@ -71,7 +71,7 @@ const ResumenClasesSidebar = ({ formDataList, alumnos, horarios, metodosPago, on
             {formDataList.length > 0 && (
                 <div className="flex items-center justify-between px-2 text-sm font-black uppercase italic">
                     <span className="text-brand-muted">Total:</span>
-                    <span className="text-orange-400 text-base">
+                    <span className="text-brand-accent text-base">
                         S/. {formDataList[0]?.montoTotal || '0'}
                     </span>
                 </div>

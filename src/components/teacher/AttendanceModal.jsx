@@ -121,14 +121,14 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
       <div className="bg-brand-surface w-full max-w-2xl rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl border border-white/20 overflow-hidden flex flex-col max-h-[90vh] animate-zoom-in">
 
         {/* HEADER */}
-        <div className="bg-gradient-to-r from-brand-primary via-[#1e3a8a] to-brand-primary-dark p-6 sm:p-7 text-white flex justify-between items-start">
+        <div className="bg-gradient-to-r from-brand-primary via-brand-primary-light to-brand-primary-dark p-6 sm:p-7 text-white flex justify-between items-start">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="bg-brand-accent text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded-md tracking-wider">
                 {clase.level || 'CLASE'}
               </span>
               {clase.court && (
-                <span className="bg-white/10 text-blue-100 text-[10px] font-bold px-2 py-0.5 rounded-md">
+                <span className="bg-white/10 text-brand-primary-soft text-[10px] font-bold px-2 py-0.5 rounded-md">
                   {clase.court}
                 </span>
               )}
@@ -136,7 +136,7 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
             <h2 className="text-xl sm:text-2xl font-black uppercase italic tracking-tight text-white leading-none pt-1">
               Control de Asistencia
             </h2>
-            <p className="text-blue-200/80 text-xs font-semibold flex items-center gap-2 pt-0.5">
+            <p className="text-brand-primary-soft/80 text-xs font-semibold flex items-center gap-2 pt-0.5">
               <Calendar size={13} className="text-brand-accent" />
               <span>{clase.dateFormatted}</span>
               <span>•</span>
@@ -168,7 +168,7 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
                 <AlertTriangle size={13} strokeWidth={2.5} /> {pendientes} Pendientes
               </span>
             ) : (
-              <span className="text-blue-700 bg-blue-100/80 px-2.5 py-1 rounded-xl flex items-center gap-1">
+              <span className="text-brand-primary bg-brand-primary-soft/80 px-2.5 py-1 rounded-xl flex items-center gap-1">
                 <CheckCheck size={13} strokeWidth={2.5} /> 100% Completo
               </span>
             )}
@@ -178,7 +178,7 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
           {totalAlumnos > 0 && (
             <button
               onClick={handleMarcarTodosPresentes}
-              className="text-[11px] font-black uppercase text-brand-primary hover:text-brand-accent flex items-center gap-1.5 self-start sm:self-auto transition-colors bg-white hover:bg-orange-50 border border-brand-border-soft px-3 py-1.5 rounded-xl shadow-xs"
+              className="text-[11px] font-black uppercase text-brand-primary hover:text-brand-accent flex items-center gap-1.5 self-start sm:self-auto transition-colors bg-white hover:bg-brand-accent-soft border border-brand-border-soft px-3 py-1.5 rounded-xl shadow-xs"
             >
               <CheckCheck size={14} className="text-brand-accent" />
               <span>Marcar Todos Presentes</span>
@@ -188,7 +188,7 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
 
         {/* ALERTA VISUAL DESTACADA SI HAY ALUMNOS SIN MARCAR */}
         {pendientes > 0 && (
-          <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200 px-5 py-2.5 flex items-center gap-2.5 text-amber-900 text-xs font-bold animate-fade-in">
+          <div className="bg-gradient-to-r from-amber-50 to-brand-accent-soft border-b border-amber-200 px-5 py-2.5 flex items-center gap-2.5 text-amber-900 text-xs font-bold animate-fade-in">
             <AlertTriangle size={16} className="text-brand-accent shrink-0" />
             <p className="leading-tight">
               <strong className="font-black text-brand-accent-dark">¡Atención!</strong> Quedan{' '}
@@ -232,7 +232,7 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
                         </span>
                       )}
                       {alumno.esRecuperacion && (
-                        <span className="bg-blue-50 text-blue-700 text-[10px] font-black px-2 py-0.5 rounded-md border border-blue-200 uppercase flex items-center gap-1">
+                        <span className="bg-brand-primary-soft text-brand-primary text-[10px] font-black px-2 py-0.5 rounded-md border border-brand-primary/20 uppercase flex items-center gap-1">
                           <RefreshCw size={10} /> Recuperación
                         </span>
                       )}
@@ -247,7 +247,7 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
                       <span>DNI: <strong className="text-slate-700">{alumno.dni}</strong></span>
 
                       {alumno.fechaNacimiento !== 'N/A' && (
-                        <span className="flex items-center gap-1 text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                        <span className="flex items-center gap-1 text-brand-primary bg-brand-primary-soft px-2 py-0.5 rounded">
                           <Baby size={11} /> {alumno.fechaNacimiento} {alumno.edad ? `(${alumno.edad} años)` : ''}
                         </span>
                       )}
@@ -262,7 +262,7 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
                             alumno.vencido
                               ? 'bg-red-50 text-red-600 border border-red-200'
                               : alumno.esHoyCorte
-                              ? 'bg-orange-50 text-orange-700 border border-orange-200'
+                              ? 'bg-brand-accent-soft text-brand-accent-dark border border-brand-accent/30'
                               : 'bg-emerald-50 text-emerald-700'
                           }`}
                         >

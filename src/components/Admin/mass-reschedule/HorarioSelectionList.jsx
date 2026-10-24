@@ -10,7 +10,7 @@ const HorarioSelectionList = ({ filterDay, filteredHorarios, horariosSeleccionad
             <button
                 type="button"
                 onClick={onToggleTodos}
-                className="text-[10px] font-bold text-blue-600 hover:text-blue-800 underline uppercase tracking-widest transition-colors"
+                className="text-[10px] font-bold text-brand-primary hover:text-brand-primary-dark underline uppercase tracking-widest transition-colors"
                 disabled={!filterDay || filteredHorarios.length === 0}
             >
                 {horariosSeleccionados.length === filteredHorarios.length && filteredHorarios.length > 0 ? "Deseleccionar Todos" : "Seleccionar Todos"}
@@ -27,7 +27,7 @@ const HorarioSelectionList = ({ filterDay, filteredHorarios, horariosSeleccionad
                 </div>
             ) : (
                 filteredHorarios.map(h => (
-                    <label key={h.id} className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${horariosSeleccionados.includes(h.id) ? 'bg-blue-100/50 border-blue-200 shadow-sm' : 'hover:bg-slate-200/50 border-transparent border'}`}>
+                    <label key={h.id} className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${horariosSeleccionados.includes(h.id) ? 'bg-brand-primary-soft/50 border-brand-primary/20 shadow-sm' : 'hover:bg-slate-200/50 border-transparent border'}`}>
                         <input
                             type="checkbox"
                             checked={horariosSeleccionados.includes(h.id)}

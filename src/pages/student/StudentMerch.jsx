@@ -110,10 +110,34 @@ const StudentMerch = () => {
                 <LoadingSpinner size={48} />
             ) : activeTab === 'catalogo' ? (
                 <>
+                    {/* 🛡️ BANNER INDUMENTARIA OFICIAL IMPERIO 7 */}
+                    <div className="mb-10 rounded-3xl overflow-hidden bg-gradient-to-r from-brand-primary via-[#2C070F] to-brand-primary-dark border-2 border-brand-accent/30 shadow-2xl flex flex-col md:flex-row items-center justify-between p-6 md:p-8 relative">
+                        <div className="absolute top-0 right-0 w-80 h-80 bg-brand-accent/15 rounded-full blur-[90px] pointer-events-none"></div>
+                        <div className="space-y-3 max-w-xl text-center md:text-left z-10">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/20 border border-brand-accent/40 text-amber-200 text-[9px] font-black uppercase tracking-widest">
+                                <Sparkles size={12} className="text-brand-accent" />
+                                <span>Colección Oficial 2026</span>
+                            </div>
+                            <h2 className="text-2xl md:text-4xl font-black text-white uppercase italic tracking-tight leading-none">
+                                Armadura Oficial <span className="text-brand-accent">Imperio 7</span>
+                            </h2>
+                            <p className="text-xs md:text-sm text-stone-300 font-medium leading-relaxed">
+                                Viste los colores del club: Vinotinto Imperial, Negro Obsidiana y detalles en Oro Real con el escudo heráldico coronado.
+                            </p>
+                        </div>
+                        <div className="mt-6 md:mt-0 z-10 shrink-0">
+                            <img
+                                src="/imperio7-jersey.jpg"
+                                alt="Camiseta Oficial Imperio 7"
+                                className="w-56 md:w-64 h-auto rounded-2xl shadow-2xl border-2 border-brand-accent/40 hover:scale-105 transition-transform duration-300"
+                            />
+                        </div>
+                    </div>
+
                     <SearchInput
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="BUSCAR COLECCIONABLE..."
+                        placeholder="BUSCAR COLECCIONABLE IMPERIO 7..."
                         wrapperClassName="relative max-w-md mb-8"
                         className="w-full bg-brand-surface border border-brand-border rounded-xl pl-12 pr-4 py-3 text-[10px] font-black uppercase outline-none focus:ring-2 focus:ring-brand-gold/30"
                     />
@@ -161,7 +185,7 @@ const StudentMerch = () => {
                 <div className="fixed bottom-24 md:bottom-8 inset-x-4 md:left-[calc(16rem+1rem)] md:right-4 z-40 flex justify-center pointer-events-none">
                     <div className="pointer-events-auto flex w-full max-w-xl items-center justify-between gap-4 rounded-full border border-brand-gold/50 bg-brand-primary-dark px-6 py-3 shadow-2xl animate-fade-in">
                         <div className="text-white">
-                            <p className="text-[9px] font-black uppercase tracking-widest text-blue-100/60">{unidades} {unidades === 1 ? 'unidad' : 'unidades'}</p>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-brand-primary-soft/60">{unidades} {unidades === 1 ? 'unidad' : 'unidades'}</p>
                             <p className="text-lg font-black italic text-brand-gold leading-none">{formatSoles(total)}</p>
                         </div>
                         <button

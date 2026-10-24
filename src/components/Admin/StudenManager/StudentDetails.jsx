@@ -74,7 +74,7 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
                     <ArrowLeft size={24} className="text-slate-600" />
                 </button>
                 <div>
-                    <h2 className="text-2xl font-black uppercase italic text-slate-800 leading-none">Expediente <span className="text-brand-primary">Gema</span></h2>
+                    <h2 className="text-2xl font-black uppercase italic text-slate-800 leading-none">Expediente <span className="text-brand-primary">Imperio 7</span></h2>
                     <p className="text-[10px] font-bold text-brand-muted uppercase tracking-[0.2em] mt-1">Ficha completa del Alumno</p>
                 </div>
             </div>

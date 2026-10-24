@@ -82,7 +82,7 @@ const AdminCatalog = ({ onBack, editData }) => {
                             </h1>
                         </div>
                         <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest ml-3 italic">
-                            Lógica interna de precios - Club Gema
+                            Lógica interna de precios - Imperio 7 Club
                         </p>
                     </div>
                 </div>
@@ -101,7 +101,7 @@ const AdminCatalog = ({ onBack, editData }) => {
                 <div className="lg:col-span-2 space-y-6">
                     <div className="bg-brand-surface rounded-3xl border border-brand-border shadow-sm overflow-hidden">
                         <div className="p-6 border-b border-brand-border-soft bg-brand-bg flex items-center gap-3">
-                            <div className="p-2 bg-blue-100 text-brand-primary rounded-lg"><Tag size={20} /></div>
+                            <div className="p-2 bg-brand-primary-soft text-brand-primary rounded-lg"><Tag size={20} /></div>
                             <h3 className="font-black text-brand-primary uppercase text-xs tracking-wider italic">Configuración de Producto</h3>
                         </div>
 
@@ -131,7 +131,7 @@ const AdminCatalog = ({ onBack, editData }) => {
                 <div className="space-y-6">
                     <div className="bg-brand-surface rounded-3xl border border-brand-border shadow-sm overflow-hidden">
                         <div className="p-6 border-b border-brand-border-soft bg-brand-bg flex items-center gap-3">
-                            <div className="p-2 bg-orange-100 text-brand-accent-dark rounded-lg"><CalendarDays size={20} /></div>
+                            <div className="p-2 bg-brand-accent-soft text-brand-accent-dark rounded-lg"><CalendarDays size={20} /></div>
                             <h3 className="font-black text-brand-primary uppercase text-xs tracking-wider italic">Vigencia y Frecuencia</h3>
                         </div>
                         <div className="p-6 space-y-6">

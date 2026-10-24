@@ -64,14 +64,17 @@ const MobileNavbar = () => {
 
             {/* HEADER CON LOGO CIRCULAR */}
             <div className="flex-none pt-12 pb-6 px-4 flex flex-col items-center border-b border-white/10 bg-white/5">
-              <div className="relative z-10 w-[120px] aspect-square bg-brand-surface rounded-full p-2.5 shadow-2xl flex items-center justify-center border-[4px] border-white/10 overflow-hidden mb-3">
+              <div className="relative z-10 w-[110px] aspect-square bg-brand-surface rounded-full p-2 shadow-2xl flex items-center justify-center border-[3px] border-brand-accent/40 overflow-hidden mb-3">
                 <Link to="/" onClick={toggleMenu}>
-                  <img src={THEME_ASSETS.logoFramed} alt="Logo Club Gema" className="w-full h-full object-cover" />
+                  <img src={THEME_ASSETS.logoFramed} alt="Logo Imperio 7" className="w-full h-full object-cover" />
                 </Link>
               </div>
               <div className="text-center">
                 <span className="block font-black text-xl tracking-tighter uppercase italic text-white leading-none">
-                  Gema<span className="text-brand-accent">Student</span>
+                  Imperio<span className="text-brand-accent">7</span>
+                </span>
+                <span className="text-[8.5px] font-black uppercase tracking-[0.3em] text-amber-200/80 italic mt-1 block">
+                  Portal del Atleta
                 </span>
               </div>
             </div>
@@ -81,7 +84,7 @@ const MobileNavbar = () => {
               <Link 
                 to="/dashboard/student/enrollment" 
                 onClick={toggleMenu}
-                className="group relative w-full flex flex-col items-center justify-center py-3.5 px-3 bg-gradient-to-r from-amber-500 via-brand-accent to-orange-600 text-white rounded-2xl shadow-[0_4px_25px_rgba(249,115,22,0.45)] hover:shadow-[0_4px_35px_rgba(249,115,22,0.7)] active:scale-95 transition-all border-2 border-white/30 overflow-hidden"
+                className="group relative w-full flex flex-col items-center justify-center py-3.5 px-3 bg-gradient-to-r from-amber-500 via-brand-accent to-amber-600 text-white rounded-2xl shadow-accent-glow hover:shadow-accent-glow-hover active:scale-95 transition-all border-2 border-white/30 overflow-hidden"
               >
                 <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent ease-in-out"></div>
                 
@@ -93,7 +96,7 @@ const MobileNavbar = () => {
                   <UserPlus size={18} className="text-white" />
                   <span className="text-[13px] font-black uppercase tracking-wider italic leading-none">Matricúlate Aquí</span>
                 </div>
-                <span className="relative z-10 text-[9px] font-bold text-orange-100 uppercase tracking-widest mt-1">
+                <span className="relative z-10 text-[9px] font-bold text-amber-100 uppercase tracking-widest mt-1">
                   Inscríbete a tus clases
                 </span>
               </Link>
@@ -104,22 +107,22 @@ const MobileNavbar = () => {
               
               {/* Grupo Principal */}
               <div className="space-y-1.5">
-                <p className="text-[9px] font-black text-blue-300/40 uppercase tracking-[0.3em] ml-2 mb-2">Principal</p>
+                <p className="text-[9px] font-black text-brand-accent/40 uppercase tracking-[0.3em] ml-2 mb-2">Principal</p>
                 
                 <NavLink 
                   to="/dashboard/student" 
                   end 
                   onClick={toggleMenu} 
                   className={({ isActive }) => `flex items-start gap-3 py-2.5 px-3 rounded-2xl transition-all ${
-                    isActive ? 'bg-blue-500/20 text-white border border-blue-400/30' : 'text-blue-100/70 hover:text-white hover:bg-white/5'
+                    isActive ? 'bg-brand-primary/20 text-white border border-brand-primary-light/30' : 'text-brand-primary-soft/70 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 mt-0.5 text-blue-400">
+                  <div className="w-8 h-8 rounded-xl bg-brand-primary/10 flex items-center justify-center shrink-0 mt-0.5 text-brand-accent">
                     <LayoutDashboard size={17} />
                   </div>
                   <div className="space-y-0.5 min-w-0">
                     <span className="block font-black text-[12px] uppercase tracking-wide text-white">Inicio</span>
-                    <span className="block text-[10px] font-medium text-blue-200/60 leading-tight">
+                    <span className="block text-[10px] font-medium text-brand-primary-soft/60 leading-tight">
                       Resumen de tu servicio, próximas clases y accesos rápidos.
                     </span>
                   </div>
@@ -129,15 +132,15 @@ const MobileNavbar = () => {
                   to="/dashboard/student/myRegistrations" 
                   onClick={toggleMenu} 
                   className={({ isActive }) => `flex items-start gap-3 py-2.5 px-3 rounded-2xl transition-all ${
-                    isActive ? 'bg-blue-500/20 text-white border border-blue-400/30' : 'text-blue-100/70 hover:text-white hover:bg-white/5'
+                    isActive ? 'bg-brand-primary/20 text-white border border-brand-primary-light/30' : 'text-brand-primary-soft/70 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 mt-0.5 text-blue-400">
+                  <div className="w-8 h-8 rounded-xl bg-brand-primary/10 flex items-center justify-center shrink-0 mt-0.5 text-brand-accent">
                     <Calendar size={17} />
                   </div>
                   <div className="space-y-0.5 min-w-0">
                     <span className="block font-black text-[12px] uppercase tracking-wide text-white">Mis Inscripciones</span>
-                    <span className="block text-[10px] font-medium text-blue-200/60 leading-tight">
+                    <span className="block text-[10px] font-medium text-brand-primary-soft/60 leading-tight">
                       Días de asistencia e historial de planes para reinscribirte rápido.
                     </span>
                   </div>
@@ -147,23 +150,23 @@ const MobileNavbar = () => {
                   to="/dashboard/student/news" 
                   onClick={toggleMenu} 
                   className={({ isActive }) => `flex items-start justify-between gap-3 py-2.5 px-3 rounded-2xl transition-all ${
-                    isActive ? 'bg-blue-500/20 text-white border border-blue-400/30' : 'text-blue-100/70 hover:text-white hover:bg-white/5'
+                    isActive ? 'bg-brand-primary/20 text-white border border-brand-primary-light/30' : 'text-brand-primary-soft/70 hover:text-white hover:bg-white/5'
                   }`}
                 >
                   <div className="flex items-start gap-3 min-w-0">
-                    <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 mt-0.5 text-blue-400">
+                    <div className="w-8 h-8 rounded-xl bg-brand-primary/10 flex items-center justify-center shrink-0 mt-0.5 text-brand-accent">
                       <Megaphone size={17} />
                     </div>
                     <div className="space-y-0.5 min-w-0">
                       <span className="block font-black text-[12px] uppercase tracking-wide text-white">Muro de Noticias</span>
-                      <span className="block text-[10px] font-medium text-blue-200/60 leading-tight">
+                      <span className="block text-[10px] font-medium text-brand-primary-soft/60 leading-tight">
                         Novedades, eventos y anuncios oficiales de la academia.
                       </span>
                     </div>
                   </div>
                   {hasNewNews && (
                     <div className="relative flex h-2.5 w-2.5 mt-2 shrink-0">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-accent opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-accent shadow-accent-dot"></span>
                     </div>
                   )}
@@ -182,7 +185,7 @@ const MobileNavbar = () => {
                   <div className="space-y-0.5 min-w-0">
                     <span className="block font-black text-[12px] uppercase tracking-wide text-brand-primary-dark">Club Merch</span>
                     <span className="block text-[10px] font-bold text-brand-primary-dark/80 leading-tight">
-                      Indumentaria, accesorios y coleccionables oficiales GEMA.
+                      Indumentaria, accesorios y coleccionables oficiales IMPERIO 7.
                     </span>
                   </div>
                 </NavLink>
@@ -190,21 +193,21 @@ const MobileNavbar = () => {
 
               {/* Grupo Rendimiento */}
               <div className="space-y-1.5">
-                <p className="text-[9px] font-black text-blue-300/40 uppercase tracking-[0.3em] ml-2 mb-2">Salud y Rendimiento</p>
+                <p className="text-[9px] font-black text-brand-accent/40 uppercase tracking-[0.3em] ml-2 mb-2">Salud y Rendimiento</p>
                 
                 <NavLink 
                   to="/dashboard/student/injuries" 
                   onClick={toggleMenu} 
                   className={({ isActive }) => `flex items-start gap-3 py-2.5 px-3 rounded-2xl transition-all ${
-                    isActive ? 'bg-orange-500/20 text-orange-300 border border-orange-400/30' : 'text-blue-100/70 hover:text-white hover:bg-white/5'
+                    isActive ? 'bg-brand-accent/20 text-brand-accent border border-brand-accent/30' : 'text-brand-primary-soft/70 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0 mt-0.5 text-orange-400">
+                  <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0 mt-0.5 text-brand-accent">
                     <Activity size={17} />
                   </div>
                   <div className="space-y-0.5 min-w-0">
                     <span className="block font-black text-[12px] uppercase tracking-wide text-white">Mis Lesiones</span>
-                    <span className="block text-[10px] font-medium text-blue-200/60 leading-tight">
+                    <span className="block text-[10px] font-medium text-brand-primary-soft/60 leading-tight">
                       Registro de lesiones para activar suspensión y recuperación médica.
                     </span>
                   </div>
@@ -214,15 +217,15 @@ const MobileNavbar = () => {
                   to="/dashboard/student/recoveries" 
                   onClick={toggleMenu} 
                   className={({ isActive }) => `flex items-start gap-3 py-2.5 px-3 rounded-2xl transition-all ${
-                    isActive ? 'bg-orange-500/20 text-orange-300 border border-orange-400/30' : 'text-blue-100/70 hover:text-white hover:bg-white/5'
+                    isActive ? 'bg-brand-accent/20 text-brand-accent border border-brand-accent/30' : 'text-brand-primary-soft/70 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0 mt-0.5 text-orange-400">
+                  <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0 mt-0.5 text-brand-accent">
                     <Ticket size={17} />
                   </div>
                   <div className="space-y-0.5 min-w-0">
                     <span className="block font-black text-[12px] uppercase tracking-wide text-white">Mis Recuperaciones</span>
-                    <span className="block text-[10px] font-medium text-blue-200/60 leading-tight">
+                    <span className="block text-[10px] font-medium text-brand-primary-soft/60 leading-tight">
                       Revisa clases pendientes y agenda reprogramaciones por faltas o salud.
                     </span>
                   </div>
@@ -231,21 +234,21 @@ const MobileNavbar = () => {
 
               {/* Grupo Administración */}
               <div className="space-y-1.5 pb-4">
-                <p className="text-[9px] font-black text-blue-300/40 uppercase tracking-[0.3em] ml-2 mb-2">Administración</p>
+                <p className="text-[9px] font-black text-brand-accent/40 uppercase tracking-[0.3em] ml-2 mb-2">Administración</p>
                 
                 <NavLink 
                   to="/dashboard/student/payments" 
                   onClick={toggleMenu} 
                   className={({ isActive }) => `flex items-start gap-3 py-2.5 px-3 rounded-2xl transition-all ${
-                    isActive ? 'bg-blue-500/20 text-white border border-blue-400/30' : 'text-blue-100/70 hover:text-white hover:bg-white/5'
+                    isActive ? 'bg-brand-primary/20 text-white border border-brand-primary-light/30' : 'text-brand-primary-soft/70 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 mt-0.5 text-blue-400">
+                  <div className="w-8 h-8 rounded-xl bg-brand-primary/10 flex items-center justify-center shrink-0 mt-0.5 text-brand-accent">
                     <CreditCard size={17} />
                   </div>
                   <div className="space-y-0.5 min-w-0">
                     <span className="block font-black text-[12px] uppercase tracking-wide text-white">Mis Pagos</span>
-                    <span className="block text-[10px] font-medium text-blue-200/60 leading-tight">
+                    <span className="block text-[10px] font-medium text-brand-primary-soft/60 leading-tight">
                       Historial de pagos, estado de tus deudas y comprobantes.
                     </span>
                   </div>
@@ -255,15 +258,15 @@ const MobileNavbar = () => {
                   to="/dashboard/student/profile" 
                   onClick={toggleMenu} 
                   className={({ isActive }) => `flex items-start gap-3 py-2.5 px-3 rounded-2xl transition-all ${
-                    isActive ? 'bg-blue-500/20 text-white border border-blue-400/30' : 'text-blue-100/70 hover:text-white hover:bg-white/5'
+                    isActive ? 'bg-brand-primary/20 text-white border border-brand-primary-light/30' : 'text-brand-primary-soft/70 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 mt-0.5 text-blue-400">
+                  <div className="w-8 h-8 rounded-xl bg-brand-primary/10 flex items-center justify-center shrink-0 mt-0.5 text-brand-accent">
                     <User size={17} />
                   </div>
                   <div className="space-y-0.5 min-w-0">
                     <span className="block font-black text-[12px] uppercase tracking-wide text-white">Mi Perfil</span>
-                    <span className="block text-[10px] font-medium text-blue-200/60 leading-tight">
+                    <span className="block text-[10px] font-medium text-brand-primary-soft/60 leading-tight">
                       Consulta y edita tus datos personales y credenciales de acceso.
                     </span>
                   </div>
@@ -285,26 +288,26 @@ const MobileNavbar = () => {
       <nav className="fixed bottom-0 left-0 w-full bg-brand-primary-dark border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] z-50 md:hidden transition-all pb-safe">
         <div className="flex justify-around items-end h-[72px] px-2 pb-2">
           
-          <NavLink to="/dashboard/student" end className={({ isActive }) => `flex flex-col items-center gap-1.5 w-full transition-all ${isActive ? 'text-brand-accent' : 'text-blue-100/50'}`}>
+          <NavLink to="/dashboard/student" end className={({ isActive }) => `flex flex-col items-center gap-1.5 w-full transition-all ${isActive ? 'text-brand-accent' : 'text-brand-primary-soft/50'}`}>
             <LayoutDashboard size={20} className={location.pathname === '/dashboard/student' ? 'animate-bounce-short' : ''} />
             <span className="text-[8px] uppercase font-black italic tracking-widest">Inicio</span>
           </NavLink>
 
           {/* ACCIÓN CLAVE 1: GESTIÓN DE CLASES */}
-          <NavLink to="/dashboard/student/myRegistrations" className={({ isActive }) => `flex flex-col items-center gap-1.5 w-full transition-all ${isActive ? 'text-blue-400' : 'text-blue-100/50'}`}>
+          <NavLink to="/dashboard/student/myRegistrations" className={({ isActive }) => `flex flex-col items-center gap-1.5 w-full transition-all ${isActive ? 'text-brand-accent' : 'text-brand-primary-soft/50'}`}>
             <Calendar size={20} />
             <span className="text-[8px] uppercase font-black italic tracking-widest">INSCRIPCIONES</span>
           </NavLink>
 
           {/* 🌟 ACCIÓN CLAVE 2: NUEVA COMPRA (DESTACADO EN EL CENTRO) */}
-          <NavLink to="/dashboard/student/enrollment" className={({ isActive }) => `flex flex-col items-center gap-1.5 w-full transition-all relative top-[-8px] ${isActive ? 'text-orange-400' : 'text-brand-accent'}`}>
+          <NavLink to="/dashboard/student/enrollment" className={({ isActive }) => `flex flex-col items-center gap-1.5 w-full transition-all relative top-[-8px] ${isActive ? 'text-brand-accent' : 'text-brand-accent'}`}>
             <div className={`p-3 rounded-full shadow-lg ${location.pathname === '/dashboard/student/enrollment' ? 'bg-brand-accent-dark shadow-brand-accent/50' : 'bg-brand-accent shadow-brand-accent/30'}`}>
                <UserPlus size={22} className="text-white" />
             </div>
             <span className="text-[8px] text-brand-accent uppercase font-black italic tracking-widest">Matricular</span>
           </NavLink>
 
-          <button onClick={toggleMenu} className="flex flex-col items-center gap-1.5 w-full text-blue-100/50 relative">
+          <button onClick={toggleMenu} className="flex flex-col items-center gap-1.5 w-full text-brand-primary-soft/50 relative">
             <Menu size={20} />
             <span className="text-[8px] uppercase font-black italic tracking-widest">Menú</span>
             {hasNewNews && (

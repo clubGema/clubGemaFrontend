@@ -3,9 +3,9 @@ import { Activity, ShieldPlus } from 'lucide-react';
 
 const RecoveryStatsCards = ({ stats, alLimite }) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-        <div className={`p-5 rounded-3xl border flex items-center justify-between ${alLimite ? 'bg-brand-accent-soft border-orange-200' : 'bg-brand-surface border-gray-200 shadow-sm'}`}>
+        <div className={`p-5 rounded-3xl border flex items-center justify-between ${alLimite ? 'bg-brand-accent-soft border-brand-accent/30' : 'bg-brand-surface border-gray-200 shadow-sm'}`}>
             <div className="flex items-center gap-4">
-                <div className={`p-3 rounded-2xl ${alLimite ? 'bg-orange-100 text-brand-accent-dark' : 'bg-brand-primary-soft text-blue-600'}`}>
+                <div className={`p-3 rounded-2xl ${alLimite ? 'bg-brand-accent/20 text-brand-accent-dark' : 'bg-brand-primary-soft text-brand-primary'}`}>
                     <Activity size={24} />
                 </div>
                 <div>
@@ -19,7 +19,7 @@ const RecoveryStatsCards = ({ stats, alLimite }) => (
                 </div>
             </div>
             {alLimite && (
-                <span className="text-[10px] font-bold bg-orange-200 text-orange-700 px-3 py-1 rounded-full uppercase">Límite Alcanzado</span>
+                <span className="text-[10px] font-black bg-brand-accent/20 text-brand-accent-dark px-3 py-1 rounded-full uppercase border border-brand-accent/30">Límite Alcanzado</span>
             )}
         </div>
 

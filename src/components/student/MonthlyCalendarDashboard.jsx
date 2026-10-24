@@ -43,7 +43,7 @@ const MonthlyCalendarDashboard = ({ sesiones = [], now = new Date() }) => {
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
         <div>
           <h2 className="flex items-center gap-1.5 text-sm md:text-lg font-black italic uppercase tracking-widest text-brand-accent">
-            <CalendarDays className="w-4 h-4" /> GEMA PLANNER
+            <CalendarDays className="w-4 h-4" /> IMPERIO 7 PLANNER
           </h2>
           <p className="text-[8px] md:text-[9px] font-bold text-brand-muted uppercase tracking-widest mt-0.5 italic">
             Mes de {new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(new Date(anioActual, mesActual))} {anioActual}

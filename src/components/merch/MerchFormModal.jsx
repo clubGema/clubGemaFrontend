@@ -95,7 +95,7 @@ const MerchFormModal = ({ producto = null, onClose, onSubmit }) => {
 
         <div>
           <label className={labelClass}>Nombre</label>
-          <input required minLength={2} maxLength={150} value={form.nombre} onChange={set('nombre')} className={inputClass} placeholder="Polo oficial GEMA" />
+          <input required minLength={2} maxLength={150} value={form.nombre} onChange={set('nombre')} className={inputClass} placeholder="Polo oficial IMPERIO 7" />
         </div>
 
         <div>

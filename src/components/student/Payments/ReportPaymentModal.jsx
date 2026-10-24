@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { X, Send, Loader2, Banknote, Upload, Coins, Copy, CheckCircle2, Landmark, CreditCard, ChevronDown } from "lucide-react";
+import { X, Send, Loader2, Banknote, Upload, Coins, Copy, CheckCircle2, Landmark, CreditCard, ChevronDown, Trash2 } from "lucide-react";
 import apiFetch from "../../../interceptors/api.js";
 import toast from "react-hot-toast";
 import { API_ROUTES } from "../../../constants/apiRoutes.js";
@@ -7,7 +7,7 @@ import { API_ROUTES } from "../../../constants/apiRoutes.js";
 // `monto` (opcional) fija el importe a pagar. Sin él se usa el saldo restante o el
 // monto final de la deuda. Si hay un importe válido el campo es de solo lectura
 // (evita errores de tipeo); si no se puede determinar, queda editable como respaldo.
-const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess }) => {
+const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess, onCancelReservation }) => {
   const [loading, setLoading] = useState(false);
   const [voucherFile, setVoucherFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -91,7 +91,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess }) => {
           <div className="bg-brand-primary p-5 md:p-8 text-white relative">
             <button onClick={onClose} className="absolute top-5 right-6 md:hidden text-white/50 hover:text-white"><X size={24} /></button>
             <h3 className="font-black uppercase italic text-lg md:text-2xl tracking-tighter leading-none">Reportar <span className="text-brand-accent">Pago</span></h3>
-            <p className="text-[9px] font-black opacity-50 uppercase tracking-[0.2em] mt-1 italic">Gema Student Elite</p>
+            <p className="text-[9px] font-black opacity-50 uppercase tracking-[0.2em] mt-1 italic">Imperio 7 Student Elite</p>
           </div>
 
           <form onSubmit={handleSubmit} className="p-5 md:p-8 space-y-4 md:space-y-6 flex-1 md:overflow-y-auto custom-scrollbar">
@@ -134,7 +134,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess }) => {
                   {esTarjeta ? "Sube la foto del POS" : "Sube la captura de tu pago"}
                 </label>
                 <input type="file" accept="image/*" className="hidden" id="voucher-input" onChange={(e) => { if (e.target.files[0]) { setVoucherFile(e.target.files[0]); setPreviewUrl(URL.createObjectURL(e.target.files[0])); } }} />
-                <label htmlFor="voucher-input" className="block bg-brand-bg border-2 border-dashed border-brand-border rounded-2xl py-8 md:py-12 text-center cursor-pointer hover:bg-brand-accent-soft hover:border-orange-200 transition-all group overflow-hidden">
+                <label htmlFor="voucher-input" className="block bg-brand-bg border-2 border-dashed border-brand-border rounded-2xl py-8 md:py-12 text-center cursor-pointer hover:bg-brand-accent-soft hover:border-brand-accent/30 transition-all group overflow-hidden">
                   {previewUrl ? <img src={previewUrl} className="h-24 md:h-32 mx-auto rounded-lg shadow-md object-contain" alt="Voucher" /> :
                     <div className="py-2"><Upload size={32} className="mx-auto text-slate-300 mb-2 group-hover:text-brand-accent transition-colors" /><p className="text-[10px] font-black text-brand-muted uppercase italic leading-none group-hover:text-brand-accent-dark transition-colors">Seleccionar Imagen</p></div>}
                 </label>
@@ -143,20 +143,33 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess }) => {
 
             {/* INDICADOR PARA EFECTIVO */}
             {esEfectivo && (
-              <div className="bg-brand-accent-soft border border-orange-100 rounded-2xl p-6 text-center">
+              <div className="bg-brand-accent-soft border border-brand-accent-soft rounded-2xl p-6 text-center">
                 <Coins size={32} className="text-brand-accent mx-auto mb-2" />
-                <h4 className="text-orange-700 font-black uppercase tracking-tighter text-sm italic">Pago en Sede</h4>
+                <h4 className="text-brand-accent-dark font-black uppercase tracking-tighter text-sm italic">Pago en Sede</h4>
                 <p className="text-[9px] text-brand-accent-dark uppercase font-bold mt-1">Acércate a recepción para cancelar este monto.</p>
               </div>
             )}
 
-            <div className="pt-4 flex gap-2 pb-2">
-              <button onClick={onClose} type="button" className="flex-1 bg-brand-surface-alt hover:bg-slate-200 text-slate-500 font-black py-3.5 rounded-xl transition-all uppercase italic text-[9px] tracking-widest active:scale-95">Cancelar</button>
+            <div className="pt-4 flex gap-2 pb-1">
+              <button onClick={onClose} type="button" className="flex-1 bg-brand-surface-alt hover:bg-slate-200 text-slate-500 font-black py-3.5 rounded-xl transition-all uppercase italic text-[9px] tracking-widest active:scale-95">Cerrar</button>
               <button disabled={loading} className="flex-[2] bg-brand-primary hover:bg-brand-accent-dark text-white font-black py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 active:scale-95 shadow-lg shadow-brand-primary/20 disabled:opacity-70 disabled:active:scale-100">
                 {loading ? <Loader2 className="animate-spin" size={16} /> : <Send size={16} />}
                 <span className="uppercase italic tracking-tighter text-xs">{loading ? "ENVIANDO..." : "REPORTAR PAGO"}</span>
               </button>
             </div>
+
+            {onCancelReservation && debt?.id && (
+              <div className="pt-2 text-center border-t border-brand-border-soft mt-2">
+                <button
+                  type="button"
+                  onClick={() => onCancelReservation(debt.id)}
+                  className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-rose-600 hover:text-rose-800 transition-colors py-1 cursor-pointer"
+                >
+                  <Trash2 size={13} />
+                  <span>¿Deseas anular y descartar esta matrícula? Haz clic aquí</span>
+                </button>
+              </div>
+            )}
           </form>
         </div>
 
@@ -166,15 +179,15 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess }) => {
             <div className="text-center space-y-4 w-full max-w-[260px] pb-10 md:pb-0">
               
               <div className="bg-brand-surface p-2.5 rounded-[2rem] shadow-lg border-2 border-white">
-                <img src="/QrYapeGema.PNG" alt="QR Gema" className="w-36 md:w-44 mx-auto h-auto rounded-[1.5rem] mb-2" />
+                <img src="/QrYapeGema.PNG" alt="QR Imperio 7" className="w-36 md:w-44 mx-auto h-auto rounded-[1.5rem] mb-2" />
                 <div className="bg-brand-primary/5 py-1 rounded-lg"><p className="text-[8px] font-black text-brand-primary uppercase italic">Yape / Plin</p></div>
               </div>
 
               <div className="bg-brand-primary p-4 rounded-2xl shadow-md">
-                <p className="text-[8px] font-bold text-blue-300 uppercase mb-2 italic">Número Oficial</p>
+                <p className="text-[8px] font-bold text-brand-accent uppercase mb-2 italic">Número Oficial</p>
                 <div className="flex items-center gap-2 bg-white/10 p-1.5 rounded-lg">
                   <span className="flex-1 font-black text-white text-lg leading-none">902 585 995</span>
-                  <button type="button" onClick={() => handleCopy(CLUB_PHONE, "cel")} className="p-2 bg-brand-accent text-white rounded-lg hover:bg-orange-400 active:scale-90 transition-all">
+                  <button type="button" onClick={() => handleCopy(CLUB_PHONE, "cel")} className="p-2 bg-brand-accent text-white rounded-lg hover:bg-brand-accent active:scale-90 transition-all">
                     {copiedField === "cel" ? <CheckCircle2 size={14} /> : <Copy size={14} />}
                   </button>
                 </div>

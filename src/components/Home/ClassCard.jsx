@@ -57,7 +57,7 @@ const ClassCard = ({ category, title, time, location, coordinator, spots, image 
           {/* CORRECCIÓN: Solo se muestra el badge si spots NO es null */}
           {spots !== null && (
             <div className={`flex-shrink-0 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-xl border-2 ${
-              spots < 5 && !isSoldOut ? 'text-brand-accent-dark bg-brand-accent-soft border-orange-200 animate-pulse' :
+              spots < 5 && !isSoldOut ? 'text-brand-accent-dark bg-brand-accent-soft border-brand-accent/30 animate-pulse' :
               isSoldOut ? 'text-brand-muted bg-brand-surface-alt border-brand-border' :
               'text-emerald-600 bg-emerald-50 border-emerald-200'
             }`}>
@@ -91,7 +91,7 @@ const ClassCard = ({ category, title, time, location, coordinator, spots, image 
           className={`w-full mt-2 py-3 rounded-xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 transition-all duration-300 border-b-4 active:border-b-0 active:translate-y-1 ${
             isSoldOut
               ? 'bg-slate-200 text-brand-muted border-slate-300 cursor-not-allowed pointer-events-none'
-              : 'bg-brand-primary text-white border-brand-primary hover:bg-brand-accent hover:border-orange-600 shadow-lg shadow-brand-primary/20 hover:shadow-brand-accent/20 group-hover:scale-[1.02]'
+              : 'bg-brand-primary text-white border-brand-primary hover:bg-brand-accent hover:border-brand-accent-dark shadow-lg shadow-brand-primary/20 hover:shadow-brand-accent/20 group-hover:scale-[1.02]'
           }`}
         >
           {isSoldOut ? 'No Disponible' : 'Reservar Cupo'}

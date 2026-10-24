@@ -45,7 +45,7 @@ const MassRescheduleHistory = ({ refreshSignal }) => { // 📥 Recibe la señal
     if (isLoading) return (
         <LoadingSpinner
             className="flex flex-col items-center justify-center p-20 space-y-3"
-            colorClassName="text-blue-600"
+            colorClassName="text-brand-primary"
             size={32}
             label="Actualizando..."
             labelClassName="text-[10px] font-black text-brand-muted uppercase tracking-widest italic text-center"
@@ -64,16 +64,16 @@ const MassRescheduleHistory = ({ refreshSignal }) => { // 📥 Recibe la señal
     return (
         <div className="space-y-5 px-2">
             {history.map((item) => (
-                <div key={item.id} className="bg-brand-surface rounded-[2.2rem] border border-brand-border shadow-sm p-6 relative overflow-hidden transition-all hover:border-blue-200">
+                <div key={item.id} className="bg-brand-surface rounded-[2.2rem] border border-brand-border shadow-sm p-6 relative overflow-hidden transition-all hover:border-brand-primary/20">
                     <div className="flex justify-between items-center mb-5">
                         <div className="flex flex-col gap-1">
                             <span className="text-[10px] font-black text-brand-muted uppercase tracking-widest">Identificador</span>
                             <h4 className="text-xs font-black text-brand-primary italic uppercase">Lote {item.grupo_uuid?.split('-')[0]}</h4>
                         </div>
                         <div className="bg-brand-primary px-4 py-2 rounded-2xl flex items-center gap-2 shadow-lg">
-                            <Users size={16} className="text-blue-300" />
+                            <Users size={16} className="text-brand-accent" />
                             <span className="text-white font-black text-sm">{item._count?.registros_asistencia || 0}</span>
-                            <span className="text-[8px] text-blue-200 font-bold uppercase tracking-tighter">Afectados</span>
+                            <span className="text-[8px] text-brand-primary-soft font-bold uppercase tracking-tighter">Afectados</span>
                         </div>
                     </div>
 
@@ -96,7 +96,7 @@ const MassRescheduleHistory = ({ refreshSignal }) => { // 📥 Recibe la señal
                     <div className="space-y-4">
                         <div className="flex flex-wrap gap-x-4">
                             <div className="flex items-center gap-1.5 text-[9px] font-black text-slate-500 uppercase">
-                                <MapPin size={12} className="text-blue-500" />
+                                <MapPin size={12} className="text-brand-primary" />
                                 {item.horarios_clases?.canchas?.nombre}
                             </div>
                             <div className="flex items-center gap-1.5 text-[9px] font-black text-brand-muted uppercase">
@@ -105,8 +105,8 @@ const MassRescheduleHistory = ({ refreshSignal }) => { // 📥 Recibe la señal
                             </div>
                         </div>
 
-                        <div className="bg-brand-primary-soft/50 p-4 rounded-2xl border-l-4 border-blue-500 relative">
-                            <AlertCircle size={14} className="text-blue-500 absolute -top-1.5 -left-1.5 bg-brand-surface rounded-full" />
+                        <div className="bg-brand-primary-soft/50 p-4 rounded-2xl border-l-4 border-brand-primary relative">
+                            <AlertCircle size={14} className="text-brand-primary absolute -top-1.5 -left-1.5 bg-brand-surface rounded-full" />
                             <p className="text-[10px] text-brand-body italic font-bold leading-relaxed">"{item.motivo}"</p>
                         </div>
                     </div>

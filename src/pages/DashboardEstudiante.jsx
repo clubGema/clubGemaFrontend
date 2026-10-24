@@ -49,7 +49,7 @@ const DashboardEstudiante = () => {
       size={48}
       className="min-h-screen flex flex-col items-center justify-center bg-brand-surface-alt"
       colorClassName="text-brand-accent mb-4"
-      label="Sincronizando Club Gema..."
+      label="Sincronizando Imperio 7..."
       labelClassName="font-black text-brand-primary uppercase italic text-[10px] tracking-widest text-center animate-pulse"
     />
   );
@@ -82,9 +82,9 @@ const DashboardEstudiante = () => {
                   type="button"
                   onClick={() => setShowCalendar(!showCalendar)}
                   aria-expanded={showCalendar}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 ${showCalendar ? 'bg-brand-surface text-brand-accent border-2 border-brand-accent shadow-sm' : 'bg-brand-accent text-white shadow-accent-glow hover:shadow-accent-glow-hover'}`}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 ${showCalendar ? 'bg-brand-surface text-brand-primary border-2 border-brand-primary shadow-sm' : 'bg-gradient-to-r from-brand-primary to-brand-primary-light text-white border border-brand-accent/50 shadow-lg hover:border-brand-accent hover:brightness-110'}`}
                 >
-                  <CalendarDays size={16} />
+                  <CalendarDays size={16} className="text-brand-accent" />
                   {showCalendar ? 'Ocultar calendario' : 'Ver calendario'}
                   <ChevronDown size={14} className={`transition-transform ${showCalendar ? 'rotate-180' : ''}`} />
                 </button>
@@ -110,7 +110,7 @@ const DashboardEstudiante = () => {
         </div>
 
         <p className="mt-12 text-center text-[8px] text-slate-300 font-black uppercase tracking-[0.4em] opacity-60 italic">
-          CLUB GEMA | DESDE 2023
+          IMPERIO 7 CLUB | DESDE 2023
         </p>
       </div>
     </div>

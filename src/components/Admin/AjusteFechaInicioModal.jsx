@@ -99,9 +99,9 @@ const AjusteFechaInicioModal = ({ cuentaId, onClose, onSuccess }) => {
               </div>
             )}
             {resultado.advertencias?.length > 0 && (
-              <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 space-y-1">
+              <div className="bg-brand-accent-soft border border-brand-accent/30 rounded-2xl p-4 space-y-1">
                 {resultado.advertencias.map((a, i) => (
-                  <p key={i} className="text-[11px] font-bold text-orange-700 flex gap-2"><AlertTriangle size={14} className="shrink-0 mt-0.5" /> {a}</p>
+                  <p key={i} className="text-[11px] font-bold text-brand-accent-dark flex gap-2"><AlertTriangle size={14} className="shrink-0 mt-0.5" /> {a}</p>
                 ))}
               </div>
             )}
@@ -112,7 +112,7 @@ const AjusteFechaInicioModal = ({ cuentaId, onClose, onSuccess }) => {
         {!loading && info && !resultado && (
           <div className="space-y-4">
             {!info.puede_ajustar && (
-              <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 flex gap-2 text-[11px] font-bold text-orange-700">
+              <div className="bg-brand-accent-soft border border-brand-accent/30 rounded-2xl p-4 flex gap-2 text-[11px] font-bold text-brand-accent-dark">
                 <AlertTriangle size={16} className="shrink-0" />
                 <span>{info.motivo_bloqueo || 'No es posible ajustar la fecha de este paquete.'}</span>
               </div>

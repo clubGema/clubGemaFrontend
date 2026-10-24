@@ -97,7 +97,7 @@ const AdminTeachersManager = () => {
                             <PageTitle
                                 title="Expediente"
                                 accent="Profesional"
-                                subtitle="Staff Técnico Gema"
+                                subtitle="Staff Técnico Imperio 7"
                                 showBar={false}
                                 wrapperClassName=""
                                 subtitleClassName="text-[10px] font-black text-brand-accent uppercase tracking-[0.2em] ml-1"
@@ -123,15 +123,15 @@ const AdminTeachersManager = () => {
                                     {selectedTeacher.nombres[0]}
                                 </div>
                                 <h2 className="text-xl font-black uppercase italic tracking-tighter">{selectedTeacher.nombres} {selectedTeacher.apellidos}</h2>
-                                <span className="bg-white/10 text-orange-400 text-[10px] font-black px-4 py-1 rounded-full uppercase mt-3 border border-white/5">
+                                <span className="bg-white/10 text-brand-accent text-[10px] font-black px-4 py-1 rounded-full uppercase mt-3 border border-white/5">
                                     {selectedTeacher.rol_id}
                                 </span>
                             </div>
                         </div>
                         <div className="bg-brand-surface rounded-3xl border border-brand-border p-6 shadow-sm">
                             <h4 className="text-[10px] font-black text-brand-muted uppercase tracking-widest mb-4">Especialidad Principal</h4>
-                            <div className="p-4 bg-brand-primary-soft rounded-2xl border border-blue-100 flex items-center gap-3">
-                                <Award className="text-blue-600" size={20} />
+                            <div className="p-4 bg-brand-primary-soft rounded-2xl border border-brand-primary/10 flex items-center gap-3">
+                                <Award className="text-brand-primary" size={20} />
                                 <p className="text-xs font-black text-brand-primary uppercase italic">{selectedTeacher.datosRolEspecifico.especializacion}</p>
                             </div>
                         </div>
@@ -149,7 +149,7 @@ const AdminTeachersManager = () => {
                                         <Fingerprint size={14} /><p className="text-[9px] font-black uppercase">Identificación</p>
                                     </div>
                                     <p className="text-sm font-bold text-brand-body">
-                                        <span className="text-blue-600 mr-2">{selectedTeacher.tipo_documento_id}</span>
+                                        <span className="text-brand-primary mr-2">{selectedTeacher.tipo_documento_id}</span>
                                         {selectedTeacher.numero_documento}
                                     </p>
                                 </div>
@@ -174,7 +174,7 @@ const AdminTeachersManager = () => {
                             </div>
                         </div>
                         <div className="bg-brand-bg border border-brand-border p-4 rounded-2xl flex items-center gap-3">
-                            <Info size={16} className="text-blue-500" />
+                            <Info size={16} className="text-brand-primary" />
                             <p className="text-[9px] font-bold text-slate-500 leading-tight uppercase italic">Los datos de acceso y contraseñas son confidenciales por motivos de seguridad.</p>
                         </div>
                     </div>
@@ -197,7 +197,7 @@ const AdminTeachersManager = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="BUSCAR STAFF POR NOMBRE O ESPECIALIDAD..."
                 wrapperClassName="relative group"
-                className="w-full bg-brand-surface border border-brand-border rounded-2xl pl-12 py-3 text-xs font-bold uppercase outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm"
+                className="w-full bg-brand-surface border border-brand-border rounded-2xl pl-12 py-3 text-xs font-bold uppercase outline-none focus:ring-2 focus:ring-brand-accent/20 shadow-sm"
             />
 
             {loading ? (

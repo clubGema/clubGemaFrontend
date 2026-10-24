@@ -51,7 +51,7 @@ const RenovacionModal = ({ isOpen, onClose, onConfirm, fechasSugeridas }) => {
   if (!isOpen || !fechasSugeridas) return null;
   const etiquetas = [
     { label: 'RENOVACIÓN INMEDIATA', desc: 'Inicia en tu próxima clase.', style: 'border-green-500 bg-green-50/50', iconColor: 'text-green-600' },
-    { label: 'REPROGRAMACIÓN +1 SESIÓN', desc: 'Saltas un turno y retomas.', style: 'border-slate-300 bg-brand-bg/50', iconColor: 'text-blue-600' },
+    { label: 'REPROGRAMACIÓN +1 SESIÓN', desc: 'Saltas un turno y retomas.', style: 'border-slate-300 bg-brand-bg/50', iconColor: 'text-brand-primary' },
     { label: 'REINICIO POSTERGADO', desc: 'Retoma en una semana.', style: 'border-brand-border bg-brand-surface', iconColor: 'text-brand-accent-dark' }
   ];
 
@@ -60,7 +60,7 @@ const RenovacionModal = ({ isOpen, onClose, onConfirm, fechasSugeridas }) => {
       <div className="bg-brand-surface w-full max-w-[420px] rounded-[3.5rem] relative shadow-2xl border-4 border-white overflow-hidden animate-in zoom-in-95 duration-300">
         <div className="p-8 text-center bg-brand-bg/80 border-b border-brand-border-soft">
           <div className="bg-brand-primary text-white w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl"><Zap size={24} fill="white" /></div>
-          <h2 className="text-2xl font-black text-brand-primary uppercase italic tracking-tighter leading-none">Renovación Gema</h2>
+          <h2 className="text-2xl font-black text-brand-primary uppercase italic tracking-tighter leading-none">Renovación Imperio 7</h2>
         </div>
         <div className="p-6 space-y-4 max-h-[50vh] overflow-y-auto scrollbar-hide">
           {fechasSugeridas.map((fecha, idx) => (
@@ -310,7 +310,7 @@ const MyRegistrations = () => {
 
               <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 bg-brand-surface">
                 {pkg.items.map((reg) => (
-                  <div key={reg.id} className="bg-brand-bg rounded-[2.5rem] p-6 border border-brand-border-soft shadow-sm hover:border-blue-300 hover:bg-brand-primary-soft/30 transition-all flex flex-col gap-5 relative overflow-hidden">
+                  <div key={reg.id} className="bg-brand-bg rounded-[2.5rem] p-6 border border-brand-border-soft shadow-sm hover:border-brand-primary/30 hover:bg-brand-primary-soft/30 transition-all flex flex-col gap-5 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-white to-transparent opacity-50 pointer-events-none"></div>
                     <div className="flex justify-between items-start relative z-10">
                       <div className="flex items-center gap-4">
@@ -322,7 +322,7 @@ const MyRegistrations = () => {
                           </p>
                         </div>
                       </div>
-                      <span className={`px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-sm ${reg.estado === 'ACTIVO' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-orange-100 text-orange-700 border border-orange-200'}`}>
+                      <span className={`px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-sm ${reg.estado === 'ACTIVO' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-brand-accent-soft text-brand-accent-dark border border-brand-accent/30'}`}>
                         {reg.estado}
                       </span>
                     </div>
@@ -334,7 +334,7 @@ const MyRegistrations = () => {
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 bg-brand-surface px-3 py-2 rounded-xl border border-brand-border-soft shadow-sm">
-                          <Activity size={12} className="text-blue-500" />
+                          <Activity size={12} className="text-brand-primary" />
                           <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">{reg.horarios_clases?.niveles_entrenamiento?.nombre}</span>
                         </div>
                         <button onClick={() => handleAction(reg)} className="p-3 text-rose-500 bg-brand-surface border border-rose-100 hover:bg-rose-500 hover:text-white rounded-xl transition-all active:scale-90 shadow-sm hover:shadow-rose-500/30">

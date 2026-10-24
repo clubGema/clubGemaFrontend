@@ -34,7 +34,7 @@ const AdminStudents = ({ onBack, onFinish }) => {
         // Construcción del objeto EXACTO que pediste
         const payload = {
             email: formData.email || undefined,
-            password: 'ALUMNOGEMA', // Password por defecto
+            password: 'ALUMNO_IMPERIO7', // Password por defecto
             nombres: formData.nombres,
             apellidos: formData.apellidos,
             rol_id: 1,
@@ -132,11 +132,11 @@ const AdminStudents = ({ onBack, onFinish }) => {
                         <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Nombres</label>
-                                <input name="nombres" placeholder="Ej: María" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/20" />
+                                <input name="nombres" placeholder="Ej: María" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-accent/20" />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Apellidos</label>
-                                <input name="apellidos" placeholder="Ej: González" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/20" />
+                                <input name="apellidos" placeholder="Ej: González" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-accent/20" />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Tipo de Doc.</label>
@@ -148,11 +148,11 @@ const AdminStudents = ({ onBack, onFinish }) => {
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Nro. Documento</label>
-                                <input name="numero_documento" placeholder="45678901" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/20 shadow-inner" />
+                                <input name="numero_documento" placeholder="45678901" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-accent/20 shadow-inner" />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">F. Nacimiento</label>
-                                <input name="fecha_nacimiento" type='date' onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/20" />
+                                <input name="fecha_nacimiento" type='date' onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-accent/20" />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Género</label>
@@ -174,11 +174,11 @@ const AdminStudents = ({ onBack, onFinish }) => {
                         <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Email</label>
-                                <input name="email" type="email" placeholder="alumno.nuevo@gmail.com" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/20" />
+                                <input name="email" type="email" placeholder="alumno.nuevo@gmail.com" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-accent/20" />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Teléfono Personal</label>
-                                <input name="telefono_personal" placeholder="+51 912345678" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/20" />
+                                <input name="telefono_personal" placeholder="+51 912345678" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-accent/20" />
                             </div>
                         </div>
                     </div>
@@ -192,7 +192,7 @@ const AdminStudents = ({ onBack, onFinish }) => {
                             <Lock size={28} className="text-brand-accent mb-4" />
                             <h4 className="font-black uppercase italic tracking-tighter text-lg leading-tight">Contraseña Inicial</h4>
                             <p className="text-[10px] text-brand-muted font-bold uppercase mt-3 leading-relaxed">
-                                La contraseña inicial del alumno será: <br /> <span className='text-white'> ALUMNOGEMA </span> <br /><br /> Una vez iniciada su sesión, se recomienda al alumno cambiar de contraseña en su perfil por motivos de seguridad. <br /><br /><br /> <span className='text-white text-[11px]'>¡Importante! <br></br> Recibirá sus credenciales de acceso en el Gmail registrado.</span>
+                                La contraseña inicial del alumno será: <br /> <span className='text-white'> ALUMNO_IMPERIO7 </span> <br /><br /> Una vez iniciada su sesión, se recomienda al alumno cambiar de contraseña en su perfil por motivos de seguridad. <br /><br /><br /> <span className='text-white text-[11px]'>¡Importante! <br></br> Recibirá sus credenciales de acceso en el Gmail registrado.</span>
                             </p>
                         </div>
                         <ShieldCheck size={100} className="absolute -right-6 -bottom-6 opacity-5 rotate-12" />

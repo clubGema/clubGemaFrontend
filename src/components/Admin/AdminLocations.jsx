@@ -159,7 +159,7 @@ const AdminLocations = ({ onSuccess, initialData }) => {
                     {/* Información General */}
                     <div className="bg-brand-surface rounded-3xl border border-brand-border shadow-sm overflow-hidden">
                         <div className="p-6 border-b border-brand-border-soft bg-brand-bg flex items-center gap-3">
-                            <div className="p-2 bg-blue-100 text-brand-primary rounded-lg">
+                            <div className="p-2 bg-brand-primary-soft text-brand-primary rounded-lg">
                                 <Home size={20} />
                             </div>
                             <h3 className="font-black text-brand-primary uppercase tracking-wider text-sm">Información General</h3>
@@ -167,13 +167,13 @@ const AdminLocations = ({ onSuccess, initialData }) => {
                         <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Nombre de la Sede</label>
-                                <input name="nombre" value={formData.nombre} onChange={handleChange} placeholder="Ej: Sede Central" className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                                <input name="nombre" value={formData.nombre} onChange={handleChange} placeholder="Ej: Sede Central" className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-brand-accent outline-none transition-all" />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Teléfono</label>
                                 <div className="relative">
                                     <Phone size={14} className="absolute left-4 top-3 text-brand-muted" />
-                                    <input name="telefono_contacto" value={formData.telefono_contacto} onChange={handleChange} placeholder="999 999 999" className="w-full bg-brand-bg border border-brand-border rounded-xl pl-10 pr-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none" />
+                                    <input name="telefono_contacto" value={formData.telefono_contacto} onChange={handleChange} placeholder="999 999 999" className="w-full bg-brand-bg border border-brand-border rounded-xl pl-10 pr-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-brand-accent outline-none" />
                                 </div>
                             </div>
                             <div className="space-y-1">
@@ -184,14 +184,14 @@ const AdminLocations = ({ onSuccess, initialData }) => {
                                             ...formData,
                                             activo: e.target.value === "true",
                                         })
-                                    } className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none">
+                                    } className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-brand-accent outline-none">
                                     <option value="true">Activo</option>
                                     <option value="false">Inactivo</option>
                                 </select>
                             </div>
                             <div className="md:col-span-3 space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Tipo de Instalación</label>
-                                <input name="tipo_instalacion" value={formData.tipo_instalacion} onChange={handleChange} placeholder="Ej: Club Deportivo / Complejo Techado" className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none" />
+                                <input name="tipo_instalacion" value={formData.tipo_instalacion} onChange={handleChange} placeholder="Ej: Club Deportivo / Complejo Techado" className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-brand-accent outline-none" />
                             </div>
                         </div>
                     </div>
@@ -199,7 +199,7 @@ const AdminLocations = ({ onSuccess, initialData }) => {
                     {/* Ubicación */}
                     <div className="bg-brand-surface rounded-3xl border border-brand-border shadow-sm overflow-hidden">
                         <div className="p-6 border-b border-brand-border-soft bg-brand-bg flex items-center gap-3">
-                            <div className="p-2 bg-orange-100 text-brand-accent-dark rounded-lg">
+                            <div className="p-2 bg-brand-accent-soft text-brand-accent-dark rounded-lg">
                                 <MapPin size={20} />
                             </div>
                             <h3 className="font-black text-brand-primary uppercase tracking-wider text-sm">Ubicación Exacta</h3>
@@ -256,10 +256,10 @@ const AdminLocations = ({ onSuccess, initialData }) => {
                     <div className="bg-brand-surface rounded-3xl border border-brand-border shadow-sm overflow-hidden">
                         <div className="p-6 border-b border-brand-border-soft bg-brand-bg flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-blue-100 text-brand-primary rounded-lg"><Map size={20} /></div>
+                                <div className="p-2 bg-brand-primary-soft text-brand-primary rounded-lg"><Map size={20} /></div>
                                 <h3 className="font-black text-brand-primary uppercase tracking-wider text-sm">Canchas</h3>
                             </div>
-                            <button onClick={addCancha} className="p-1.5 bg-brand-accent text-white rounded-lg hover:bg-brand-accent-dark transition-colors shadow-md shadow-orange-200"><Plus size={18} /></button>
+                            <button onClick={addCancha} className="p-1.5 bg-brand-accent text-white rounded-lg hover:bg-brand-accent-dark transition-colors shadow-md shadow-brand-accent/25"><Plus size={18} /></button>
                         </div>
                         <div className="p-4 space-y-4 max-h-[400px] overflow-y-auto">
                             {formData.canchas.map((cancha, index) => (

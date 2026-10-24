@@ -2,8 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-brand-primary: #581220;
+  --color-brand-primary-dark: #0C0608;
+  --color-brand-primary-light: #7A1A2E;
+  --color-brand-primary-soft: #FDF2F4;
+  --color-brand-accent: #D4AF37;
+  --color-brand-accent-dark: #A67C1E;
+  --color-brand-accent-light: #F5D77F;
+  --color-brand-accent-soft: #FCF8ED;
+}
+
 html {
   scroll-behavior: smooth;
+  accent-color: var(--color-brand-accent);
+}
+
+::selection {
+  background-color: #581220;
+  color: #D4AF37;
 }
 
 @layer utilities {

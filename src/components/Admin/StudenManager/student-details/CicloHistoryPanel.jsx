@@ -34,8 +34,8 @@ const CicloHistoryPanel = ({ historial, loadingCiclos, onSelectMes, onSelectIndi
 
     return (
     <div className="bg-brand-surface rounded-[2.5rem] border border-brand-border-soft shadow-sm overflow-hidden flex flex-col">
-        <div className="px-6 py-5 bg-brand-accent-soft/50 border-b border-orange-100 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-orange-100 text-brand-accent-dark flex items-center justify-center shrink-0">
+        <div className="px-6 py-5 bg-brand-accent-soft/50 border-b border-brand-accent-soft flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-brand-accent-soft text-brand-accent-dark flex items-center justify-center shrink-0">
                 <CalendarClock size={16} />
             </div>
             <h3 className="text-xs font-black text-slate-800 uppercase italic tracking-widest leading-tight">
@@ -105,7 +105,7 @@ const CicloHistoryPanel = ({ historial, loadingCiclos, onSelectMes, onSelectIndi
                             const desglose = ciclo.desglose_mes;
 
                             return (
-                                <div key={claveCiclo(ciclo, i)} className="bg-brand-surface border border-brand-border rounded-2xl p-4 flex flex-col gap-3 shadow-sm relative transition-all hover:border-orange-200 hover:shadow-md overflow-hidden">
+                                <div key={claveCiclo(ciclo, i)} className="bg-brand-surface border border-brand-border rounded-2xl p-4 flex flex-col gap-3 shadow-sm relative transition-all hover:border-brand-accent/30 hover:shadow-md overflow-hidden">
                                     <div className="flex justify-between items-start gap-2">
                                         <div className="min-w-0 flex-1">
                                             <div className="flex items-center gap-1.5 flex-wrap">
@@ -114,7 +114,7 @@ const CicloHistoryPanel = ({ historial, loadingCiclos, onSelectMes, onSelectIndi
                                                 </span>
 
                                                 {ciclo.numero_mes_ciclo > 0 && (
-                                                    <span className="flex items-center gap-1 text-[8px] font-black text-indigo-600 bg-indigo-50 px-1.5 py-1 rounded-md border border-indigo-100 uppercase">
+                                                    <span className="flex items-center gap-1 text-[8px] font-black text-brand-primary bg-brand-primary-soft px-1.5 py-1 rounded-md border border-brand-primary-soft uppercase">
                                                         <Layers size={9} /> Mes {ciclo.numero_mes_ciclo}
                                                     </span>
                                                 )}

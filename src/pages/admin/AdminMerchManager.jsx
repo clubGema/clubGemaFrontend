@@ -98,7 +98,7 @@ const AdminMerchManager = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="BUSCAR PRODUCTO..."
                     wrapperClassName="relative"
-                    className="w-full bg-brand-bg border-none rounded-xl pl-12 pr-4 py-2.5 text-[10px] font-black uppercase outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full bg-brand-bg border-none rounded-xl pl-12 pr-4 py-2.5 text-[10px] font-black uppercase outline-none focus:ring-2 focus:ring-brand-accent/20"
                 />
             </div>
 

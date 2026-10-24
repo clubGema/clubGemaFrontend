@@ -25,7 +25,7 @@ const PaymentHistoryItem = ({ payment }) => {
           <div>
             <div className="flex items-center gap-3">
               <h4 className="font-black text-brand-body text-sm uppercase italic leading-none tracking-tight">
-                {payment.cuentas_por_cobrar?.detalle_adicional || 'CUOTA CLUB GEMA'}
+                {payment.cuentas_por_cobrar?.detalle_adicional || 'CUOTA IMPERIO 7 CLUB'}
               </h4>
               {esAbono && (
                 <span className="bg-brand-primary text-white text-[8px] px-2 py-0.5 rounded-full font-black uppercase italic tracking-widest">
@@ -54,7 +54,7 @@ const PaymentHistoryItem = ({ payment }) => {
               href={payment.url_comprobante} 
               target="_blank" 
               rel="noreferrer"
-              className="text-[9px] font-black text-blue-400 uppercase flex items-center gap-1 hover:text-brand-accent mt-1 transition-colors underline decoration-blue-200"
+              className="text-[9px] font-black text-brand-accent uppercase flex items-center gap-1 hover:text-brand-accent mt-1 transition-colors underline decoration-brand-primary/20"
             >
               VOUCHER <ExternalLink size={10} />
             </a>

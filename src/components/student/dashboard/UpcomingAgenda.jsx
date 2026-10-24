@@ -25,7 +25,7 @@ const UpcomingAgenda = ({ proximas, pasadas, now, onVerCalendario }) => {
           <div className="w-1.5 md:w-2 h-6 md:h-8 bg-brand-primary rounded-full"></div>
           <h2 className="font-black text-brand-primary uppercase tracking-tight text-sm md:text-lg italic leading-none">Tus próximas clases</h2>
         </div>
-        <Zap size={20} className="text-brand-accent fill-orange-500/20 shrink-0" />
+        <Zap size={20} className="text-brand-accent fill-brand-accent/20 shrink-0" />
       </div>
 
       <div className="p-4 md:p-6 space-y-6 bg-brand-bg/30">
@@ -53,7 +53,7 @@ const UpcomingAgenda = ({ proximas, pasadas, now, onVerCalendario }) => {
           <button
             type="button"
             onClick={onVerCalendario}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest bg-brand-accent-soft/50 text-brand-accent-dark border border-orange-200 hover:bg-brand-accent-soft transition-all"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest bg-brand-accent-soft/50 text-brand-accent-dark border border-brand-accent/30 hover:bg-brand-accent-soft transition-all"
           >
             <CalendarDays size={14} />
             {restantes === 1 ? 'Tienes 1 clase más' : `Tienes ${restantes} clases más`} · Verlas en el calendario
@@ -66,7 +66,7 @@ const UpcomingAgenda = ({ proximas, pasadas, now, onVerCalendario }) => {
               type="button"
               onClick={() => setShowHistory((v) => !v)}
               aria-expanded={showHistory}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest bg-brand-surface text-brand-primary border border-brand-border-soft shadow-sm hover:border-blue-300 transition-all"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest bg-brand-surface text-brand-primary border border-brand-border-soft shadow-sm hover:border-brand-primary/30 transition-all"
             >
               <History size={14} />
               {showHistory ? 'Ocultar historial pasado' : `Ver historial pasado (${pasadas.length})`}

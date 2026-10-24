@@ -44,7 +44,7 @@ const AdminInjuriesManager = () => {
             {/* 1. HEADER ADAPTATIVO */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
                 <div className="flex items-center gap-4">
-                    <div className="p-3 bg-gradient-to-br from-brand-primary to-[#3b82f6] rounded-2xl text-white shadow-xl shadow-brand-primary/20 transform -rotate-2">
+                    <div className="p-3 bg-gradient-to-br from-brand-primary to-brand-accent rounded-2xl text-white shadow-xl shadow-brand-primary/20 transform -rotate-2">
                         <Activity size={28} />
                     </div>
                     <div>
@@ -52,7 +52,7 @@ const AdminInjuriesManager = () => {
                             Control de <span className="text-brand-accent">Lesiones</span>
                         </h1>
                         <p className="text-[9px] md:text-[10px] font-black text-brand-muted uppercase tracking-[0.2em] mt-1 ml-1">
-                            Staff Gema • Gestión Administrativa
+                            Staff Imperio 7 • Gestión Administrativa
                         </p>
                     </div>
                 </div>

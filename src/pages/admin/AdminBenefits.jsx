@@ -172,7 +172,7 @@ const AdminBenefits = () => {
                                 <TicketPercent className="text-brand-primary" size={20} />
                                 <span className="text-[11px] font-black uppercase tracking-widest text-brand-primary">Asignar Nuevo Incentivo</span>
                             </div>
-                            {loadingDeuda && <Loader2 size={16} className="animate-spin text-blue-500" />}
+                            {loadingDeuda && <Loader2 size={16} className="animate-spin text-brand-primary" />}
                         </div>
 
                         <div className="p-6 space-y-6">
@@ -187,7 +187,7 @@ const AdminBenefits = () => {
                                     }}
                                     placeholder="NOMBRE O DOCUMENTO..."
                                     iconSize={16}
-                                    className="w-full bg-brand-bg border border-brand-border rounded-2xl pl-11 pr-4 py-3 text-xs font-bold uppercase outline-none focus:ring-2 focus:ring-blue-500/10 transition-all"
+                                    className="w-full bg-brand-bg border border-brand-border rounded-2xl pl-11 pr-4 py-3 text-xs font-bold uppercase outline-none focus:ring-2 focus:ring-brand-accent/10 transition-all"
                                 />
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-64 overflow-y-auto p-2 bg-brand-bg/50 rounded-2xl border border-dashed border-brand-border custom-scrollbar">
                                     {filteredAlumnos.length > 0 ? (
@@ -224,15 +224,15 @@ const AdminBenefits = () => {
                             {/* BANNER DINÁMICO DE INTELIGENCIA */}
                             {selectedAlumnoId && !loadingDeuda && (
                                 <div className={`p-4 rounded-2xl border-2 animate-fade-in-up flex gap-4 ${deudaPendiente
-                                    ? 'bg-brand-accent-soft border-orange-200'
-                                    : 'bg-brand-primary-soft border-blue-200'
+                                    ? 'bg-brand-accent-soft border-brand-accent/30'
+                                    : 'bg-brand-primary-soft border-brand-primary/20'
                                     }`}>
                                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm ${deudaPendiente ? 'bg-brand-accent text-white' : 'bg-brand-primary text-white'
                                         }`}>
                                         {deudaPendiente ? <AlertCircle size={24} /> : <Clock size={24} />}
                                     </div>
                                     <div>
-                                        <h5 className={`text-xs font-black uppercase tracking-tight ${deudaPendiente ? 'text-orange-800' : 'text-brand-primary'}`}>
+                                        <h5 className={`text-xs font-black uppercase tracking-tight ${deudaPendiente ? 'text-brand-accent-dark' : 'text-brand-primary'}`}>
                                             {deudaPendiente ? 'DEUDA ACTIVA DETECTADA' : 'SIN DEUDAS: MODO RESERVA'}
                                         </h5>
                                         <p className="text-[10px] font-bold text-slate-600 leading-tight mt-1 uppercase italic">
@@ -252,7 +252,7 @@ const AdminBenefits = () => {
                                     <select
                                         value={selectedBeneficioId}
                                         onChange={(e) => setSelectedBeneficioId(e.target.value)}
-                                        className="w-full bg-brand-bg border border-brand-border rounded-2xl px-4 py-3 text-xs font-black uppercase outline-none focus:ring-2 focus:ring-blue-500/10 cursor-pointer shadow-sm"
+                                        className="w-full bg-brand-bg border border-brand-border rounded-2xl px-4 py-3 text-xs font-black uppercase outline-none focus:ring-2 focus:ring-brand-accent/10 cursor-pointer shadow-sm"
                                     >
                                         <option value="">SELECCIONA DESCUENTO...</option>
                                         {tiposBeneficio.map(tipo => (
@@ -272,7 +272,7 @@ const AdminBenefits = () => {
                                             value={motivo}
                                             onChange={(e) => setMotivo(e.target.value)}
                                             rows="1"
-                                            className="w-full bg-brand-bg border border-brand-border rounded-2xl pl-11 pr-4 py-3 text-xs font-bold uppercase outline-none focus:ring-2 focus:ring-blue-500/10 min-h-[46px] resize-none shadow-sm"
+                                            className="w-full bg-brand-bg border border-brand-border rounded-2xl pl-11 pr-4 py-3 text-xs font-bold uppercase outline-none focus:ring-2 focus:ring-brand-accent/10 min-h-[46px] resize-none shadow-sm"
                                         />
                                     </div>
                                 </div>
@@ -284,7 +284,7 @@ const AdminBenefits = () => {
                             <button
                                 type="submit"
                                 disabled={submitting || !selectedAlumnoId}
-                                className={`flex items-center gap-2 text-white px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg disabled:opacity-50 ${deudaPendiente ? 'bg-brand-accent-dark hover:bg-orange-700' : 'bg-brand-primary hover:bg-brand-primary-dark'
+                                className={`flex items-center gap-2 text-white px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg disabled:opacity-50 ${deudaPendiente ? 'bg-brand-accent-dark hover:bg-brand-accent-dark' : 'bg-brand-primary hover:bg-brand-primary-dark'
                                     }`}
                             >
                                 {submitting ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
@@ -294,7 +294,7 @@ const AdminBenefits = () => {
                     </form>
                 </div>
 
-                {/* Sidebar Gema */}
+                {/* Sidebar Imperio 7 */}
                 <div className="space-y-6">
                     <div className="bg-brand-primary-dark p-8 rounded-[2.5rem] text-white shadow-2xl border border-white/10 relative overflow-hidden group">
                         <div className="absolute -right-10 -top-10 w-40 h-40 bg-brand-accent/10 rounded-full blur-[80px] group-hover:bg-brand-accent/20 transition-all duration-700"></div>
@@ -306,13 +306,13 @@ const AdminBenefits = () => {
                             <div className="flex gap-4">
                                 <div className="w-6 h-6 rounded bg-brand-accent/20 flex items-center justify-center shrink-0 text-brand-accent font-black text-xs">01</div>
                                 <p className="text-[10px] font-bold text-white/70 leading-relaxed uppercase">
-                                    Si el cuadro es <span className="text-orange-400">Naranja</span>, el alumno tiene deudas. El descuento se aplica de inmediato.
+                                    Si el cuadro es <span className="text-brand-accent">Naranja</span>, el alumno tiene deudas. El descuento se aplica de inmediato.
                                 </p>
                             </div>
                             <div className="flex gap-4">
-                                <div className="w-6 h-6 rounded bg-blue-500/20 flex items-center justify-center shrink-0 text-blue-400 font-black text-xs">02</div>
+                                <div className="w-6 h-6 rounded bg-brand-primary/20 flex items-center justify-center shrink-0 text-brand-accent font-black text-xs">02</div>
                                 <p className="text-[10px] font-bold text-white/70 leading-relaxed uppercase">
-                                    Si el cuadro es <span className="text-blue-400">Azul</span>, el sistema guarda el beneficio para el siguiente mes.
+                                    Si el cuadro es <span className="text-brand-accent">Azul</span>, el sistema guarda el beneficio para el siguiente mes.
                                 </p>
                             </div>
                         </div>

@@ -71,8 +71,8 @@ const Filters = ({ activeDay, setActiveDay, activeCategory, setActiveCategory, c
                 key={day.index}
                 onClick={() => setActiveDay(day.index)}
                 className={`min-w-[80px] md:min-w-[110px] flex-1 flex flex-col items-center border-2 rounded-xl md:rounded-2xl p-3 md:p-4 transition-all duration-300 snap-center relative overflow-hidden group ${isActive
-                  ? 'border-brand-accent bg-brand-surface shadow-lg shadow-orange-100 scale-[0.98] md:scale-100'
-                  : 'border-brand-border-soft bg-brand-bg text-brand-muted hover:border-blue-200'
+                  ? 'border-brand-accent bg-brand-surface shadow-lg shadow-brand-accent/20 scale-[0.98] md:scale-100'
+                  : 'border-brand-border-soft bg-brand-bg text-brand-muted hover:border-brand-primary/30'
                   }`}
               >
                 {isActive && <div className="absolute top-0 left-0 w-full h-1 bg-brand-accent"></div>}
@@ -107,7 +107,7 @@ const Filters = ({ activeDay, setActiveDay, activeCategory, setActiveCategory, c
                   onClick={() => setActiveCategory(cat)}
                   className={`px-4 md:px-5 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest whitespace-nowrap transition-all duration-300 border-2 ${isActive
                     ? 'bg-brand-primary border-brand-primary text-white shadow-md shadow-brand-primary/20'
-                    : 'bg-brand-surface border-brand-border-soft text-slate-500 hover:border-orange-200 hover:text-brand-accent'
+                    : 'bg-brand-surface border-brand-border-soft text-slate-500 hover:border-brand-accent/40 hover:text-brand-primary hover:bg-brand-primary-soft'
                     }`}
                 >
                   {cat}

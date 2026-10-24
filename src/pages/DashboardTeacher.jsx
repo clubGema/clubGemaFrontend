@@ -30,7 +30,7 @@ const DashboardTeacher = () => {
     ? `${user.user.nombres} ${user.user.apellidos}` 
     : user?.nombres 
     ? `${user.nombres} ${user.apellidos}` 
-    : 'Coordinador Gema';
+    : 'Coordinador Imperio 7';
 
   // 1. Cargar agenda desde el backend
   const fetchAgenda = useCallback(async () => {
@@ -69,7 +69,7 @@ const DashboardTeacher = () => {
                 timeRange,
                 reprogramacionData,
                 court: horario.canchas?.nombre || 'Cancha Principal',
-                sede: horario.canchas?.sedes?.nombre || 'Sede Gema',
+                sede: horario.canchas?.sedes?.nombre || 'Sede Imperio 7',
                 level: horario.niveles_entrenamiento?.nombre || 'Nivel Regular',
                 fechaKey,
                 fechaReal: reg.fecha,
@@ -215,20 +215,20 @@ const DashboardTeacher = () => {
     <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 animate-fade-in pb-12 px-2 sm:px-4">
 
       {/* HEADER DE BIENVENIDA */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 bg-gradient-to-r from-brand-primary via-[#1e3a8a] to-brand-primary-dark p-6 sm:p-8 rounded-[2rem] text-white shadow-xl relative overflow-hidden">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 bg-gradient-to-r from-brand-primary via-brand-primary-light to-brand-primary-dark p-6 sm:p-8 rounded-[2rem] text-white shadow-xl relative overflow-hidden">
         <div className="relative z-10 space-y-2">
           <span className="inline-flex items-center gap-2 bg-brand-accent text-white text-[10px] font-black uppercase px-3 py-1 rounded-lg tracking-widest shadow-xs">
             <Sparkles size={12} /> Portal del Coordinador
           </span>
           <h1 className="text-2xl sm:text-4xl font-black uppercase tracking-tight italic leading-none text-white">
-            Hola, <span className="text-orange-400">{coordinatorFullName}</span> 👋
+            Hola, <span className="text-brand-accent">{coordinatorFullName}</span> 👋
           </h1>
-          <p className="text-blue-100/70 text-xs sm:text-sm font-medium">
+          <p className="text-brand-primary-soft/70 text-xs sm:text-sm font-medium">
             Gestiona tus entrenamientos, verifica la asistencia diaria y supervisa los integrantes de cada clase.
           </p>
         </div>
 
-        <div className="relative z-10 flex items-center gap-3 bg-white/10 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/10 text-xs font-black uppercase tracking-wider text-blue-100">
+        <div className="relative z-10 flex items-center gap-3 bg-white/10 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/10 text-xs font-black uppercase tracking-wider text-brand-primary-soft">
           <CalendarIcon size={18} className="text-brand-accent" />
           <span>{format(startOfToday(), "EEEE dd 'de' MMMM", { locale: es })}</span>
         </div>
@@ -236,7 +236,7 @@ const DashboardTeacher = () => {
 
       {/* BANNER DE ALERTA: INTEGRANTES SIN ASISTENCIA / FALTA */}
       {clasesPendientesCierre.length > 0 && (
-        <div className="bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-rose-500/10 border-2 border-brand-accent/40 rounded-3xl p-5 sm:p-6 shadow-lg shadow-orange-900/5 relative overflow-hidden animate-fade-in">
+        <div className="bg-gradient-to-r from-amber-500/15 via-brand-accent/10 to-rose-500/10 border-2 border-brand-accent/40 rounded-3xl p-5 sm:p-6 shadow-lg shadow-brand-primary-dark/5 relative overflow-hidden animate-fade-in">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-start gap-3.5">
               <div className="p-3 bg-brand-accent text-white rounded-2xl shadow-md shadow-brand-accent/30 shrink-0 mt-0.5">
@@ -276,7 +276,7 @@ const DashboardTeacher = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* Sesiones hoy */}
         <div className="bg-brand-surface p-4 sm:p-5 rounded-2xl border border-brand-border shadow-xs flex items-center gap-3 sm:gap-4">
-          <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
+          <div className="p-3 bg-brand-primary-soft text-brand-primary rounded-xl">
             <CalendarIcon size={22} />
           </div>
           <div>
@@ -392,7 +392,7 @@ const DashboardTeacher = () => {
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={handleIrAHoy}
-                  className="text-[10px] font-black uppercase text-brand-accent hover:text-brand-accent-dark px-2.5 py-1.5 rounded-lg border border-brand-accent/20 hover:bg-orange-50 transition-colors"
+                  className="text-[10px] font-black uppercase text-brand-accent hover:text-brand-accent-dark px-2.5 py-1.5 rounded-lg border border-brand-accent/20 hover:bg-brand-accent-soft transition-colors"
                 >
                   Hoy
                 </button>
@@ -452,9 +452,9 @@ const DashboardTeacher = () => {
                       estaSeleccionado
                         ? 'bg-brand-primary text-white shadow-md shadow-brand-primary/30 ring-2 ring-brand-accent'
                         : esHoy
-                        ? 'bg-orange-50 text-brand-accent-dark font-black border-2 border-brand-accent/50'
+                        ? 'bg-brand-accent-soft text-brand-accent-dark font-black border-2 border-brand-accent/50'
                         : tieneClases
-                        ? 'bg-slate-50 hover:bg-blue-50/70 text-slate-800 font-bold border border-slate-200/80'
+                        ? 'bg-slate-50 hover:bg-brand-primary-soft/70 text-slate-800 font-bold border border-slate-200/80'
                         : 'text-slate-400 hover:bg-slate-50 font-medium'
                     }`}
                   >
@@ -470,7 +470,7 @@ const DashboardTeacher = () => {
                         ) : todasCerradas ? (
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" title="Asistencia completa" />
                         ) : (
-                          <span className={`w-1.5 h-1.5 rounded-full ${estaSeleccionado ? 'bg-orange-300' : 'bg-blue-600'}`} />
+                          <span className={`w-1.5 h-1.5 rounded-full ${estaSeleccionado ? 'bg-brand-accent/50' : 'bg-brand-primary'}`} />
                         )}
                         <span className={`text-[8px] font-black leading-none ${estaSeleccionado ? 'text-white/80' : 'text-slate-500'}`}>
                           {sesionesDelEsteDia.length}
@@ -495,10 +495,10 @@ const DashboardTeacher = () => {
                 <span className="w-2 h-2 rounded-full bg-brand-accent" /> Pendiente
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-blue-600" /> Programada
+                <span className="w-2 h-2 rounded-full bg-brand-primary" /> Programada
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full border border-brand-accent bg-orange-100" /> Hoy
+                <span className="w-2 h-2 rounded-full border border-brand-accent bg-brand-accent-soft" /> Hoy
               </span>
             </div>
           </div>
@@ -517,7 +517,7 @@ const DashboardTeacher = () => {
               </div>
 
               <div className="flex items-center gap-2 self-start sm:self-auto">
-                <span className="bg-blue-50 text-brand-primary text-xs font-black px-3.5 py-1.5 rounded-xl border border-blue-100">
+                <span className="bg-brand-primary-soft text-brand-primary text-xs font-black px-3.5 py-1.5 rounded-xl border border-brand-primary/10">
                   {sesionesDelDia.length} {sesionesDelDia.length === 1 ? 'Sesión' : 'Sesiones'}
                 </span>
                 {isToday(selectedDate) && (
@@ -531,7 +531,7 @@ const DashboardTeacher = () => {
             {/* Lista de clases de ese día */}
             {sesionesDelDia.length === 0 ? (
               <div className="bg-brand-surface p-10 sm:p-14 rounded-[2rem] border-2 border-dashed border-brand-border text-center space-y-3">
-                <div className="w-16 h-16 bg-blue-50 text-blue-400 rounded-full flex items-center justify-center mx-auto">
+                <div className="w-16 h-16 bg-brand-primary-soft text-brand-accent rounded-full flex items-center justify-center mx-auto">
                   <CalendarDays size={32} />
                 </div>
                 <h4 className="text-base font-black text-slate-700 uppercase tracking-tight">
@@ -555,7 +555,7 @@ const DashboardTeacher = () => {
                     key={claseItem.id}
                     className={`bg-brand-surface rounded-[2rem] p-5 sm:p-7 border-2 transition-all shadow-md hover:shadow-xl relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-5 ${
                       claseItem.requiereAtencion
-                        ? 'border-brand-accent bg-gradient-to-r from-orange-50/40 via-white to-white'
+                        ? 'border-brand-accent bg-gradient-to-r from-brand-accent-soft/40 via-white to-white'
                         : claseItem.attended
                         ? 'border-emerald-200 bg-white'
                         : 'border-brand-border bg-white'
@@ -592,7 +592,7 @@ const DashboardTeacher = () => {
                           </span>
                         )}
                         {claseItem.tieneRecuperadores && (
-                          <span className="bg-blue-50 text-blue-700 text-[10px] font-black px-2.5 py-1 rounded-lg uppercase flex items-center gap-1">
+                          <span className="bg-brand-primary-soft text-brand-primary text-[10px] font-black px-2.5 py-1 rounded-lg uppercase flex items-center gap-1">
                             <RefreshCw size={11} /> Recuperadores
                           </span>
                         )}
@@ -608,10 +608,10 @@ const DashboardTeacher = () => {
                           <Clock size={15} className="text-brand-accent" /> {claseItem.timeRange} HRS
                         </span>
                         <span className="flex items-center gap-1.5">
-                          <MapPin size={15} className="text-blue-500" /> {claseItem.court} ({claseItem.sede})
+                          <MapPin size={15} className="text-brand-primary" /> {claseItem.court} ({claseItem.sede})
                         </span>
                         <span className="flex items-center gap-1.5">
-                          <Users size={15} className="text-blue-500" /> {claseItem.totalStudents} Atletas
+                          <Users size={15} className="text-brand-primary" /> {claseItem.totalStudents} Atletas
                         </span>
                       </div>
 
@@ -641,7 +641,7 @@ const DashboardTeacher = () => {
                           claseItem.isFuture
                             ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
                             : claseItem.requiereAtencion
-                            ? 'bg-brand-accent hover:bg-brand-accent-dark text-white shadow-brand-accent/30 ring-2 ring-orange-400'
+                            ? 'bg-brand-accent hover:bg-brand-accent-dark text-white shadow-brand-accent/30 ring-2 ring-brand-accent'
                             : claseItem.attended
                             ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
                             : 'bg-brand-primary hover:bg-[#152a63] text-white shadow-brand-primary/20'
@@ -688,9 +688,9 @@ const DashboardTeacher = () => {
                 key={item.id}
                 className={`bg-brand-surface rounded-[2rem] p-5 sm:p-6 border transition-all flex flex-col md:flex-row md:items-center justify-between gap-5 shadow-sm ${
                   item.requiereAtencion
-                    ? 'border-brand-accent bg-orange-50/20'
+                    ? 'border-brand-accent bg-brand-accent-soft/20'
                     : item.isToday
-                    ? 'border-brand-primary bg-blue-50/20'
+                    ? 'border-brand-primary bg-brand-primary-soft/20'
                     : 'border-brand-border'
                 }`}
               >
@@ -712,7 +712,7 @@ const DashboardTeacher = () => {
                         {item.level}
                       </span>
                       {item.isToday && (
-                        <span className="text-[9px] font-black uppercase bg-orange-100 text-brand-accent-dark px-2 py-0.5 rounded">
+                        <span className="text-[9px] font-black uppercase bg-brand-accent-soft text-brand-accent-dark px-2 py-0.5 rounded">
                           Hoy
                         </span>
                       )}

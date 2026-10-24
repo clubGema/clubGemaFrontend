@@ -69,7 +69,7 @@ const OutstandingDebtAlert = ({ pendingPayment, onRefresh, onPay }) => {
   };
 
   return (
-    <div className={`relative overflow-hidden rounded-[3.5rem] p-8 md:p-10 text-white shadow-2xl animate-fade-in mb-8 ${stats.esParcial ? 'bg-gradient-to-br from-[#2563eb] to-brand-primary border-b-8 border-brand-primary/50' : 'bg-gradient-to-br from-brand-accent to-[#ea580c] border-b-8 border-orange-800/40'}`}>
+    <div className={`relative overflow-hidden rounded-[3.5rem] p-8 md:p-10 text-white shadow-2xl animate-fade-in mb-8 ${stats.esParcial ? 'bg-gradient-to-br from-[#581220] to-brand-primary border-b-8 border-brand-primary/50' : 'bg-gradient-to-br from-brand-accent to-[#A67C1E] border-b-8 border-brand-accent-dark/40'}`}>
       
       <div className="absolute top-8 right-10">
         <span className="bg-white/20 backdrop-blur-md px-5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-white/20">
@@ -81,7 +81,7 @@ const OutstandingDebtAlert = ({ pendingPayment, onRefresh, onPay }) => {
         <div className="flex flex-col md:flex-row items-center gap-8 flex-1 w-full text-center md:text-left">
           
           <div className="bg-white/10 p-6 rounded-[2.5rem] border-2 border-white/20 shrink-0 shadow-inner">
-            {stats.esParcial ? <Info size={44} className="text-blue-100" /> : <Banknote size={44} />}
+            {stats.esParcial ? <Info size={44} className="text-brand-primary-soft" /> : <Banknote size={44} />}
           </div>
 
           <div className="space-y-4 w-full">
@@ -89,19 +89,19 @@ const OutstandingDebtAlert = ({ pendingPayment, onRefresh, onPay }) => {
                <div className="flex items-center justify-center md:justify-start gap-3 opacity-80">
                  <AlertCircle size={16} />
                  <span className="font-black uppercase text-[11px] tracking-[0.2em] italic">
-                   {stats.esParcial ? 'Sincronización de Saldo Gema' : 'Aviso: Pago Obligatorio'}
+                   {stats.esParcial ? 'Sincronización de Saldo Imperio 7' : 'Aviso: Pago Obligatorio'}
                  </span>
                </div>
                <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">
-                 {pendingPayment.catalogo_conceptos?.nombre || 'Plan Gema'}
+                 {pendingPayment.catalogo_conceptos?.nombre || 'Plan Imperio 7'}
                </h2>
             </div>
 
             {stats.esParcial ? (
               <div className="bg-white/10 p-5 rounded-[2rem] border border-white/10 max-w-xl">
                 <div className="flex justify-between items-center mb-3">
-                  <p className="text-[10px] font-black uppercase italic tracking-widest opacity-70 text-blue-100 text-left">Saldo Pendiente</p>
-                  <p className="text-xl font-black text-orange-400 italic">FALTAN S/ {stats.saldoRestante.toFixed(2)}</p>
+                  <p className="text-[10px] font-black uppercase italic tracking-widest opacity-70 text-brand-primary-soft text-left">Saldo Pendiente</p>
+                  <p className="text-xl font-black text-brand-accent italic">FALTAN S/ {stats.saldoRestante.toFixed(2)}</p>
                 </div>
                 
                 <div className="w-full h-3 bg-white/20 rounded-full overflow-hidden border border-white/10">
@@ -128,7 +128,7 @@ const OutstandingDebtAlert = ({ pendingPayment, onRefresh, onPay }) => {
         <div className="flex flex-col sm:flex-row lg:flex-col gap-4 w-full lg:w-72">
           <button 
             onClick={handlePayClick}
-            className={`flex-1 py-5 rounded-[1.8rem] font-black uppercase italic text-sm flex items-center justify-center gap-3 transition-all shadow-2xl active:scale-95 border-b-4 ${stats.esParcial ? 'bg-brand-accent hover:bg-[#ea580c] border-[#9a3412] text-white' : 'bg-brand-surface text-brand-primary border-brand-border hover:bg-brand-bg'}`}
+            className={`flex-1 py-5 rounded-[1.8rem] font-black uppercase italic text-sm flex items-center justify-center gap-3 transition-all shadow-2xl active:scale-95 border-b-4 ${stats.esParcial ? 'bg-brand-accent hover:bg-[#A67C1E] border-[#9a3412] text-white' : 'bg-brand-surface text-brand-primary border-brand-border hover:bg-brand-bg'}`}
           >
             <CreditCard size={20} /> 
             {stats.esParcial ? 'Pagar Saldo' : 'Pagar Ahora'} 

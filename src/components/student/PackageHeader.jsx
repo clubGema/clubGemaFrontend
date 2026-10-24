@@ -15,7 +15,7 @@ const PackageHeader = ({ pkg }) => {
           CLASE ÚNICA
         </span>
         <span className="text-[10px] font-bold text-slate-500 bg-brand-surface px-4 py-2 rounded-full border border-brand-border shadow-sm flex items-center gap-2 capitalize">
-          <Calendar size={12} className="text-blue-500" />
+          <Calendar size={12} className="text-brand-primary" />
           {format(parseDateOnly(pkg.fecha_clase),"EEEE dd 'de' MMMM, yyyy", { locale: es })}
         </span>
       </div>
@@ -30,11 +30,11 @@ const PackageHeader = ({ pkg }) => {
       </div>
       <div>
         <span className="text-[10px] font-bold text-slate-500 bg-brand-surface px-4 py-2 rounded-full border border-brand-border shadow-sm flex items-center gap-2">
-          <Calendar size={12} className="text-blue-500" />
+          <Calendar size={12} className="text-brand-primary" />
           Inicio: {format(parseDateOnly(pkg.fecha_inicio), 'dd MMM, yyyy', { locale: es })}
         </span>
         <span className="text-[10px] font-bold text-slate-500 bg-brand-surface px-4 py-2 rounded-full border border-brand-border shadow-sm flex items-center gap-2 mt-1">
-          <Calendar size={12} className="text-blue-500" />
+          <Calendar size={12} className="text-brand-primary" />
           Fin:{' '}
           {esFechaValida(pkg.fecha_fin)
             ? format(parseDateOnly(pkg.fecha_fin), 'dd MMM, yyyy', { locale: es })

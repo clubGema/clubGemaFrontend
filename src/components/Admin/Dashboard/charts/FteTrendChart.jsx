@@ -31,7 +31,7 @@ const FteTrendChart = ({ activosPorMes, selectedYear, setSelectedYear, available
                 <div className="bg-brand-surface p-3 rounded-2xl shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1)] border border-brand-border-soft max-w-[220px]">
                     <p className="font-bold text-slate-600 mb-2 border-b border-brand-border-soft pb-1">
                         {label} {selectedYear}
-                        {fisicos > 0 && <span className="ml-2 text-indigo-500 font-black text-[10px]">({fisicos} alumnos)</span>}
+                        {fisicos > 0 && <span className="ml-2 text-brand-primary font-black text-[10px]">({fisicos} alumnos)</span>}
                     </p>
                     <div className="flex items-center gap-2 text-xs mb-1.5">
                         <div className="w-2.5 h-2.5 rounded-full shadow-sm" style={{ backgroundColor: '#6366f1' }}></div>
@@ -54,7 +54,7 @@ const FteTrendChart = ({ activosPorMes, selectedYear, setSelectedYear, available
             <div className="mb-6 flex justify-between items-start">
                 <div>
                     <ChartHeader
-                        barClassName="w-1.5 h-6 bg-indigo-500 rounded-full"
+                        barClassName="w-1.5 h-6 bg-brand-primary rounded-full"
                         title="Volumen Activo (FTE)"
                         subtitle="Evolución de Full-Time Equivalents (1 Horario = 0.5 FTE)"
                     >

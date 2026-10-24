@@ -13,7 +13,7 @@ const HorarioFilters = ({
             </label>
             <select
                 id="sedeSelect"
-                className="w-full bg-brand-bg border border-brand-border rounded-2xl px-5 py-4 text-sm font-bold text-brand-primary focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all uppercase cursor-pointer"
+                className="w-full bg-brand-bg border border-brand-border rounded-2xl px-5 py-4 text-sm font-bold text-brand-primary focus:ring-4 focus:ring-brand-accent/20 focus:border-brand-accent outline-none transition-all uppercase cursor-pointer"
                 value={sedeSelect}
                 onChange={(e) => onSedeChange(e.target.value)}
             >
@@ -29,7 +29,7 @@ const HorarioFilters = ({
             </label>
             <select
                 id="nivelSelect"
-                className="w-full bg-brand-bg border border-brand-border rounded-2xl px-5 py-4 text-sm font-bold text-brand-primary focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all uppercase cursor-pointer"
+                className="w-full bg-brand-bg border border-brand-border rounded-2xl px-5 py-4 text-sm font-bold text-brand-primary focus:ring-4 focus:ring-brand-accent/20 focus:border-brand-accent outline-none transition-all uppercase cursor-pointer"
                 value={nivelSelect}
                 onChange={(e) => onNivelChange(e.target.value)}
             >
@@ -45,7 +45,7 @@ const HorarioFilters = ({
             </label>
             <select
                 id="diaSelect"
-                className="w-full bg-brand-bg border border-brand-border rounded-2xl px-5 py-4 text-sm font-bold text-brand-primary focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all uppercase cursor-pointer"
+                className="w-full bg-brand-bg border border-brand-border rounded-2xl px-5 py-4 text-sm font-bold text-brand-primary focus:ring-4 focus:ring-brand-accent/20 focus:border-brand-accent outline-none transition-all uppercase cursor-pointer"
                 value={diaSelect}
                 onChange={(e) => onDiaChange(e.target.value)}
             >

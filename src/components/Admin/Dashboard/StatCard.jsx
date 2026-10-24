@@ -2,8 +2,8 @@ import React from 'react';
 
 const StatCard = ({ title, value, icon: Icon, color }) => {
     const colors = {
-        blue: "from-blue-600/20 to-indigo-600/5 text-brand-primary border-blue-100",
-        orange: "from-brand-accent/20 to-amber-500/5 text-brand-accent-dark border-orange-100",
+        blue: "from-brand-primary/20 to-brand-primary/5 text-brand-primary border-brand-primary/10",
+        orange: "from-brand-accent/20 to-amber-500/5 text-brand-accent-dark border-brand-accent-soft",
         green: "from-emerald-500/20 to-teal-500/5 text-emerald-600 border-emerald-100",
         purple: "from-purple-500/20 to-fuchsia-500/5 text-purple-700 border-purple-100",
         gray: "from-slate-500/20 to-slate-700/5 text-slate-600 border-brand-border",

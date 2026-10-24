@@ -81,7 +81,7 @@ const AdminLevels = ({ onBack, initialData }) => {
                         <input
                             value={formData.nombre}
                             onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                            className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/20"
+                            className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-accent/20"
                             placeholder="Ej: ALTA COMPETENCIA"
                         />
                         <p className="text-[9px] text-brand-muted italic mt-2">

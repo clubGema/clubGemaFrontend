@@ -64,7 +64,7 @@ function Login() {
           borderRadius: '16px',
           background: '#fff',
         },
-        iconTheme: { primary: '#f97316', secondary: '#fff' },
+        iconTheme: { primary: '#D4AF37', secondary: '#fff' },
       });
     }
   };
@@ -125,16 +125,16 @@ function Login() {
           <div className="z-10 flex flex-col items-center text-center mt-2 md:mt-10">
             <img
               src={THEME_ASSETS.logoPublic}
-              alt="Logo Club Gema"
-              className="w-20 md:w-72 h-auto rounded-full filter drop-shadow-lg"
+              alt="Logo Imperio 7"
+              className="w-24 md:w-64 h-auto rounded-full filter drop-shadow-[0_10px_25px_rgba(0,0,0,0.5)] border-2 border-brand-accent/40"
             />
           </div>
 
           <div className="z-10 flex flex-col items-center mt-2">
-            <div className="bg-transparent border border-brand-accent/40 backdrop-blur-md px-3 py-2 md:px-6 md:py-4 rounded-xl w-full max-w-sm text-center">
-              <div className="text-[10px] md:text-sm font-bold text-login-highlight">Ecosistema Deportivo Digital</div>
-              <div className="text-[7px] md:text-[9px] text-login-slogan uppercase tracking-widest font-black hidden md:block">
-                Constancia · Disciplina · Comunidad
+            <div className="bg-black/30 border border-brand-accent/40 backdrop-blur-md px-3 py-2 md:px-6 md:py-4 rounded-xl w-full max-w-sm text-center shadow-lg">
+              <div className="text-[10px] md:text-sm font-black text-login-highlight uppercase tracking-wider">Imperio 7 Club</div>
+              <div className="text-[7px] md:text-[9px] text-login-slogan uppercase tracking-[0.25em] font-black hidden md:block mt-1">
+                Disciplina · Grandeza · Victoria
               </div>
             </div>
           </div>
@@ -178,7 +178,7 @@ function Login() {
               </div>
 
               {/* AVISO VISUAL AMIGABLE DE CONTRASEÑA */}
-              <div className="bg-brand-primary-soft border border-blue-200/70 rounded-xl p-3 flex items-start gap-2.5 text-left shadow-sm">
+              <div className="bg-brand-primary-soft border border-brand-primary/20 rounded-xl p-3 flex items-start gap-2.5 text-left shadow-sm">
                 <AlertCircle size={16} className="text-brand-accent mt-0.5 flex-shrink-0" />
                 <div className="text-[11px] text-slate-600 leading-snug font-medium">
                   <span className="font-bold text-brand-primary block mb-0.5">
@@ -222,8 +222,8 @@ function Login() {
             </span>
           </div>
 
-          <p className="mt-6 md:mt-12 text-center text-[9px] md:text-[10px] text-slate-300 font-black uppercase tracking-[0.3em] pb-4">
-            Club Gema | Desde 2023
+          <p className="mt-6 md:mt-12 text-center text-[9px] md:text-[10px] text-stone-300 font-black uppercase tracking-[0.3em] pb-4">
+            Imperio 7 | Desde 2023
           </p>
         </div>
       </div>
@@ -234,7 +234,7 @@ function Login() {
           <div className="bg-brand-surface w-full max-w-lg rounded-[2rem] shadow-2xl overflow-hidden flex flex-col max-h-[92vh] border border-white/20 animate-in fade-in zoom-in-95 duration-200">
             
             {/* Header del Modal */}
-            <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-950 p-5 md:p-6 text-white relative flex justify-between items-start shrink-0">
+            <div className="bg-gradient-to-r from-brand-primary via-[#3A0B14] to-brand-primary-dark p-5 md:p-6 text-white relative flex justify-between items-start shrink-0">
               <div className="flex items-center gap-3.5">
                 <div className="w-11 h-11 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-brand-accent border border-white/15 shadow-inner shrink-0">
                   <KeyRound size={22} />
@@ -243,7 +243,7 @@ function Login() {
                   <h4 className="text-lg md:text-xl font-black uppercase italic tracking-tight leading-tight">
                     ¿No recuerdas tu contraseña?
                   </h4>
-                  <p className="text-[10px] md:text-xs text-blue-200 font-medium tracking-wide mt-0.5">
+                  <p className="text-[10px] md:text-xs text-amber-200 font-medium tracking-wide mt-0.5">
                     Te ayudamos a recuperar tu acceso en pocos pasos
                   </p>
                 </div>
@@ -264,27 +264,27 @@ function Login() {
             <div className="p-5 md:p-6 space-y-3.5 overflow-y-auto custom-scrollbar bg-brand-surface">
               
               {/* Paso 1: Revisa tu correo */}
-              <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-100 flex items-start gap-3.5 text-left">
-                <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+              <div className="p-4 rounded-2xl bg-brand-primary-soft border border-brand-primary/10 flex items-start gap-3.5 text-left">
+                <div className="w-9 h-9 rounded-xl bg-brand-primary text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
                   <Mail size={18} />
                 </div>
                 <div className="space-y-1">
-                  <h5 className="text-xs md:text-sm font-black text-blue-950 uppercase tracking-wide">
+                  <h5 className="text-xs md:text-sm font-black text-brand-heading uppercase tracking-wide">
                     1. Revisa tu correo electrónico
                   </h5>
-                  <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                    Al momento de registrarte en Club Gema, te enviamos tus credenciales oficiales de acceso (usuario y contraseña). Por favor verifica tu <b>Bandeja de entrada</b> o carpeta de <b>Spam / Correo no deseado</b>.
+                  <p className="text-xs text-brand-body leading-relaxed font-medium">
+                    Al momento de registrarte en Imperio 7, te enviamos tus credenciales oficiales de acceso (usuario y contraseña). Por favor verifica tu <b>Bandeja de entrada</b> o carpeta de <b>Spam / Correo no deseado</b>.
                   </p>
                 </div>
               </div>
 
               {/* Paso 2: Inscripción presencial */}
-              <div className="p-4 rounded-2xl bg-orange-50/70 border border-orange-100 flex items-start gap-3.5 text-left">
-                <div className="w-9 h-9 rounded-xl bg-orange-500 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+              <div className="p-4 rounded-2xl bg-brand-accent-soft border border-brand-accent/20 flex items-start gap-3.5 text-left">
+                <div className="w-9 h-9 rounded-xl bg-brand-accent text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
                   <ShieldCheck size={18} />
                 </div>
                 <div className="space-y-1">
-                  <h5 className="text-xs md:text-sm font-black text-orange-950 uppercase tracking-wide">
+                  <h5 className="text-xs md:text-sm font-black text-brand-primary-dark uppercase tracking-wide">
                     2. ¿Te inscribieron presencialmente?
                   </h5>
                   <p className="text-xs text-slate-600 leading-relaxed font-medium">
@@ -331,7 +331,7 @@ function Login() {
               </div>
 
               {/* Paso 4: Soporte en caso de pérdida de correos */}
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-indigo-950 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg border border-white/10">
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-brand-primary-dark text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg border border-white/10">
                 <div className="space-y-1 text-left">
                   <div className="flex items-center gap-2 text-brand-accent">
                     <MessageCircle size={16} />
@@ -344,7 +344,7 @@ function Login() {
                   </p>
                 </div>
                 <a
-                  href="https://wa.me/51999888777?text=Hola%20Club%20Gema,%20necesito%20ayuda%20para%20recuperar%20el%20acceso%20a%20mi%20cuenta"
+                  href="https://wa.me/51999888777?text=Hola%20Imperio%207,%20necesito%20ayuda%20para%20recuperar%20el%20acceso%20a%20mi%20cuenta"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-4 py-2.5 bg-brand-accent hover:bg-brand-accent-dark text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-1.5 shrink-0"

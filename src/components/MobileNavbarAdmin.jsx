@@ -16,7 +16,7 @@ const MobileNavbarAdmin = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const bottomNavClass = ({ isActive }) =>
-        `flex flex-col items-center gap-1.5 w-full transition-all ${isActive ? 'text-brand-accent' : 'text-blue-100/50'}`;
+        `flex flex-col items-center gap-1.5 w-full transition-all ${isActive ? 'text-brand-accent' : 'text-brand-primary-soft/50'}`;
     const bottomNavLabelClass = "text-[8px] uppercase font-black italic tracking-widest";
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -49,13 +49,16 @@ const MobileNavbarAdmin = () => {
                             <button onClick={toggleMenu} className="absolute top-4 right-4 text-white/50 hover:text-white bg-white/5 p-2 rounded-full">
                                 <X size={20} />
                             </button>
-                            <div className="relative z-10 w-[100px] aspect-square bg-brand-surface rounded-full p-2 shadow-2xl flex items-center justify-center border-[4px] border-white/10 overflow-hidden mb-3">
+                            <div className="relative z-10 w-[100px] aspect-square bg-brand-surface rounded-full p-2 shadow-2xl flex items-center justify-center border-[3px] border-brand-accent/40 overflow-hidden mb-3">
                                 <Link to="/" onClick={toggleMenu}>
-                                    <img src={THEME_ASSETS.logoFramed} alt="Logo Club Gema" className="w-full h-full object-cover" />
+                                    <img src={THEME_ASSETS.logoFramed} alt="Logo Imperio 7" className="w-full h-full object-cover" />
                                 </Link>
                             </div>
                             <span className="font-black text-lg tracking-tighter uppercase italic text-white">
-                                Gema<span className="text-brand-accent">Admin</span>
+                                Imperio<span className="text-brand-accent">7</span>
+                            </span>
+                            <span className="text-[8px] font-black uppercase tracking-[0.25em] text-amber-200/80 italic mt-0.5">
+                                Admin
                             </span>
                         </div>
 
@@ -63,37 +66,38 @@ const MobileNavbarAdmin = () => {
                         <div className="flex-1 overflow-y-auto p-4 space-y-6 [scrollbar-width:none]">
 
                             <div className="space-y-1">
-                                <p className="px-3 text-[9px] font-black text-blue-300/40 uppercase tracking-[0.3em] mb-2">Operaciones</p>
-                                <NavLink to="/dashboard/admin/students" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><GraduationCap size={16} className="text-blue-400" /> Alumnos</NavLink>
-                                <NavLink to="/dashboard/admin/entregas-merch" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><PackageCheck size={16} className="text-blue-400" /> Entregas Merch</NavLink>
-                                <NavLink to="/dashboard/admin/teachers" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><UserCog size={16} className="text-blue-400" /> Coordinadores</NavLink>
+                                <p className="px-3 text-[9px] font-black text-brand-accent/40 uppercase tracking-[0.3em] mb-2">Operaciones</p>
+                                <NavLink to="/dashboard/admin/students" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><GraduationCap size={16} className="text-brand-accent" /> Alumnos</NavLink>
+                                <NavLink to="/dashboard/admin/clases-individuales" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Ticket size={16} className="text-brand-accent" /> Asignar Clase Individual</NavLink>
+                                <NavLink to="/dashboard/admin/entregas-merch" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><PackageCheck size={16} className="text-brand-accent" /> Entregas Merch</NavLink>
+                                <NavLink to="/dashboard/admin/teachers" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><UserCog size={16} className="text-brand-accent" /> Coordinadores</NavLink>
                             </div>
 
                             <div className="space-y-1">
-                                <p className="px-3 text-[9px] font-black text-blue-300/40 uppercase tracking-[0.3em] mb-2">Club</p>
-                                <NavLink to="/dashboard/admin/schedule" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><CalendarRange size={16} /> Horarios</NavLink>
-                                <NavLink to="/dashboard/admin/reprogramaciones" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Layers size={16} /> Reprogramar</NavLink>
-                                <NavLink to="/dashboard/admin/locations" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><MapPin size={16} /> Sedes</NavLink>
-                                <NavLink to="/dashboard/admin/levels" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><BarChart3 size={16} /> Niveles</NavLink>
-                                <NavLink to="/dashboard/admin/merch" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Gift size={16} /> Gestión Merch</NavLink>
-                                <NavLink to="/dashboard/admin/cash-flow" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Receipt size={16} /> Balance</NavLink>
+                                <p className="px-3 text-[9px] font-black text-brand-accent/40 uppercase tracking-[0.3em] mb-2">Club</p>
+                                <NavLink to="/dashboard/admin/schedule" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><CalendarRange size={16} /> Horarios</NavLink>
+                                <NavLink to="/dashboard/admin/reprogramaciones" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Layers size={16} /> Reprogramar</NavLink>
+                                <NavLink to="/dashboard/admin/locations" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><MapPin size={16} /> Sedes</NavLink>
+                                <NavLink to="/dashboard/admin/levels" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><BarChart3 size={16} /> Niveles</NavLink>
+                                <NavLink to="/dashboard/admin/merch" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Gift size={16} /> Gestión Merch</NavLink>
+                                <NavLink to="/dashboard/admin/cash-flow" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Receipt size={16} /> Balance</NavLink>
                             </div>
 
                             <div className="space-y-1">
-                                <p className="px-3 text-[9px] font-black text-blue-300/40 uppercase tracking-[0.3em] mb-2">Marketing</p>
-                                <NavLink to="/dashboard/admin/publications" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Megaphone size={16} /> Muro Noticias</NavLink>
-                                <NavLink to="/dashboard/admin/anuncios-beneficios" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Sparkles size={16} /> Carrusel App</NavLink>
-                                <NavLink to="/dashboard/admin/CreateBenefits" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><TicketPercent size={16} /> Crear Descuentos</NavLink>
-                                <NavLink to="/dashboard/admin/benefits" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><TicketPercent size={16} /> Asignar Descuentos</NavLink>
-                                <NavLink to="/dashboard/admin/guest-passes" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Ticket size={16} /> Clases Únicas</NavLink>
+                                <p className="px-3 text-[9px] font-black text-brand-accent/40 uppercase tracking-[0.3em] mb-2">Marketing</p>
+                                <NavLink to="/dashboard/admin/publications" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Megaphone size={16} /> Muro Noticias</NavLink>
+                                <NavLink to="/dashboard/admin/anuncios-beneficios" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Sparkles size={16} /> Carrusel App</NavLink>
+                                <NavLink to="/dashboard/admin/CreateBenefits" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><TicketPercent size={16} /> Crear Descuentos</NavLink>
+                                <NavLink to="/dashboard/admin/benefits" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><TicketPercent size={16} /> Asignar Descuentos</NavLink>
+                                <NavLink to="/dashboard/admin/guest-passes" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Ticket size={16} /> Clases Únicas</NavLink>
                             </div>
 
                             <div className="space-y-1 pb-6">
-                                <p className="px-3 text-[9px] font-black text-blue-300/40 uppercase tracking-[0.3em] mb-2">Sistema</p>
-                                <NavLink to="/dashboard/admin/injuries" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Activity size={16} /> Lesiones</NavLink>
-                                <NavLink to="/dashboard/admin/delete-makeups" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><History size={16} /> Depuración</NavLink>
-                                <NavLink to="/dashboard/admin/catalog" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><DollarSign size={16} /> Catálogo</NavLink>
-                                <NavLink to="/dashboard/admin/settings" onClick={toggleMenu} className="flex items-center gap-4 text-blue-100/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Settings size={16} /> Ajustes</NavLink>
+                                <p className="px-3 text-[9px] font-black text-brand-accent/40 uppercase tracking-[0.3em] mb-2">Sistema</p>
+                                <NavLink to="/dashboard/admin/injuries" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Activity size={16} /> Lesiones</NavLink>
+                                <NavLink to="/dashboard/admin/delete-makeups" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><History size={16} /> Depuración</NavLink>
+                                <NavLink to="/dashboard/admin/catalog" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><DollarSign size={16} /> Catálogo</NavLink>
+                                <NavLink to="/dashboard/admin/settings" onClick={toggleMenu} className="flex items-center gap-4 text-brand-primary-soft/70 px-3 py-2.5 rounded-xl hover:bg-white/5 text-[12px] font-bold uppercase tracking-wide"><Settings size={16} /> Ajustes</NavLink>
                             </div>
                         </div>
 
@@ -126,7 +130,7 @@ const MobileNavbarAdmin = () => {
                         <span className={bottomNavLabelClass}>Pagos</span>
                     </NavLink>
 
-                    <button onClick={toggleMenu} className="flex flex-col items-center gap-1.5 w-full text-blue-100/50">
+                    <button onClick={toggleMenu} className="flex flex-col items-center gap-1.5 w-full text-brand-primary-soft/50">
                         <Menu size={20} />
                         <span className="text-[8px] uppercase font-black italic tracking-widest">Menú</span>
                     </button>

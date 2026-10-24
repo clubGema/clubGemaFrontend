@@ -65,7 +65,7 @@ const InjuryEvaluationModal = ({ isOpen, onClose, solicitud, onEvaluateSuccess }
                         </div>
 
                         <div className="flex items-center gap-3 bg-brand-bg p-4 rounded-[1.5rem] border border-brand-border-soft mt-4 shadow-inner">
-                            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-primary to-blue-700 flex items-center justify-center text-white font-black text-sm shadow-md italic">
+                            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-primary flex items-center justify-center text-white font-black text-sm shadow-md italic">
                                 {solicitud?.alumnos?.usuarios?.nombres?.charAt(0) || 'A'}
                             </div>
                             <div>
@@ -103,11 +103,11 @@ const InjuryEvaluationModal = ({ isOpen, onClose, solicitud, onEvaluateSuccess }
                                     <label className="block text-[10px] font-black text-brand-primary uppercase tracking-widest mb-4">Alcance de la Justificación</label>
                                     <div className="flex gap-8">
                                         <label className="flex items-center gap-2.5 cursor-pointer group">
-                                            <input type="radio" name="tipo" checked={evalData.tipo === 'RANGO'} onChange={() => setEvalData({ ...evalData, tipo: 'RANGO' })} className="w-4 h-4 accent-orange-500 shadow-sm" />
+                                            <input type="radio" name="tipo" checked={evalData.tipo === 'RANGO'} onChange={() => setEvalData({ ...evalData, tipo: 'RANGO' })} className="w-4 h-4 accent-brand-accent shadow-sm" />
                                             <span className="text-xs font-black text-slate-600 group-hover:text-brand-primary uppercase tracking-tight">Temporal</span>
                                         </label>
                                         <label className="flex items-center gap-2.5 cursor-pointer group">
-                                            <input type="radio" name="tipo" checked={evalData.tipo === 'INDEFINIDO'} onChange={() => setEvalData({ ...evalData, tipo: 'INDEFINIDO' })} className="w-4 h-4 accent-orange-500 shadow-sm" />
+                                            <input type="radio" name="tipo" checked={evalData.tipo === 'INDEFINIDO'} onChange={() => setEvalData({ ...evalData, tipo: 'INDEFINIDO' })} className="w-4 h-4 accent-brand-accent shadow-sm" />
                                             <span className="text-xs font-black text-slate-600 group-hover:text-brand-primary uppercase tracking-tight">Indefinida</span>
                                         </label>
                                     </div>

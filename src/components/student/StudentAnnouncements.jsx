@@ -11,7 +11,7 @@ const StudentAnnouncements = () => {
       titulo: '¡No pierdas tu progreso!',
       descripcion: 'Entrena 2-3 veces/semana y recupera hasta 2 clases. Si vas 4 veces, ¡recupera hasta 4! Tienes hasta el mes siguiente.',
       icon: <RefreshCcw size={32} />,
-      gradient: 'from-brand-primary to-blue-600',
+      gradient: 'from-brand-primary to-brand-primary',
       badge: 'FLEXIBILIDAD'
     },
     {
@@ -20,7 +20,7 @@ const StudentAnnouncements = () => {
       titulo: 'Entrenar con amigos paga',
       descripcion: 'Por cada referido que se inscriba, obtén S/ 10 de descuento directo en tu siguiente mensualidad. ¡Sin límites!',
       icon: <Users size={32} />,
-      gradient: 'from-brand-accent-dark to-orange-400',
+      gradient: 'from-brand-accent-dark to-brand-accent',
       badge: 'AHORRO'
     },
     {
@@ -34,7 +34,7 @@ const StudentAnnouncements = () => {
     },
     {
       id: 4,
-      tipo: 'DISCIPLINA GEMA',
+      tipo: 'DISCIPLINA IMPERIO 7',
       titulo: 'Bonos por Rendimiento',
       descripcion: 'Premiamos tu esfuerzo constante en la cancha con beneficios y merchandising exclusivo del Club.',
       icon: <Trophy size={32} />,
@@ -62,7 +62,7 @@ const StudentAnnouncements = () => {
             <Gift size={16} className="text-white" />
           </div>
           <h2 className="font-black uppercase tracking-[0.2em] text-[11px] italic text-brand-primary">
-            Beneficios Exclusivos <span className="text-brand-accent">Gema</span>
+            Beneficios Exclusivos <span className="text-brand-accent">Imperio 7</span>
           </h2>
         </div>
       </div>

@@ -17,7 +17,7 @@ const MerchAddOnsSlider = ({ items, quantities, onQtyChange, ownedCounts = {} })
         <h3 className="text-sm font-black text-brand-primary uppercase italic tracking-widest">Añade a tu plan</h3>
       </div>
       <p className="text-[11px] font-bold text-brand-muted -mt-2">
-        Coleccionables GEMA, opcionales. Se suman al total de tu matrícula.
+        Coleccionables IMPERIO 7, opcionales. Se suman al total de tu matrícula.
       </p>
 
       <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 -mx-1 px-1 [scrollbar-width:thin]">

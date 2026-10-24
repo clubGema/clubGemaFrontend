@@ -130,7 +130,7 @@ const AdminSchedule = ({ onBack, initialData }) => {
     };
 
     if (fetchingData) return (
-        <LoadingSpinner className="flex justify-center p-20" colorClassName="text-blue-600" />
+        <LoadingSpinner className="flex justify-center p-20" colorClassName="text-brand-primary" />
     );
 
     return (
@@ -158,7 +158,7 @@ const AdminSchedule = ({ onBack, initialData }) => {
                 <div className="lg:col-span-2 space-y-6">
                     <div className="bg-brand-surface rounded-3xl border border-brand-border shadow-sm overflow-hidden">
                         <div className="p-6 border-b border-brand-border-soft bg-brand-bg flex items-center gap-3">
-                            <div className="p-2 bg-blue-100 text-brand-primary rounded-lg"><Home size={20} /></div>
+                            <div className="p-2 bg-brand-primary-soft text-brand-primary rounded-lg"><Home size={20} /></div>
                             <h3 className="font-black text-brand-primary uppercase tracking-wider text-sm">Asignación de Espacio</h3>
                         </div>
                         <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -167,7 +167,7 @@ const AdminSchedule = ({ onBack, initialData }) => {
                                 <select
                                     value={commonData.sede_id}
                                     onChange={(e) => setCommonData({ ...commonData, sede_id: e.target.value, cancha_id: '' })}
-                                    className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                                    className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-brand-accent outline-none transition-all"
                                 >
                                     <option value="">Seleccione Sede</option>
                                     {sedes.map(s => <option key={s.id} value={s.id.toString()}>{s.nombre}</option>)}
@@ -181,7 +181,7 @@ const AdminSchedule = ({ onBack, initialData }) => {
                                         value={commonData.cancha_id}
                                         onChange={(e) => setCommonData({ ...commonData, cancha_id: e.target.value })}
                                         disabled={!commonData.sede_id}
-                                        className="w-full bg-brand-bg border border-brand-border rounded-xl pl-10 pr-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none disabled:opacity-50"
+                                        className="w-full bg-brand-bg border border-brand-border rounded-xl pl-10 pr-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-brand-accent outline-none disabled:opacity-50"
                                     >
                                         <option value="">Seleccione Cancha</option>
                                         {canchas.map(c => <option key={c.id} value={c.id.toString()}>{c.nombre}</option>)}
@@ -196,7 +196,7 @@ const AdminSchedule = ({ onBack, initialData }) => {
                                     step={1}
                                     value={commonData.capacidad_max}
                                     onChange={(e) => setCommonData({ ...commonData, capacidad_max: e.target.value })}
-                                    className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                                    className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold focus:ring-2 focus:ring-brand-accent outline-none transition-all"
                                 />
                             </div>
                         </div>
@@ -204,7 +204,7 @@ const AdminSchedule = ({ onBack, initialData }) => {
 
                     <div className="bg-brand-surface rounded-3xl border border-brand-border shadow-sm overflow-hidden">
                         <div className="p-6 border-b border-brand-border-soft bg-brand-bg flex items-center gap-3">
-                            <div className="p-2 bg-orange-100 text-brand-accent-dark rounded-lg"><User size={20} /></div>
+                            <div className="p-2 bg-brand-accent-soft text-brand-accent-dark rounded-lg"><User size={20} /></div>
                             <h3 className="font-black text-brand-primary uppercase tracking-wider text-sm">Personal y Nivel</h3>
                         </div>
                         <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -248,20 +248,20 @@ const AdminSchedule = ({ onBack, initialData }) => {
                     <div className="bg-brand-surface rounded-3xl border border-brand-border shadow-sm overflow-hidden flex flex-col max-h-[500px]">
                         <div className="p-6 border-b border-brand-border-soft bg-brand-bg flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-blue-100 text-brand-primary rounded-lg"><Clock size={20} /></div>
+                                <div className="p-2 bg-brand-primary-soft text-brand-primary rounded-lg"><Clock size={20} /></div>
                                 <h3 className="font-black text-brand-primary uppercase tracking-wider text-sm">Horarios</h3>
                             </div>
                             {/* BOTÓN PLUS VISIBLE SIEMPRE */}
                             <button
                                 onClick={addBloque}
-                                className="p-1.5 bg-brand-accent text-white rounded-lg hover:bg-brand-accent-dark transition-colors shadow-md shadow-orange-200"
+                                className="p-1.5 bg-brand-accent text-white rounded-lg hover:bg-brand-accent-dark transition-colors shadow-md shadow-brand-accent/25"
                             >
                                 <Plus size={18} />
                             </button>
                         </div>
                         <div className="p-6 space-y-4 overflow-y-auto custom-scrollbar">
                             {bloques.map((bloque, index) => (
-                                <div key={bloque.id} className="space-y-3 bg-brand-bg p-4 rounded-2xl border border-brand-border-soft relative group hover:bg-brand-surface hover:border-blue-100 transition-all">
+                                <div key={bloque.id} className="space-y-3 bg-brand-bg p-4 rounded-2xl border border-brand-border-soft relative group hover:bg-brand-surface hover:border-brand-primary/10 transition-all">
                                     {bloques.length > 1 && (
                                         <button
                                             onClick={() => removeBloque(bloque.id)}

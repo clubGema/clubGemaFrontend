@@ -16,7 +16,7 @@ const RecoveryConfirmToast = ({ t, slot, onConfirm }) => (
                     toast.dismiss(t.id);
                     onConfirm();
                 }}
-                className="flex-1 bg-brand-accent text-white text-[10px] font-black uppercase py-2.5 rounded-xl hover:bg-brand-accent-dark transition-colors shadow-lg shadow-orange-200"
+                className="flex-1 bg-brand-accent text-white text-[10px] font-black uppercase py-2.5 rounded-xl hover:bg-brand-accent-dark transition-colors shadow-lg shadow-brand-accent/25"
             >
                 Confirmar
             </button>

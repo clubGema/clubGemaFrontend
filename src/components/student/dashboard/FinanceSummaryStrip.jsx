@@ -12,15 +12,15 @@ const TONES = {
   },
   [FINANCE_LEVEL.PENDING]: {
     Icon: AlertCircle,
-    box: 'bg-brand-accent-soft/50 border-orange-200',
+    box: 'bg-brand-accent-soft/50 border-brand-accent/30',
     icon: 'text-brand-accent',
-    text: 'text-orange-700',
+    text: 'text-brand-accent-dark',
   },
   [FINANCE_LEVEL.REVIEW]: {
     Icon: Clock,
-    box: 'bg-brand-primary-soft/50 border-blue-200',
-    icon: 'text-blue-500',
-    text: 'text-blue-700',
+    box: 'bg-brand-primary-soft/50 border-brand-primary/20',
+    icon: 'text-brand-primary',
+    text: 'text-brand-primary',
   },
 };
 

@@ -27,5 +27,5 @@ export const STATUS_SUCCESS_SOLID = 'bg-emerald-600 border-emerald-600 text-whit
 
 // PENDIENTE: los estados de error y aviso siguen dispersos con varias
 // combinaciones (`bg-red-100 text-red-600`, `bg-red-50 text-red-600`,
-// `bg-amber-100`, `bg-orange-100`...). Unificarlos cambia más píxeles en
+// `bg-amber-100`, `bg-brand-accent-soft`...). Unificarlos cambia más píxeles en
 // pantalla y merece la misma decisión explícita que se tomó para el verde.

@@ -55,7 +55,7 @@ const StudentStats = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
       {/* Tarjeta de Asistencia Real */}
       <div className="bg-brand-surface p-6 rounded-[2rem] border border-brand-border-soft shadow-sm flex items-center gap-5 transition-all hover:shadow-md">
-        <div className="w-14 h-14 bg-brand-primary-soft rounded-2xl flex items-center justify-center text-blue-600 shadow-inner">
+        <div className="w-14 h-14 bg-brand-primary-soft rounded-2xl flex items-center justify-center text-brand-primary shadow-inner">
           <CalendarCheck size={28} />
         </div>
         <div>

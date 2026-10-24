@@ -50,7 +50,7 @@ const construirFecha = (fecha, hora, fallback) => {
 
 const nombreCoordinador = (horario) => {
   const u = horario?.coordinadores?.usuarios;
-  return u ? `${u.nombres.trim()} ${u.apellidos.trim()}` : 'COORDINADOR GEMA';
+  return u ? `${u.nombres.trim()} ${u.apellidos.trim()}` : 'COORDINADOR IMPERIO 7';
 };
 
 const construirSesion = ({ key, tipo, estado, fecha, horaInicio, horaFin, horario, fechaOriginal, raw }) => ({

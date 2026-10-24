@@ -27,7 +27,7 @@ const AvailableSlotsGrid = ({ slots, onSlotClick, loading }) => {
             {slots.map((slot) => {
                 const horario = slot.horarioData;
                 const fechaObj = new Date(slot.fecha);
-                const coordinatorName = horario.coordinador?.nombre_completo || "Coach Gema";
+                const coordinatorName = horario.coordinador?.nombre_completo || "Coach Imperio 7";
 
                 // Formateamos ambas horas: inicio y fin
                 const horaInicio = horario.hora_inicio.substring(0, 5);
@@ -76,7 +76,7 @@ const AvailableSlotsGrid = ({ slots, onSlotClick, loading }) => {
                         {/* Detalles Inferiores */}
                         <div className="space-y-3 border-t border-slate-50 pt-4">
                             <div className="flex items-center gap-3 text-slate-600">
-                                <div className="w-7 h-7 rounded-lg bg-brand-primary-soft flex items-center justify-center text-blue-600">
+                                <div className="w-7 h-7 rounded-lg bg-brand-primary-soft flex items-center justify-center text-brand-primary">
                                     <MapPin size={14} />
                                 </div>
                                 <span className="uppercase font-black text-[10px] tracking-[0.05em] italic truncate">

@@ -60,7 +60,7 @@ const AdminStudentsManager = () => {
             }));
         },
         [selectedSede],
-        { initialData: [], errorMessage: 'Error al sincronizar Base Gema' }
+        { initialData: [], errorMessage: 'Error al sincronizar Base Imperio 7' }
     );
 
     // El pipeline de filtrado corre sobre la lista completa, asi que se usa el
@@ -256,9 +256,9 @@ const AdminStudentsManager = () => {
                     wrapperClassName="relative group"
                     iconSize={20}
                     iconClassName="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-brand-primary transition-colors"
-                    className="w-full bg-brand-surface border-2 border-brand-border-soft rounded-[1.8rem] pl-16 pr-8 py-5 font-black text-xs uppercase tracking-widest outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-brand-primary transition-all shadow-sm"
+                    className="w-full bg-brand-surface border-2 border-brand-border-soft rounded-[1.8rem] pl-16 pr-8 py-5 font-black text-xs uppercase tracking-widest outline-none focus:ring-4 focus:ring-brand-accent/5 focus:border-brand-primary transition-all shadow-sm"
                 />
-                <select value={selectedSede} onChange={(e) => cambiarSede(e.target.value)} className="bg-brand-surface border border-brand-border rounded-xl px-4 py-3 text-[10px] font-black uppercase shadow-sm outline-none cursor-pointer focus:ring-2 focus:ring-blue-500">
+                <select value={selectedSede} onChange={(e) => cambiarSede(e.target.value)} className="bg-brand-surface border border-brand-border rounded-xl px-4 py-3 text-[10px] font-black uppercase shadow-sm outline-none cursor-pointer focus:ring-2 focus:ring-brand-accent">
                     <option value="">TODAS LAS SEDES</option>
                     {sedes.map(s => <option key={s.id} value={s.id}>SEDE {s.nombre}</option>)}
                 </select>
@@ -309,7 +309,7 @@ const AdminStudentsManager = () => {
                                 <button
                                     key={i}
                                     onClick={() => setCurrentPage(i + 1)}
-                                    className={`w-10 h-10 rounded-xl text-[10px] font-black transition-all ${currentPage === i + 1 ? 'bg-brand-primary text-white shadow-lg shadow-blue-100' : 'bg-brand-surface border border-brand-border text-slate-600 hover:bg-brand-bg'}`}
+                                    className={`w-10 h-10 rounded-xl text-[10px] font-black transition-all ${currentPage === i + 1 ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary-soft' : 'bg-brand-surface border border-brand-border text-slate-600 hover:bg-brand-bg'}`}
                                 >
                                     {i + 1}
                                 </button>

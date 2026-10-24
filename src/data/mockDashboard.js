@@ -5,7 +5,7 @@ export const roleData = {
         stats: [
             { id: "alumnos", title: "Alumnos Activos", value: "0", icon: Users, color: "blue" },
             { id: "coordinadores", title: "Cuerpo Técnico", value: "0", icon: GraduationCap, color: "orange" },
-            { id: "sedes", title: "Sedes Gema", value: "0", icon: MapPin, color: "purple" },
+            { id: "sedes", title: "Sedes Imperio 7", value: "0", icon: MapPin, color: "purple" },
             { id: "pendientes", title: "Deudas Pendientes", value: "$0.00", icon: AlertCircle, color: "gray" },
         ],
         recentTitle: "Movimientos del Club",

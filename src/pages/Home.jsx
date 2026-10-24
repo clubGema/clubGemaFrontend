@@ -68,8 +68,8 @@ function Home() {
           title: h.nivel?.nombre || "Entrenamiento Voleibol",
           category: h.nivel?.nombre || "General",
           time: `${formatTime(h.hora_inicio)} - ${formatTime(h.hora_fin)}`,
-          location: h.cancha?.sede?.nombre || h.cancha?.nombre || "Sede Gema",
-          coordinator: h.coordinador?.nombre_completo || "Staff Gema",
+          location: h.cancha?.sede?.nombre || h.cancha?.nombre || "Sede Imperio 7",
+          coordinator: h.coordinador?.nombre_completo || "Staff Imperio 7",
           spots: h.capacidad_max || 0,
           price: h.precio || 0,
           image: h.imagen_url || "https://images.unsplash.com/photo-1592656094267-764a45160876?w=800&q=80",
@@ -101,9 +101,9 @@ function Home() {
       <main className="w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-6 md:py-16 flex-grow">
         <div id="programacion" className="mb-6 md:mb-12 scroll-mt-24">
           <div className="flex items-center gap-2 md:gap-3 mb-2">
-            <div className="h-5 w-1.5 md:h-8 bg-[#cd5a2c] rounded-full"></div>
-            <h2 className="text-xl md:text-3xl font-black text-[#263e5e] uppercase italic tracking-tighter leading-tight">
-              Programación <span className="text-[#cd5a2c]">Semanal</span>
+            <div className="h-5 w-1.5 md:h-8 bg-brand-accent rounded-full"></div>
+            <h2 className="text-xl md:text-3xl font-black text-brand-primary uppercase italic tracking-tighter leading-tight">
+              Programación <span className="text-brand-accent">Semanal</span>
             </h2>
           </div>
           <p className="text-[11px] md:text-base text-slate-500 font-medium ml-3.5 md:ml-4 leading-relaxed">
@@ -125,7 +125,7 @@ function Home() {
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#cd5a2c]"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-accent"></div>
             <p className="mt-4 text-brand-muted font-bold uppercase text-xs tracking-widest">Cargando horarios...</p>
           </div>
         ) : (

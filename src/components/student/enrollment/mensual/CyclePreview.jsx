@@ -31,9 +31,9 @@ const CyclePreview = ({ fechas }) => {
         })}
       </div>
 
-      <div className="mt-4 flex items-center gap-3 bg-blue-100/50 p-3 rounded-2xl border border-blue-200">
-        <Info size={16} className="text-blue-600 shrink-0" />
-        <p className="text-[9px] font-bold text-blue-800 uppercase leading-tight italic">
+      <div className="mt-4 flex items-center gap-3 bg-brand-primary-soft/50 p-3 rounded-2xl border border-brand-primary/20">
+        <Info size={16} className="text-brand-primary shrink-0" />
+        <p className="text-[9px] font-bold text-brand-primary-dark uppercase leading-tight italic">
           Tus 30 días de ciclo contarán a partir de la fecha que inicies. Fechas referenciales: se confirman al generar la matrícula.
         </p>
       </div>

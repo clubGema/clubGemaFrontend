@@ -348,7 +348,7 @@ const AdminCashFlow = () => {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                    <div className="flex items-center bg-brand-surface border border-brand-border rounded-2xl px-3 py-1.5 shadow-sm hover:border-orange-300 transition-colors">
+                    <div className="flex items-center bg-brand-surface border border-brand-border rounded-2xl px-3 py-1.5 shadow-sm hover:border-brand-accent/40 transition-colors">
                         <Calendar size={14} className="text-brand-muted" />
                         <select
                             value={filtroAnio}

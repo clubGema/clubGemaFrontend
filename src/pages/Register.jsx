@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { THEME_ASSETS } from "../config/themeAssets.js";
 
 const TERMINOS_Y_CONDICIONES = [
-    { title: "Uso de Imagen", desc: "Autorizo el uso de mi imagen y voz para materiales promocionales del Club Gema en medios digitales." },
+    { title: "Uso de Imagen", desc: "Autorizo el uso de mi imagen y voz para materiales promocionales de Imperio 7 en medios digitales." },
     { title: "Salud y Riesgo", desc: "Declaro conocer mis condiciones físicas y de salud y deslindo al Club de cualquier complicación médica, lesión o accidente derivado de mi propia condición o negligencia." },
     { title: "Bienes Personales", desc: "El Club no se responsabiliza por pérdida, hurto o deterioro de objetos personales dentro de las sedes." },
     { title: "Uso de equipos e infraestructura", desc: "Me comprometo al uso correcto de los equipos e infraestructura, asumiendo cualquier daño ocasionado por uso indebido. " },
@@ -18,7 +18,7 @@ const TERMINOS_Y_CONDICIONES = [
 
 const TerminoItem = React.memo(({ item, idx }) => (
     <div className="flex gap-5 items-start">
-        <div className="flex-shrink-0 w-7 h-7 rounded-full bg-orange-100 text-brand-accent-dark flex items-center justify-center text-[11px] font-black shadow-sm">
+        <div className="flex-shrink-0 w-7 h-7 rounded-full bg-brand-accent-soft text-brand-accent-dark flex items-center justify-center text-[11px] font-black shadow-sm">
             {idx + 1}
         </div>
         <div className="space-y-1">
@@ -129,12 +129,12 @@ function Register() {
             <div className="max-w-6xl w-full bg-brand-surface rounded-[1.5rem] md:rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col md:flex-row border border-white/10 z-10 animate-fade-in my-8 md:my-0">
 
                 {/* LADO IZQUIERDO: Branding (Arriba en móvil, lateral en MD) */}
-                <div className="w-full md:w-1/3 bg-gradient-to-b from-blue-600 via-blue-800 to-indigo-950 p-6 md:p-10 text-white flex flex-col justify-center items-center relative overflow-hidden shrink-0">
+                <div className="w-full md:w-1/3 bg-gradient-to-b from-login-grad-start via-login-grad-mid to-login-grad-end p-6 md:p-10 text-white flex flex-col justify-center items-center relative overflow-hidden shrink-0">
                     <div className="z-10 text-center">
-                        <img src={THEME_ASSETS.logoPublic} alt="Logo" className="rounded-full w-24 h-24 md:w-40 md:h-40 mx-auto mb-4 md:mb-6 shadow-2xl border-4 border-white/10" />
-                        <h2 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-none">Club Gema</h2>
+                        <img src={THEME_ASSETS.logoPublic} alt="Logo Imperio 7" className="rounded-full w-24 h-24 md:w-40 md:h-40 mx-auto mb-4 md:mb-6 shadow-2xl border-4 border-brand-accent/40" />
+                        <h2 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-none">Imperio 7</h2>
                         <div className="h-1 w-8 md:w-12 bg-brand-accent mx-auto my-3 md:my-4 rounded-full"></div>
-                        <p className="text-blue-100 text-[10px] md:text-sm font-medium opacity-80">Portal Oficial Club Gema</p>
+                        <p className="text-amber-200 text-[10px] md:text-sm font-medium opacity-90">Portal Oficial Imperio 7</p>
                     </div>
                 </div>
 
@@ -218,7 +218,7 @@ function Register() {
 
                         {/* TÉRMINOS Y CONDICIONES */}
                         <div className="pt-2">
-                            <div className={`p-4 md:p-5 rounded-[1.5rem] md:rounded-[2.5rem] border-2 transition-all flex items-center gap-3 md:gap-5 ${lecturaCompletada ? 'bg-brand-accent-soft border-orange-200' : 'bg-brand-bg border-brand-border-soft'}`}>
+                            <div className={`p-4 md:p-5 rounded-[1.5rem] md:rounded-[2.5rem] border-2 transition-all flex items-center gap-3 md:gap-5 ${lecturaCompletada ? 'bg-brand-accent-soft border-brand-accent/30' : 'bg-brand-bg border-brand-border-soft'}`}>
                                 <ShieldCheck className={lecturaCompletada ? 'text-brand-accent' : 'text-slate-300'} size={20} md:size={24} />
                                 <div className="flex-1 text-left">
                                     <button type="button" onClick={() => setModalAbierto(true)} className="text-[10px] md:text-xs font-black uppercase text-brand-primary hover:text-brand-accent-dark transition-colors text-left">Ver Términos y Condiciones</button>
@@ -241,7 +241,7 @@ function Register() {
                     <div className="bg-brand-surface w-full max-w-xl rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-white/10">
                         <div className="relative p-6 md:p-10 bg-brand-primary text-white shrink-0">
                             <div className="relative z-10 text-left">
-                                <p className="text-orange-400 text-[8px] md:text-[10px] font-black uppercase tracking-widest mb-1 md:mb-2">Club Gema</p>
+                                <p className="text-brand-accent text-[8px] md:text-[10px] font-black uppercase tracking-widest mb-1 md:mb-2">Imperio 7 Club</p>
                                 <h4 className="text-xl md:text-3xl font-black uppercase italic tracking-tighter leading-tight md:leading-none">Compromiso de<br />Participación</h4>
                             </div>
                         </div>

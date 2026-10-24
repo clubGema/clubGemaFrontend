@@ -36,7 +36,7 @@ const BenefitsCarousel = ({ anuncios = [] }) => {
     <div className="w-full mb-8">
       <div className="flex items-center gap-2 mb-3 px-1">
         <Gift size={16} className="text-brand-accent" />
-        <h2 className="font-black uppercase tracking-widest text-[9px] italic text-slate-500">Beneficios Exclusivos Gema</h2>
+        <h2 className="font-black uppercase tracking-widest text-[9px] italic text-slate-500">Beneficios Exclusivos Imperio 7</h2>
       </div>
 
       <div

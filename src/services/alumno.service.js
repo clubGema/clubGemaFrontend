@@ -7,7 +7,7 @@ const alumnoService = {
   // deuda pendiente y el flag de plan individual.
   getResumenTabla: async (sedeId) => {
     const response = await apiFetch.get(API_ROUTES.HISTORIAL_ACADEMICO.RESUMEN_TABLA(sedeId));
-    const result = await parseJsonResponse(response, 'Error al sincronizar Base Gema');
+    const result = await parseJsonResponse(response, 'Error al sincronizar Base Imperio 7');
     return result.data || [];
   },
 

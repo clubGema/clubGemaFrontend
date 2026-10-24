@@ -22,7 +22,7 @@ const FilterHeader = ({ label, filterKey, options, align = 'center', filters, se
         <div className={`flex items-center gap-1.5 ${align === 'center' ? 'justify-center' : align === 'right' ? 'justify-end' : 'justify-start'}`}>
             <span>{label}</span>
             <div className="relative inline-flex items-center justify-center">
-                <Filter size={12} className={`transition-colors ${filters[filterKey] !== '' ? 'text-brand-accent' : 'text-slate-300 group-hover:text-blue-500'}`} />
+                <Filter size={12} className={`transition-colors ${filters[filterKey] !== '' ? 'text-brand-accent' : 'text-slate-300 group-hover:text-brand-primary'}`} />
                 <select
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     value={filters[filterKey]}
@@ -63,11 +63,11 @@ const StudentTable = ({
 
             {/* Aviso de Filtros Activos */}
             {hasFilters && (
-                <div className="bg-brand-accent-soft px-6 py-2 border-b border-orange-100 flex items-center justify-between">
+                <div className="bg-brand-accent-soft px-6 py-2 border-b border-brand-accent-soft flex items-center justify-between">
                     <span className="text-[10px] font-black text-brand-accent-dark uppercase tracking-widest">Filtros Aplicados</span>
                     <button
                         onClick={onClearFilters}
-                        className="text-[9px] font-bold bg-brand-surface border border-orange-200 text-brand-accent px-3 py-1 rounded-lg hover:bg-brand-accent hover:text-white transition-all"
+                        className="text-[9px] font-bold bg-brand-surface border border-brand-accent/30 text-brand-accent px-3 py-1 rounded-lg hover:bg-brand-accent hover:text-white transition-all"
                     >
                         Limpiar Filtros
                     </button>
@@ -104,7 +104,7 @@ const StudentTable = ({
                                                 <select
                                                     value={textFilter.field}
                                                     onChange={(e) => setTextFilter({ ...textFilter, field: e.target.value })}
-                                                    className="w-full mb-3 p-2 text-xs bg-brand-bg border border-brand-border rounded-lg outline-none focus:border-blue-500 font-bold text-brand-body cursor-pointer"
+                                                    className="w-full mb-3 p-2 text-xs bg-brand-bg border border-brand-border rounded-lg outline-none focus:border-brand-accent font-bold text-brand-body cursor-pointer"
                                                 >
                                                     <option value="full_name">Nombre del Alumno</option>
                                                     <option value="dni">Documento (DNI)</option>
@@ -116,7 +116,7 @@ const StudentTable = ({
                                                     value={textFilter.value}
                                                     onChange={(e) => setTextFilter({ ...textFilter, value: e.target.value })}
                                                     placeholder={`Ingresa el ${textFilter.field === 'full_name' ? 'nombre' : textFilter.field === 'dni' ? 'DNI' : 'celular'}...`}
-                                                    className="w-full p-2.5 text-xs border border-brand-border rounded-lg outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 font-bold transition-all"
+                                                    className="w-full p-2.5 text-xs border border-brand-border rounded-lg outline-none focus:ring-2 focus:ring-brand-primary-soft focus:border-brand-accent font-bold transition-all"
                                                     autoFocus
                                                 />
 
@@ -129,7 +129,7 @@ const StudentTable = ({
                                                     </button>
                                                     <button
                                                         onClick={() => setIsTextFilterOpen(false)}
-                                                        className="text-[10px] font-black bg-brand-primary hover:bg-blue-800 text-white px-4 py-2 rounded-lg transition-colors shadow-sm"
+                                                        className="text-[10px] font-black bg-brand-primary hover:bg-brand-primary-dark text-white px-4 py-2 rounded-lg transition-colors shadow-sm"
                                                     >
                                                         Aplicar
                                                     </button>
@@ -156,7 +156,7 @@ const StudentTable = ({
                                 {/* COLUMNA 1: ALUMNO Y CONTACTO */}
                                 <td className="p-4 pl-6">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 bg-brand-primary text-white rounded-xl flex items-center justify-center font-black text-xl italic shadow-md shadow-blue-100 shrink-0">
+                                        <div className="w-12 h-12 bg-brand-primary text-white rounded-xl flex items-center justify-center font-black text-xl italic shadow-md shadow-brand-primary-soft shrink-0">
                                             {alum.nombres.charAt(0)}
                                         </div>
                                         <div className="space-y-1">
@@ -165,7 +165,7 @@ const StudentTable = ({
                                                 <span className={`flex items-center gap-1 text-[9px] font-bold ${textFilter.field === 'dni' && textFilter.value ? 'text-brand-accent bg-brand-accent-soft px-1 rounded' : 'text-brand-muted'}`}>
                                                     <Fingerprint size={10} /> {alum.dni}
                                                 </span>
-                                                <span className={`flex items-center gap-1 text-[9px] font-bold ${textFilter.field === 'telefono' && textFilter.value ? 'text-brand-accent bg-brand-accent-soft px-1 rounded' : 'text-blue-500'}`}>
+                                                <span className={`flex items-center gap-1 text-[9px] font-bold ${textFilter.field === 'telefono' && textFilter.value ? 'text-brand-accent bg-brand-accent-soft px-1 rounded' : 'text-brand-primary'}`}>
                                                     <Phone size={10} /> {alum.telefono}
                                                 </span>
                                             </div>
@@ -177,7 +177,7 @@ const StudentTable = ({
                                 <td className="p-4">
                                     <div className="flex flex-col gap-1">
                                         {alum.sedes.length > 0 ? alum.sedes.map((s, idx) => (
-                                            <span key={idx} className="inline-flex items-center gap-1 w-fit text-[9px] font-black text-brand-accent-dark bg-brand-accent-soft px-2.5 py-1 rounded-md uppercase border border-orange-100 italic">
+                                            <span key={idx} className="inline-flex items-center gap-1 w-fit text-[9px] font-black text-brand-accent-dark bg-brand-accent-soft px-2.5 py-1 rounded-md uppercase border border-brand-accent-soft italic">
                                                 <MapPin size={10} /> {s}
                                             </span>
                                         )) : (
@@ -190,7 +190,7 @@ const StudentTable = ({
                                 <td className="p-4 text-center">
                                     <div className="flex justify-center flex-wrap gap-1">
                                         {alum.niveles.length > 0 ? alum.niveles.map((n, idx) => (
-                                            <span key={idx} className="bg-indigo-50 text-indigo-600 text-[9px] font-black px-3 py-1 rounded-lg uppercase border border-indigo-100 italic">{n}</span>
+                                            <span key={idx} className="bg-brand-primary-soft text-brand-primary text-[9px] font-black px-3 py-1 rounded-lg uppercase border border-brand-primary-soft italic">{n}</span>
                                         )) : (
                                             <span className="bg-brand-surface-alt text-brand-muted text-[9px] font-black px-3 py-1 rounded-lg uppercase border border-brand-border italic">SIN NIVEL</span>
                                         )}

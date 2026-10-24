@@ -50,6 +50,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             type: 'dropdown',
             items: [
                 { icon: GraduationCap, label: 'Alumnos', path: '/dashboard/admin/students' },
+                { icon: Ticket, label: 'Asignar Clase Individual', path: '/dashboard/admin/clases-individuales' },
                 { icon: UserCog, label: 'Coordinadores', path: '/dashboard/admin/teachers' },
                 { icon: CheckCircle, label: 'Validar Pagos', path: '/dashboard/admin/payment-validation' },
                 { icon: DollarSign, label: 'Balance', path: '/dashboard/admin/cash-flow' },
@@ -94,23 +95,26 @@ const Sidebar = ({ isOpen, onClose }) => {
         <>
             <aside className={`
                 fixed inset-y-0 left-0 z-40 w-64 h-screen 
-                bg-gradient-to-b from-brand-primary to-brand-primary-dark text-white 
+                bg-gradient-to-b from-[#3D0A14] via-[#1A050A] to-[#0A0204] text-white 
                 transform transition-transform duration-300 ease-in-out
                 ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-                md:sticky md:top-0 md:translate-x-0 border-r border-white/10
+                md:sticky md:top-0 md:translate-x-0 border-r border-[#D4AF37]/20
                 flex flex-col overflow-hidden shadow-2xl
             `}>
 
                 {/* 🌟 LOGO CIRCULAR (Estilo Premium) */}
                 <div className="flex-none pt-8 pb-6 px-4 flex flex-col items-center bg-white/5 relative">
-                    <div className="relative z-10 w-[140px] aspect-square bg-brand-surface rounded-full p-2.5 shadow-2xl flex items-center justify-center border-[4px] border-white/10 overflow-hidden mb-3 hover:border-brand-accent/30 transition-colors">
+                    <div className="relative z-10 w-[140px] aspect-square bg-brand-surface rounded-full p-2.5 shadow-2xl flex items-center justify-center border-[4px] border-brand-accent/40 overflow-hidden mb-3 hover:border-brand-accent transition-colors">
                         <Link to="/" className="relative z-10 hover:scale-105 transition-transform duration-300">
-                            <img src={THEME_ASSETS.logoFramed} alt="Logo Club Gema" className="w-full h-full object-cover" />
+                            <img src={THEME_ASSETS.logoFramed} alt="Logo Imperio 7" className="w-full h-full object-cover" />
                         </Link>
                     </div>
                     <div className="text-center">
                         <span className="block font-black text-xl tracking-tighter uppercase italic text-white leading-none">
-                            Gema<span className="text-brand-accent">Admin</span>
+                            Imperio<span className="text-brand-accent">7</span>
+                        </span>
+                        <span className="text-[8.5px] font-black uppercase tracking-[0.3em] text-[#F5D77F] italic mt-1 block">
+                            Panel Administrativo
                         </span>
                     </div>
                 </div>
@@ -132,23 +136,23 @@ const Sidebar = ({ isOpen, onClose }) => {
                     flex-1 py-4 px-3 overflow-y-auto space-y-1
                     [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
                 `}>
-                    <p className="px-4 text-[9px] font-black text-blue-300/40 uppercase tracking-[0.3em] mb-3">Panel de Control</p>
+                    <p className="px-4 text-[9px] font-black text-amber-200/40 uppercase tracking-[0.3em] mb-3">Panel de Control</p>
 
                     {menuGroups.map((group, idx) => (
                         <div key={idx} className="space-y-1">
                             {group.type === 'link' ? (
                                 <Link
                                     to={group.path}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group/link ${location.pathname === group.path ? 'bg-blue-500/20 text-white shadow-inner border border-blue-400/20' : 'text-blue-100/60 hover:bg-white/5 hover:text-white'}`}
+                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group/link ${location.pathname === group.path ? 'bg-brand-accent/20 text-white shadow-inner border border-brand-accent/30' : 'text-stone-300/70 hover:bg-white/5 hover:text-white'}`}
                                 >
-                                    <group.icon size={18} className={location.pathname === group.path ? 'text-blue-400' : 'group-hover/link:text-orange-400 transition-colors'} />
+                                    <group.icon size={18} className={location.pathname === group.path ? 'text-brand-accent' : 'group-hover/link:text-brand-accent transition-colors'} />
                                     <span className="text-[12px] font-bold uppercase tracking-wider">{group.title}</span>
                                 </Link>
                             ) : (
                                 <div className="space-y-1 mt-2">
                                     <button
                                         onClick={() => toggleMenu(group.title)}
-                                        className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-blue-100/40 hover:bg-white/5 hover:text-blue-100/80 transition-all group"
+                                        className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-stone-300/50 hover:bg-white/5 hover:text-stone-200 transition-all group"
                                     >
                                         <span className="text-[10px] font-black uppercase tracking-widest">{group.title}</span>
                                         <ChevronDown size={14} className={`transition-transform duration-300 ${openMenus[group.title] ? 'rotate-180' : ''}`} />
@@ -163,7 +167,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                                                         key={item.path}
                                                         to={item.path}
                                                         onClick={() => onClose && onClose()}
-                                                        className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all text-[11px] font-bold uppercase tracking-wide ${isActive ? 'text-orange-400 bg-orange-400/10' : 'text-blue-100/50 hover:text-white hover:bg-white/5'}`}
+                                                        className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all text-[11px] font-bold uppercase tracking-wide ${isActive ? 'text-amber-300 bg-amber-400/15 font-black' : 'text-stone-300/60 hover:text-white hover:bg-white/5'}`}
                                                     >
                                                         <item.icon size={14} />
                                                         <span>{item.label}</span>

@@ -14,7 +14,7 @@ const DashboardHeader = ({ firstName, notifications, unreadCount, onMarkAsRead }
           Hola, <span className="text-brand-accent">{firstName}</span> 👋
         </h1>
         <p className="text-[9px] md:text-xs text-brand-muted font-black mt-2 italic uppercase tracking-widest flex items-center gap-1.5">
-          <Sparkles size={12} className="text-orange-400" /> ¡Bienvenido al Club!
+          <Sparkles size={12} className="text-brand-accent" /> ¡Bienvenido al Club!
         </p>
       </div>
 
@@ -25,7 +25,7 @@ const DashboardHeader = ({ firstName, notifications, unreadCount, onMarkAsRead }
             <div className="absolute right-0 top-14 w-[280px] md:w-96 bg-brand-surface rounded-[2rem] shadow-2xl border border-brand-border-soft z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
               <div className="p-4 border-b border-slate-50 flex justify-between items-center bg-brand-bg/80">
                 <h3 className="font-black text-brand-primary text-[10px] uppercase italic tracking-widest">Alertas</h3>
-                {unreadCount > 0 && <span className="text-[8px] bg-orange-100 text-brand-accent-dark px-2 py-0.5 rounded-full font-black tracking-widest">{unreadCount} NUEVAS</span>}
+                {unreadCount > 0 && <span className="text-[8px] bg-brand-accent/20 text-brand-accent-dark px-2 py-0.5 rounded-full font-black tracking-widest border border-brand-accent/30">{unreadCount} NUEVAS</span>}
               </div>
               <div className="max-h-[300px] overflow-y-auto custom-scrollbar">
                 {notifications.length > 0 ? (
@@ -52,7 +52,7 @@ const DashboardHeader = ({ firstName, notifications, unreadCount, onMarkAsRead }
             </div>
           )}
         </div>
-        <div className="w-10 h-10 md:w-14 md:h-14 bg-gradient-to-br from-[#1e40af] to-brand-primary-dark rounded-[1rem] flex items-center justify-center text-white font-black border-2 border-white shadow-lg text-lg">
+        <div className="w-10 h-10 md:w-14 md:h-14 bg-gradient-to-br from-brand-primary to-brand-primary-dark rounded-[1rem] flex items-center justify-center text-brand-accent font-black border-2 border-brand-accent/40 shadow-lg text-lg">
           {initial}
         </div>
       </div>

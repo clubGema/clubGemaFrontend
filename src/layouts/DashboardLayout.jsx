@@ -15,11 +15,11 @@ const DashboardLayout = () => {
     
     const displayName = userData?.nombres 
         ? `${userData.nombres} ${userData.apellidos}` 
-        : 'Usuario Gema';
+        : 'Usuario Imperio 7';
 
     const initial = userData?.nombres 
         ? userData.nombres.charAt(0).toUpperCase() 
-        : 'G';
+        : 'I';
 
     const userRole = userData?.rol || 'Personal';
 
@@ -46,7 +46,7 @@ const DashboardLayout = () => {
                     <div className="md:hidden flex items-center">
                         <img
                             src={THEME_ASSETS.logo}
-                            alt="Gema Logo"
+                            alt="Imperio 7 Logo"
                             className="h-10 w-auto filter drop-shadow-[0_0_3px_rgba(255,255,255,1)]"
                         />
                     </div>
@@ -58,16 +58,16 @@ const DashboardLayout = () => {
                                 <p className="text-sm font-black text-brand-primary leading-tight uppercase tracking-tight">
                                     {displayName}
                                 </p>
-                                <span className="inline-block px-2 py-0.5 bg-orange-100 text-brand-accent-dark text-[10px] font-black uppercase tracking-widest rounded-md mt-1">
+                                <span className="inline-block px-2 py-0.5 bg-brand-accent-soft text-brand-accent-dark text-[10px] font-black uppercase tracking-widest rounded-md mt-1 border border-brand-accent/20">
                                     {userRole}
                                 </span>
                             </div>
 
                             <div className="relative">
-                                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#1e40af] to-brand-primary-dark flex items-center justify-center text-white font-black border-2 border-white shadow-lg shadow-brand-primary/20">
+                                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-primary-dark flex items-center justify-center text-white font-black border-2 border-white shadow-lg shadow-brand-primary/20">
                                     {initial}
                                 </div>
-                                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></div>
                             </div>
                         </div>
                     </div>

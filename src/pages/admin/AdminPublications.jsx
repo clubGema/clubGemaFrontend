@@ -131,7 +131,7 @@ const AdminPublications = () => {
                             <h1 className="text-2xl font-black italic uppercase tracking-tight text-brand-heading">
                                 Nueva <span className="text-brand-primary">Publicación</span>
                             </h1>
-                            <p className="text-[10px] font-black text-brand-muted uppercase tracking-widest italic">Anuncio para la comunidad Gema</p>
+                            <p className="text-[10px] font-black text-brand-muted uppercase tracking-widest italic">Anuncio para la comunidad Imperio 7</p>
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,7 @@ const AdminPublications = () => {
                         <div className="space-y-1">
                             <label className="text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Imagen Destacada</label>
                             <input type="file" id="pub-image" className="hidden" accept="image/*" onChange={handleFileChange} />
-                            <label htmlFor="pub-image" className="block bg-brand-bg border-2 border-dashed border-brand-border rounded-[2rem] py-10 text-center cursor-pointer hover:bg-brand-accent-soft hover:border-orange-200 transition-all">
+                            <label htmlFor="pub-image" className="block bg-brand-bg border-2 border-dashed border-brand-border rounded-[2rem] py-10 text-center cursor-pointer hover:bg-brand-accent-soft hover:border-brand-accent/30 transition-all">
                                 {previewUrl ? (
                                     <img src={previewUrl} className="h-40 mx-auto rounded-2xl shadow-lg" alt="Preview" />
                                 ) : (

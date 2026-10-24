@@ -19,7 +19,7 @@ const InjuryHistoryItem = ({ solicitud }) => {
                 </div>
                 <p className="text-slate-600 font-medium group-hover:text-white transition-colors">{solicitud.descripcion_lesion}</p>
                 {solicitud.notas_admin && (
-                    <p className="text-sm text-brand-accent-dark mt-2 bg-orange-200 p-2 rounded-lg border border-brand-accent/20">
+                    <p className="text-sm text-brand-accent-dark mt-2 bg-brand-accent/30 p-2 rounded-lg border border-brand-accent/20">
                         <span className="font-bold">Admin:</span> {solicitud.notas_admin}
                     </p>
                 )}
@@ -28,7 +28,7 @@ const InjuryHistoryItem = ({ solicitud }) => {
                 href={solicitud.url_evidencia_medica}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-xs font-bold text-blue-600 hover:text-blue-400 bg-blue-200 px-3 py-2 rounded-lg border border-blue-500/20 transition-all shrink-0"
+                className="flex items-center gap-2 text-xs font-bold text-brand-primary hover:text-brand-accent bg-brand-primary/20 px-3 py-2 rounded-lg border border-brand-primary/20 transition-all shrink-0"
             >
                 <FileText size={14} /> Ver Evidencia
             </a>

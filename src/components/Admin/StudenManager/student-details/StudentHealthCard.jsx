@@ -3,7 +3,7 @@ import { Stethoscope, User } from 'lucide-react';
 
 const StudentHealthCard = ({ detalle, onStatusHistoryChange }) => (
     <div className="bg-brand-surface rounded-[2.5rem] border border-brand-border-soft shadow-sm overflow-hidden">
-        <div className="px-8 py-5 bg-brand-primary-soft/50 border-b border-blue-100 flex items-center justify-between">
+        <div className="px-8 py-5 bg-brand-primary-soft/50 border-b border-brand-primary/10 flex items-center justify-between">
             <div className="flex items-center gap-2 text-brand-primary">
                 <Stethoscope size={20} />
                 <span className="text-[11px] font-black uppercase tracking-widest italic">Información de Salud</span>
@@ -29,7 +29,7 @@ const StudentHealthCard = ({ detalle, onStatusHistoryChange }) => (
                 <select
                     value={detalle.salud?.historial ?? 'Nuevo'}
                     onChange={(e) => onStatusHistoryChange(e.target.value)}
-                    className="w-full text-[11px] font-medium text-slate-500 italic leading-relaxed bg-transparent border border-brand-border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full text-[11px] font-medium text-slate-500 italic leading-relaxed bg-transparent border border-brand-border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-brand-primary-light"
                 >
                     <option value="Antiguo">Antiguo</option>
                     <option value="Nuevo">Nuevo</option>

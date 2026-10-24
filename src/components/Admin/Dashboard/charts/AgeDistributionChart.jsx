@@ -25,7 +25,7 @@ const AgeDistributionChart = ({ alumnosEdades }) => (
                     <XAxis dataKey="range" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: BRAND_COLORS.muted, fontWeight: 'bold' }} dy={10} />
                     <YAxis axisLine={false} tickLine={false} width={50} tick={{ fontSize: 10, fill: BRAND_COLORS.muted, fontWeight: 'bold' }} />
                     <Tooltip cursor={{ fill: BRAND_COLORS.bg }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} formatter={(value) => [`${value} alumnos`, 'Histórico']} />
-                    <Bar dataKey="count" fill="#3b82f6" radius={[8, 8, 0, 0]} barSize={60}>
+                    <Bar dataKey="count" fill={BRAND_COLORS.primary} radius={[8, 8, 0, 0]} barSize={60}>
                         {alumnosEdades.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
                         ))}

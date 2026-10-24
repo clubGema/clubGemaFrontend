@@ -12,13 +12,13 @@ const IconOptions = {
   RefreshCcw, Users, HeartPulse, Gift, Sparkles, Zap, Star, Trophy
 };
 
-// 🎨 Gradientes Predefinidos
+// 🎨 Gradientes Predefinidos (paleta Imperio 7). Los id se mantienen por compatibilidad.
 const GradientesOptions = [
-  { id: 'blue', class: 'from-brand-primary to-blue-600', label: 'Azul Corporativo' },
-  { id: 'orange', class: 'from-brand-accent-dark to-orange-400', label: 'Naranja Fuego' },
+  { id: 'blue', class: 'from-brand-primary to-brand-primary-light', label: 'Vinotinto Imperial' },
+  { id: 'orange', class: 'from-brand-accent-dark to-brand-accent', label: 'Oro Imperial' },
   { id: 'red', class: 'from-red-600 to-red-400', label: 'Rojo Lesión' },
   { id: 'green', class: 'from-emerald-600 to-emerald-400', label: 'Verde Éxito' },
-  { id: 'purple', class: 'from-violet-600 to-indigo-500', label: 'Violeta Premium' },
+  { id: 'purple', class: 'from-brand-primary-dark to-brand-primary', label: 'Obsidiana Real' },
 ];
 
 const AdminCreateBenefitsAnuncio = () => {
@@ -34,7 +34,7 @@ const AdminCreateBenefitsAnuncio = () => {
     titulo: '',
     descripcion: '',
     icono: 'Gift',
-    gradiente: 'from-brand-primary to-blue-600',
+    gradiente: 'from-brand-primary to-brand-primary',
     badge: '',
     activo: true,
     orden: 0
@@ -307,7 +307,7 @@ const AdminCreateBenefitsAnuncio = () => {
                 </div>
 
                 <div className="md:col-span-2 pt-4 border-t border-brand-border-soft flex items-center gap-3">
-                  <input type="checkbox" id="activo" name="activo" checked={formData.activo} onChange={handleChange} className="w-5 h-5 accent-orange-500" />
+                  <input type="checkbox" id="activo" name="activo" checked={formData.activo} onChange={handleChange} className="w-5 h-5 accent-brand-accent" />
                   <label htmlFor="activo" className="text-sm font-black text-brand-primary uppercase italic cursor-pointer">Publicar Inmediatamente</label>
                 </div>
 

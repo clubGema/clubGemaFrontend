@@ -80,11 +80,11 @@ const FeriadoHistory = ({ onClose }) => {
                 {/* Header */}
                 <div className="p-6 bg-brand-bg border-b border-brand-border-soft flex justify-between items-center shrink-0">
                     <div className="flex items-center gap-3">
-                        <div className="p-2 bg-brand-accent rounded-xl text-white shadow-lg shadow-orange-200">
+                        <div className="p-2 bg-brand-accent rounded-xl text-white shadow-lg shadow-brand-accent/25">
                             <CalendarIcon size={20} />
                         </div>
                         <h2 className="font-black text-slate-800 uppercase tracking-tighter text-xl italic">
-                            Feriados <span className="text-brand-accent">GEMA</span>
+                            Feriados <span className="text-brand-accent">IMPERIO 7</span>
                         </h2>
                     </div>
                     <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-full transition-colors text-brand-muted">
@@ -143,7 +143,7 @@ const FeriadoHistory = ({ onClose }) => {
                                 // 💡 Aplicamos la corrección aquí
                                 const localDate = parseLocalDate(f.fecha);
                                 return (
-                                    <div key={f.id} className="bg-brand-surface p-3 rounded-2xl border border-brand-border-soft flex items-center justify-between group hover:border-orange-200 transition-all shadow-sm hover:shadow-md">
+                                    <div key={f.id} className="bg-brand-surface p-3 rounded-2xl border border-brand-border-soft flex items-center justify-between group hover:border-brand-accent/30 transition-all shadow-sm hover:shadow-md">
                                         <div className="flex items-center gap-3">
                                             <div className="w-10 h-10 bg-brand-surface-alt rounded-lg flex flex-col items-center justify-center text-[10px] font-black text-slate-600 shadow-sm border border-white">
                                                 <span>{format(localDate, 'dd')}</span>

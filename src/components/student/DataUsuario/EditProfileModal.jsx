@@ -151,7 +151,7 @@ const EditProfileModal = ({ isOpen, onClose, onSuccess }) => {
             {/* SECCIÓN 3: UBICACIÓN */}
             <div className="space-y-3">
               <div className="border-b border-brand-border-soft pb-1.5 flex items-center gap-2">
-                <MapPin size={14} className="text-blue-500" />
+                <MapPin size={14} className="text-brand-primary" />
                 <span className="text-[10px] font-black text-brand-muted uppercase tracking-widest">Ubicación</span>
               </div>
               <div className="grid grid-cols-2 gap-3">

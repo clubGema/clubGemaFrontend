@@ -14,7 +14,7 @@ const CurrentScheduleCard = ({ horario, isSelected, onSelect }) => {
             onClick={onSelect}
             className={`cursor-pointer border-2 rounded-2xl p-4 transition-all relative overflow-hidden group ${isSelected
                 ? 'border-brand-accent bg-brand-accent-soft/30'
-                : 'border-brand-border-soft hover:border-orange-200 hover:bg-brand-bg'
+                : 'border-brand-border-soft hover:border-brand-accent/30 hover:bg-brand-bg'
                 }`}
         >
             {isSelected && (
@@ -34,7 +34,7 @@ const CurrentScheduleCard = ({ horario, isSelected, onSelect }) => {
                         }`}>
                         {horario.horarios_clases.niveles_entrenamiento?.nombre || 'Sin Nivel'}
                     </span>
-                    <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md ${isSelected ? 'bg-orange-200 text-orange-800' : 'bg-brand-surface-alt text-slate-500'
+                    <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md ${isSelected ? 'bg-brand-accent/30 text-brand-accent-dark' : 'bg-brand-surface-alt text-slate-500'
                         }`}>
                         {horario.horarios_clases.canchas.sedes.nombre || 'Sin Sede'}
                     </span>

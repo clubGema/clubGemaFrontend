@@ -142,7 +142,7 @@ const EditProfileContacts = () => {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
                     <h4 className="text-xs font-black text-slate-800 truncate">{c.nombre_completo}</h4>
-                    {c.es_principal && <Star size={11} className="text-brand-accent fill-orange-500 shrink-0" />}
+                    {c.es_principal && <Star size={11} className="text-brand-accent fill-brand-accent shrink-0" />}
                   </div>
                   <p className="text-[10px] font-bold text-slate-500">{c.relacion} · {c.telefono}</p>
                 </div>
@@ -215,7 +215,7 @@ const FormularioContacto = ({ formContacto, setFormContacto, onGuardar, onCancel
         type="checkbox"
         checked={formContacto.es_principal}
         onChange={e => setFormContacto({ ...formContacto, es_principal: e.target.checked })}
-        className="accent-orange-500 w-3.5 h-3.5"
+        className="accent-brand-accent w-3.5 h-3.5"
       />
       <span className="text-[9px] font-black text-slate-500 uppercase">Marcar como principal</span>
     </label>

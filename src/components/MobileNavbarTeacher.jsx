@@ -42,7 +42,8 @@ const MobileNavbarTeacher = () => {
           <div className="flex flex-col h-full border-l border-white/10">
             <div className="p-6 flex justify-between items-center border-b border-white/10 bg-white/5">
               <span className="font-black text-sm tracking-widest uppercase italic text-white flex gap-1">
-                Gema<span className="text-brand-accent">Coordinador</span>
+                Imperio<span className="text-brand-accent">7</span>
+                <span className="text-amber-200/80 text-[10px] tracking-normal not-italic ml-1">Coordinador</span>
               </span>
               <button onClick={toggleMenu} className="p-2 bg-white/5 rounded-lg text-white/50">
                 <X size={20} />
@@ -51,27 +52,27 @@ const MobileNavbarTeacher = () => {
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               <div className="space-y-1">
-                <p className="px-4 text-[10px] font-black text-blue-300/40 uppercase tracking-[0.2em] mb-2">
+                <p className="px-4 text-[10px] font-black text-amber-200/40 uppercase tracking-[0.2em] mb-2">
                   Panel del Coordinador
                 </p>
                 <NavLink
                   to="/dashboard/teacher"
                   onClick={toggleMenu}
-                  className="flex items-center gap-4 text-blue-100/70 px-4 py-3 rounded-xl hover:bg-white/5"
+                  className="flex items-center gap-4 text-brand-primary-soft/70 px-4 py-3 rounded-xl hover:bg-white/5"
                 >
                   <ClipboardList size={18} /> Mis Clases y Agenda
                 </NavLink>
                 <NavLink
                   to="/dashboard/teacher/DiaCorte"
                   onClick={toggleMenu}
-                  className="flex items-center gap-4 text-blue-100/70 px-4 py-3 rounded-xl hover:bg-white/5"
+                  className="flex items-center gap-4 text-brand-primary-soft/70 px-4 py-3 rounded-xl hover:bg-white/5"
                 >
                   <CalendarClock size={18} /> Días de Corte
                 </NavLink>
                 <NavLink
                   to="/dashboard/teacher/profile"
                   onClick={toggleMenu}
-                  className="flex items-center gap-4 text-blue-100/70 px-4 py-3 rounded-xl hover:bg-white/5"
+                  className="flex items-center gap-4 text-brand-primary-soft/70 px-4 py-3 rounded-xl hover:bg-white/5"
                 >
                   <User size={18} /> Mi Perfil
                 </NavLink>
@@ -100,7 +101,7 @@ const MobileNavbarTeacher = () => {
             end
             className={({ isActive }) =>
               `flex flex-col items-center justify-center gap-1 w-full h-full transition-all ${
-                isActive ? 'text-brand-accent scale-105' : 'text-blue-100/40 hover:text-blue-100/70'
+                isActive ? 'text-brand-accent scale-105' : 'text-brand-primary-soft/40 hover:text-brand-primary-soft/70'
               }`
             }
           >
@@ -117,7 +118,7 @@ const MobileNavbarTeacher = () => {
             to="/dashboard/teacher/DiaCorte"
             className={({ isActive }) =>
               `flex flex-col items-center justify-center gap-1 w-full h-full transition-all ${
-                isActive ? 'text-brand-accent scale-105' : 'text-blue-100/40 hover:text-blue-100/70'
+                isActive ? 'text-brand-accent scale-105' : 'text-brand-primary-soft/40 hover:text-brand-primary-soft/70'
               }`
             }
           >
@@ -134,7 +135,7 @@ const MobileNavbarTeacher = () => {
             to="/dashboard/teacher/profile"
             className={({ isActive }) =>
               `flex flex-col items-center justify-center gap-1 w-full h-full transition-all ${
-                isActive ? 'text-brand-accent scale-105' : 'text-blue-100/40 hover:text-blue-100/70'
+                isActive ? 'text-brand-accent scale-105' : 'text-brand-primary-soft/40 hover:text-brand-primary-soft/70'
               }`
             }
           >
@@ -151,7 +152,7 @@ const MobileNavbarTeacher = () => {
           {/* MÁS (MENÚ) */}
           <button
             onClick={toggleMenu}
-            className="flex flex-col items-center justify-center gap-1 w-full h-full text-blue-100/40 hover:text-blue-100/70 transition-all"
+            className="flex flex-col items-center justify-center gap-1 w-full h-full text-brand-primary-soft/40 hover:text-brand-primary-soft/70 transition-all"
           >
             <Menu size={20} />
             <span className="text-[9px] uppercase font-black tracking-tighter">Menú</span>

@@ -56,7 +56,7 @@ const StudentInjuries = () => {
                 <div className="grid md:grid-cols-2 gap-8">
                     <InjuryRequestForm onSuccess={() => setActiveTab('history')} />
 
-                    <div className="bg-blue-100 border border-blue-200 rounded-2xl p-6 h-fit">
+                    <div className="bg-brand-primary-soft border border-brand-primary/20 rounded-2xl p-6 h-fit">
                         <h4 className="font-bold text-brand-primary mb-4 flex items-center gap-2">
                             <AlertCircle size={20} /> Información Importante
                         </h4>

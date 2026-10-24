@@ -11,7 +11,7 @@ const NotFound = () => {
             <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-brand-accent/10 blur-[120px] rounded-full"></div>
 
             <div className="max-w-2xl w-full text-center relative z-10">
-                {/* Icono de error con estilo Gema */}
+                {/* Icono de error con estilo Imperio 7 */}
                 <div className="mb-8 relative inline-block">
                     <div className="w-32 h-32 bg-gradient-to-br from-brand-primary to-brand-primary-dark rounded-[2.5rem] flex items-center justify-center border border-white/10 shadow-2xl animate-bounce">
                         <span className="text-7xl font-black text-white italic tracking-tighter">404</span>
@@ -51,7 +51,7 @@ const NotFound = () => {
                 <div className="mt-16 flex items-center justify-center gap-3 opacity-30">
                     <div className="h-px w-12 bg-slate-500"></div>
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">
-                        Gema Performance Systems
+                        Imperio 7 Performance Systems
                     </span>
                     <div className="h-px w-12 bg-slate-500"></div>
                 </div>

@@ -24,7 +24,7 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message, iconType = '
                 >
                     <div className="p-8 text-center">
                         <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mb-6 mx-auto ${
-                            iconType === 'danger' ? 'bg-red-50 text-red-500 animate-bounce' : 'bg-orange-50 text-orange-500'
+                            iconType === 'danger' ? 'bg-red-50 text-red-500 animate-bounce' : 'bg-brand-accent-soft text-brand-accent'
                         }`}>
                             {iconType === 'danger' ? <ShieldAlert size={40} /> : <AlertTriangle size={40} />}
                         </div>
@@ -46,7 +46,7 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message, iconType = '
                             <button
                                 onClick={onConfirm}
                                 className={`flex-[2] px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest text-white shadow-lg transition-all active:scale-95 order-1 sm:order-2 ${
-                                    iconType === 'danger' ? 'bg-red-600 shadow-red-200' : 'bg-brand-primary shadow-blue-200'
+                                    iconType === 'danger' ? 'bg-red-600 shadow-red-200' : 'bg-brand-primary shadow-brand-primary/20'
                                 }`}
                             >
                                 {confirmText}

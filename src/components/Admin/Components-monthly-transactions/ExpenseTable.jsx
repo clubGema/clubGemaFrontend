@@ -33,19 +33,19 @@ export const ExpenseTable = ({
                             {egresos.map((m) => inlineEditId === m.id ? (
                                 <tr key={m.id} className="bg-brand-accent-soft/50">
                                     <td className="p-2">
-                                        <input type="date" value={inlineData.fecha} onChange={e => setInlineData({ ...inlineData, fecha: e.target.value })} className="w-full text-[10px] bg-brand-surface border border-orange-300 p-2 rounded-lg outline-none font-bold" />
+                                        <input type="date" value={inlineData.fecha} onChange={e => setInlineData({ ...inlineData, fecha: e.target.value })} className="w-full text-[10px] bg-brand-surface border border-brand-accent/40 p-2 rounded-lg outline-none font-bold" />
                                     </td>
                                     <td className="p-2">
-                                        <select value={inlineData.sede_id} onChange={e => setInlineData({ ...inlineData, sede_id: e.target.value })} className="w-full text-[9px] bg-brand-surface border border-orange-300 p-2 rounded-lg outline-none font-bold uppercase text-brand-accent">
+                                        <select value={inlineData.sede_id} onChange={e => setInlineData({ ...inlineData, sede_id: e.target.value })} className="w-full text-[9px] bg-brand-surface border border-brand-accent/40 p-2 rounded-lg outline-none font-bold uppercase text-brand-accent">
                                             <option value="">General</option>
                                             {sedes.map(s => <option key={s.id} value={s.id}>{s.nombre}</option>)}
                                         </select>
                                     </td>
                                     <td className="p-2">
-                                        <input type="text" value={inlineData.concepto} onChange={e => setInlineData({ ...inlineData, concepto: e.target.value.toUpperCase() })} className="w-full bg-brand-surface border border-orange-300 p-2 rounded-lg outline-none font-black uppercase" />
+                                        <input type="text" value={inlineData.concepto} onChange={e => setInlineData({ ...inlineData, concepto: e.target.value.toUpperCase() })} className="w-full bg-brand-surface border border-brand-accent/40 p-2 rounded-lg outline-none font-black uppercase" />
                                     </td>
                                     <td className="p-2">
-                                        <input type="number" step="0.01" value={inlineData.monto} onChange={e => setInlineData({ ...inlineData, monto: e.target.value })} className="w-full bg-brand-surface border border-orange-300 p-2 rounded-lg outline-none text-right font-black" />
+                                        <input type="number" step="0.01" value={inlineData.monto} onChange={e => setInlineData({ ...inlineData, monto: e.target.value })} className="w-full bg-brand-surface border border-brand-accent/40 p-2 rounded-lg outline-none text-right font-black" />
                                     </td>
                                     <td className="p-2 text-center">
                                         <div className="flex justify-center gap-1.5">
@@ -61,7 +61,7 @@ export const ExpenseTable = ({
                                     <td className="p-3 text-brand-heading font-black uppercase">{m.concepto}</td>
                                     <td className="p-3 text-right font-black text-red-500">- S/ {parseFloat(m.monto).toFixed(2)}</td>
                                     <td className="p-3 text-center">
-                                        <button onClick={() => startInlineEdit(m, mesNum)} className="text-brand-accent font-black uppercase text-[9px] hover:bg-brand-accent-soft px-2 py-1 rounded-lg transition-colors flex items-center justify-center gap-1 mx-auto border border-transparent hover:border-orange-200">
+                                        <button onClick={() => startInlineEdit(m, mesNum)} className="text-brand-accent font-black uppercase text-[9px] hover:bg-brand-accent-soft px-2 py-1 rounded-lg transition-colors flex items-center justify-center gap-1 mx-auto border border-transparent hover:border-brand-accent/30">
                                             <Edit2 size={12} /> Editar
                                         </button>
                                         <button onClick={() => movimientoDelete(m, mesNum)} className="text-red-600 font-black uppercase text-[9px] hover:bg-green-50 px-2 py-1 rounded-lg transition-colors flex items-center justify-center gap-1 mx-auto border border-transparent hover:border-green-200">
@@ -74,19 +74,19 @@ export const ExpenseTable = ({
                             {addingType === 'EGRESO' && (
                                 <tr className="bg-brand-accent-soft/50">
                                     <td className="p-2">
-                                        <input type="date" value={newData.fecha} onChange={e => setNewData({ ...newData, fecha: e.target.value })} className="w-full text-[10px] bg-brand-surface border border-orange-400 p-2 rounded-lg outline-none font-bold" />
+                                        <input type="date" value={newData.fecha} onChange={e => setNewData({ ...newData, fecha: e.target.value })} className="w-full text-[10px] bg-brand-surface border border-brand-accent p-2 rounded-lg outline-none font-bold" />
                                     </td>
                                     <td className="p-2">
-                                        <select value={newData.sede_id} onChange={e => setNewData({ ...newData, sede_id: e.target.value })} className="w-full text-[9px] bg-brand-surface border border-orange-400 p-2 rounded-lg outline-none font-bold uppercase text-brand-accent">
+                                        <select value={newData.sede_id} onChange={e => setNewData({ ...newData, sede_id: e.target.value })} className="w-full text-[9px] bg-brand-surface border border-brand-accent p-2 rounded-lg outline-none font-bold uppercase text-brand-accent">
                                             <option value="">General</option>
                                             {sedes.map(s => <option key={s.id} value={s.id}>{s.nombre}</option>)}
                                         </select>
                                     </td>
                                     <td className="p-2">
-                                        <input type="text" placeholder="Concepto..." value={newData.concepto} onChange={e => setNewData({ ...newData, concepto: e.target.value.toUpperCase() })} className="w-full bg-brand-surface border border-orange-400 p-2 rounded-lg outline-none font-black uppercase" />
+                                        <input type="text" placeholder="Concepto..." value={newData.concepto} onChange={e => setNewData({ ...newData, concepto: e.target.value.toUpperCase() })} className="w-full bg-brand-surface border border-brand-accent p-2 rounded-lg outline-none font-black uppercase" />
                                     </td>
                                     <td className="p-2">
-                                        <input type="number" step="0.01" placeholder="0.00" value={newData.monto} onChange={e => setNewData({ ...newData, monto: e.target.value })} className="w-full bg-brand-surface border border-orange-400 p-2 rounded-lg outline-none text-right font-black" />
+                                        <input type="number" step="0.01" placeholder="0.00" value={newData.monto} onChange={e => setNewData({ ...newData, monto: e.target.value })} className="w-full bg-brand-surface border border-brand-accent p-2 rounded-lg outline-none text-right font-black" />
                                     </td>
                                     <td className="p-2 text-center">
                                         <div className="flex justify-center gap-1.5">

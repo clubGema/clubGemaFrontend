@@ -45,7 +45,7 @@ const PastHistoryPanel = ({ pasadas, now }) => {
         </div>
 
         <div className="flex items-center gap-2 bg-brand-bg px-3 py-1.5 rounded-xl border border-brand-border-soft">
-          <Calendar size={12} className="text-blue-500" />
+          <Calendar size={12} className="text-brand-primary" />
           <select value={filtroAnio} onChange={(e) => setFiltroAnio(e.target.value)} className="text-[9px] font-black uppercase tracking-widest text-slate-500 outline-none bg-transparent cursor-pointer">
             <option value="TODOS">TODOS LOS AÑOS</option>
             {aniosOpciones.map((anio) => <option key={anio} value={anio.toString()}>CICLO {anio}</option>)}

@@ -28,7 +28,7 @@ const SessionCard = ({ sesion, now }) => {
       )}
 
       {esRecuperacion && (
-        <div className="absolute top-0 right-0 bg-blue-500 text-white flex items-center gap-1 text-[7px] md:text-[8px] font-black px-3 py-1 rounded-bl-xl md:rounded-bl-2xl italic tracking-tighter z-10">
+        <div className="absolute top-0 right-0 bg-brand-primary text-white flex items-center gap-1 text-[7px] md:text-[8px] font-black px-3 py-1 rounded-bl-xl md:rounded-bl-2xl italic tracking-tighter z-10">
           <RefreshCw size={8} className="md:w-2.5 md:h-2.5" /> RECUPERACIÓN
         </div>
       )}
@@ -57,7 +57,7 @@ const SessionCard = ({ sesion, now }) => {
             )}
 
             {esReposicion && !esMovida && sesion.fechaOriginal && (
-              <div className="mt-0.5 flex items-center gap-1 text-indigo-600">
+              <div className="mt-0.5 flex items-center gap-1 text-brand-primary">
                 <History size={8} />
                 <span className="text-[7px] md:text-[8px] font-black italic uppercase tracking-tighter truncate">
                   Orig: {formatFechaCorta(sesion.fechaOriginal)}
@@ -72,7 +72,7 @@ const SessionCard = ({ sesion, now }) => {
           <div className="space-y-0.5 text-left">
             <p className="text-[7px] md:text-[8px] font-black text-brand-muted uppercase tracking-widest">Sede</p>
             <div className="flex items-start gap-1 text-[9px] md:text-[10px] font-bold text-slate-600 uppercase italic">
-              <MapPin size={10} className="text-blue-500 shrink-0 mt-0.5" />
+              <MapPin size={10} className="text-brand-primary shrink-0 mt-0.5" />
               <span className="whitespace-normal leading-tight">{sesion.sede}</span>
             </div>
           </div>
@@ -88,7 +88,7 @@ const SessionCard = ({ sesion, now }) => {
           <div className="space-y-0.5 hidden lg:block text-left">
             <p className="text-[8px] font-black text-brand-muted uppercase tracking-widest">Coordinador</p>
             <div className="flex items-start gap-1 text-[10px] font-black text-brand-primary uppercase italic">
-              <User size={10} className="text-indigo-500 shrink-0 mt-0.5" />
+              <User size={10} className="text-brand-primary shrink-0 mt-0.5" />
               <span className="whitespace-normal leading-tight">{sesion.coordinador}</span>
             </div>
           </div>

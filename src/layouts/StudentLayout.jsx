@@ -15,7 +15,7 @@ const StudentLayout = () => {
   return (
     <div className="min-h-screen bg-brand-bg">
       <StudentSidebar />
-      <div className="w-full md:pl-64 flex-1 relative min-h-screen">
+      <div className="w-full md:pl-64 flex-1 relative min-h-screen overflow-x-hidden">
         {/* Las rutas hijas son lazy: este Suspense cubre su descarga. */}
         <Suspense fallback={<LoadingSpinner />}>
           <Outlet />

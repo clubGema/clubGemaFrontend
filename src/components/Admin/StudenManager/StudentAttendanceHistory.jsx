@@ -40,7 +40,7 @@ const StudentAttendanceHistory = ({ alumno, onBack }) => {
             case 'FALTA':
                 return { bg: 'bg-red-50 text-red-600 border-red-200', icon: <XCircle size={14} />, text: 'FALTA' };
             case 'PROGRAMADA':
-                return { bg: 'bg-brand-primary-soft text-blue-600 border-blue-200', icon: <Clock size={14} />, text: 'PROGRAMADA' };
+                return { bg: 'bg-brand-primary-soft text-brand-primary border-brand-primary/20', icon: <Clock size={14} />, text: 'PROGRAMADA' };
             default:
                 return { bg: 'bg-brand-bg text-slate-600 border-brand-border', icon: <HelpCircle size={14} />, text: estado };
         }

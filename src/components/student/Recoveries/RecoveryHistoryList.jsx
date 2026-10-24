@@ -30,11 +30,11 @@ const RecoveryHistoryList = ({ historial, onCancel }) => {
 
     const getStatusBadge = (status) => {
         switch (status) {
-            case 'PROGRAMADA': return <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 border border-blue-500/30 flex items-center gap-1"><Clock size={12} /> Programada</span>;
+            case 'PROGRAMADA': return <span className="px-3 py-1 rounded-full text-xs font-bold bg-brand-primary-soft text-brand-primary border border-brand-primary/30 flex items-center gap-1"><Clock size={12} /> Programada</span>;
             case 'COMPLETADA_PRESENTE': return <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-500/30 flex items-center gap-1"><CheckCircle size={12} /> Asistió</span>;
             case 'COMPLETADA_FALTA': return <span className="px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-500/30 flex items-center gap-1"><XCircle size={12} /> Faltó</span>;
             case 'VENCIDA': return <span className="px-3 py-1 rounded-full text-xs font-bold bg-gray-200 text-gray-600 border border-gray-400/30 flex items-center gap-1"><CalendarX2 size={12} /> Vencida</span>;
-            case 'CANCELADA': return <span className="px-3 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700 border border-orange-500/30 flex items-center gap-1"><AlertTriangle size={12} /> Cancelada</span>;
+            case 'CANCELADA': return <span className="px-3 py-1 rounded-full text-xs font-bold bg-brand-accent-soft text-brand-accent-dark border border-brand-accent/30 flex items-center gap-1"><AlertTriangle size={12} /> Cancelada</span>;
             default: return <span className="px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-700 border border-gray-500/30 flex items-center gap-1"><Clock size={12} /> {status}</span>;
         }
     };
@@ -43,11 +43,11 @@ const RecoveryHistoryList = ({ historial, onCancel }) => {
         <div className="flex flex-col gap-6">
 
             {/* 🔥 NUEVO: Banner Informativo de Reglas */}
-            <div className="bg-brand-primary-soft border border-blue-200 rounded-3xl p-5 flex gap-4 text-blue-800 shadow-sm">
-                <Info className="shrink-0 text-blue-600 mt-0.5" size={24} />
+            <div className="bg-brand-primary-soft border border-brand-primary/20 rounded-3xl p-5 flex gap-4 text-brand-primary-dark shadow-sm">
+                <Info className="shrink-0 text-brand-primary mt-0.5" size={24} />
                 <div className="text-sm">
                     <h4 className="font-extrabold text-brand-primary mb-2 uppercase tracking-wide text-xs">Información Importante</h4>
-                    <ul className="list-disc list-inside space-y-1.5 text-blue-700/80 font-medium">
+                    <ul className="list-disc list-inside space-y-1.5 text-brand-primary/80 font-medium">
                         <li>Las clases <strong className="text-brand-primary">Programadas</strong> pueden cancelarse con al menos <strong className="text-brand-primary">1 hora de anticipación</strong>.</li>
                         <li>Si cancelas a tiempo, el ticket volverá automáticamente a tu lista de "Pendientes".</li>
                         <li>Si faltas a una clase de recuperación programada, el ticket se perderá definitivamente.</li>
@@ -75,7 +75,7 @@ const RecoveryHistoryList = ({ historial, onCancel }) => {
                                             Fecha de falta: {new Date(ticket.fecha_falta).toLocaleDateString('es-ES', { year: 'numeric', month: 'numeric', day: 'numeric', timeZone: 'UTC' })}
                                         </span>
                                         {ticket.es_por_lesion && (
-                                            <span className="text-[10px] bg-orange-100 text-brand-accent-dark border border-orange-200 px-2 py-0.5 rounded uppercase font-black">
+                                            <span className="text-[10px] bg-brand-accent-soft text-brand-accent-dark border border-brand-accent/30 px-2 py-0.5 rounded uppercase font-black">
                                                 Justificado Méd.
                                             </span>
                                         )}
@@ -88,10 +88,10 @@ const RecoveryHistoryList = ({ historial, onCancel }) => {
                                                 {new Date(ticket.fecha_programada).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
                                             </p>
                                             <div className="flex items-center gap-4 mt-1">
-                                                <p className="text-sm font-medium text-slate-500 group-hover:text-blue-200 flex items-center gap-1">
+                                                <p className="text-sm font-medium text-slate-500 group-hover:text-brand-primary-soft flex items-center gap-1">
                                                     <Clock size={14} /> {formatTime(ticket.horarios_clases.hora_inicio)} - {formatTime(ticket.horarios_clases.hora_fin)}
                                                 </p>
-                                                <p className="text-sm font-medium text-slate-500 group-hover:text-blue-200 flex items-center gap-1">
+                                                <p className="text-sm font-medium text-slate-500 group-hover:text-brand-primary-soft flex items-center gap-1">
                                                     <MapPin size={14} /> {ticket.horarios_clases.canchas?.sedes?.nombre} (Cancha {ticket.horarios_clases.canchas?.numero})
                                                 </p>
                                             </div>

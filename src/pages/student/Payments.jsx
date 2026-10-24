@@ -90,7 +90,7 @@ const Payments = () => {
 
       {/* <PaymentMethodCard /> */}
 
-      {/* 🔥 AVISO DE CONTINUIDAD GEMA PREMIUM - VERSIÓN FINAL ALINEADA 🔥 */}
+      {/* 🔥 AVISO DE CONTINUIDAD IMPERIO 7 PREMIUM - VERSIÓN FINAL ALINEADA 🔥 */}
       {activeDebts.length > 0 && (
         <div className="w-full my-12 relative overflow-hidden shadow-2xl rounded-[3rem] group">
           {/* Fondo con Gradiente Sólido */}
@@ -162,7 +162,7 @@ const Payments = () => {
         {/* HISTORIAL DE REPORTES */}
         <section className="sticky top-8">
           <h2 className="font-black text-brand-primary uppercase italic mb-8 flex items-center gap-3 text-2xl">
-            <div className="w-3 h-8 bg-blue-400 rounded-full"></div>
+            <div className="w-3 h-8 bg-brand-primary-light rounded-full"></div>
             HISTORIAL DE REPORTES
           </h2>
 

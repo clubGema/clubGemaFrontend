@@ -86,7 +86,7 @@ const AdminDeleteMakeups = () => {
     }, [recuperaciones, searchTerm]);
 
     if (loading) return (
-        <LoadingSpinner className="flex h-96 items-center justify-center" colorClassName="text-blue-600" />
+        <LoadingSpinner className="flex h-96 items-center justify-center" colorClassName="text-brand-primary" />
     );
 
     return (
@@ -99,7 +99,7 @@ const AdminDeleteMakeups = () => {
                     </div>
                     <div>
                         <h1 className="text-xl font-black text-white uppercase italic tracking-tighter leading-none">Depuración Maestra</h1>
-                        <p className="text-[9px] text-brand-muted font-bold uppercase tracking-widest mt-1">Gema Academy • Control de Registros</p>
+                        <p className="text-[9px] text-brand-muted font-bold uppercase tracking-widest mt-1">Imperio 7 Club • Control de Registros</p>
                     </div>
                 </div>
                 <SearchInput
@@ -141,7 +141,7 @@ const AdminDeleteMakeups = () => {
                                             className="w-full flex items-center justify-between p-3 hover:bg-brand-bg transition-colors"
                                         >
                                             <div className="flex items-center gap-3">
-                                                <div className={`p-1.5 rounded-lg ${openAlumnos[alumnoId] ? 'bg-brand-primary-soft text-blue-600' : 'bg-brand-bg text-brand-muted'}`}>
+                                                <div className={`p-1.5 rounded-lg ${openAlumnos[alumnoId] ? 'bg-brand-primary-soft text-brand-primary' : 'bg-brand-bg text-brand-muted'}`}>
                                                     <User size={14} />
                                                 </div>
                                                 <div className="flex items-baseline gap-2">
@@ -150,7 +150,7 @@ const AdminDeleteMakeups = () => {
                                                     </span>
                                                     <span className="text-[9px] font-bold text-slate-300 uppercase">ID: {alumnoId}</span>
                                                 </div>
-                                                <span className="text-[9px] font-black px-1.5 py-0.5 bg-brand-primary-soft text-blue-500 rounded-md">
+                                                <span className="text-[9px] font-black px-1.5 py-0.5 bg-brand-primary-soft text-brand-primary rounded-md">
                                                     {data.tickets.length} registros
                                                 </span>
                                             </div>
@@ -177,7 +177,7 @@ const AdminDeleteMakeups = () => {
                                                                     <td className="px-4 py-2 font-bold text-slate-600">
                                                                         {formatLocalDate(recu.fecha_falta)}
                                                                     </td>
-                                                                    <td className={`px-4 py-2 font-medium ${recu.fecha_programada ? 'text-blue-600' : 'text-slate-300 italic'}`}>
+                                                                    <td className={`px-4 py-2 font-medium ${recu.fecha_programada ? 'text-brand-primary' : 'text-slate-300 italic'}`}>
                                                                         {formatLocalDate(recu.fecha_programada)}
                                                                     </td>
                                                                     <td className="px-4 py-2">

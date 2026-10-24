@@ -59,12 +59,12 @@ const EnrollmentStepper = ({ userId, onSuccess }) => {
     [coleccionMerch]
   );
 
-  // Sede de recojo: la elegida o, por defecto, la sede donde se matricula.
+  // Sede de recojo: automáticamente la sede elegida en la matrícula
   const sedeRecojoId = extras.sedeId
     ?? sedes.find(s => s.nombre === state.sede)?.id
+    ?? sedes.find(s => s.nombre?.toLowerCase() === state.sede?.toLowerCase())?.id
     ?? null;
-  const hayMerch = qtyMapToIds(extras.merchQty).length > 0;
-  const faltaSedeRecojo = state.modalidad === MODALIDAD.MENSUAL && hayMerch && !sedeRecojoId;
+  const faltaSedeRecojo = false;
 
   const precioBase = state.modalidad === MODALIDAD.MENSUAL
     ? precioMensual(planes, derived.horariosElegidos.length)

@@ -47,7 +47,7 @@ const MonthAccordionBase = ({
                 className={`bg-brand-surface border rounded-2xl px-6 py-5 cursor-pointer flex flex-col lg:flex-row justify-between items-start lg:items-center shadow-sm transition-all duration-200 ${isOpen ? 'border-brand-accent shadow-md ring-1 ring-brand-accent/20' : 'border-brand-border hover:border-slate-300 hover:shadow-md'}`}
             >
                 <div className="flex items-center gap-3 w-full lg:w-auto">
-                    <div className={`p-1.5 rounded-lg transition-colors ${isOpen ? 'bg-orange-100 text-brand-accent-dark' : 'bg-brand-surface-alt text-slate-500'}`}>
+                    <div className={`p-1.5 rounded-lg transition-colors ${isOpen ? 'bg-brand-accent-soft text-brand-accent-dark' : 'bg-brand-surface-alt text-slate-500'}`}>
                         {isOpen ? <ChevronUp size={20}/> : <ChevronDown size={20}/>}
                     </div>
                     <h2 className="text-[15px] font-black text-brand-heading uppercase tracking-widest flex items-center gap-2">
@@ -74,7 +74,7 @@ const MonthAccordionBase = ({
 
             {/* --- CONTENIDO DESPLEGABLE (TABLAS) --- */}
             {isOpen && !isLoading && (
-                <div className="mt-3 grid grid-cols-1 xl:grid-cols-2 gap-6 pl-4 pr-2 pb-4 border-l-2 border-orange-200 ml-4">
+                <div className="mt-3 grid grid-cols-1 xl:grid-cols-2 gap-6 pl-4 pr-2 pb-4 border-l-2 border-brand-accent/30 ml-4">
                     {desgloseMes && (
                         <div className="xl:col-span-2">
                             <MerchRevenueBreakdown desglose={desgloseMes} />

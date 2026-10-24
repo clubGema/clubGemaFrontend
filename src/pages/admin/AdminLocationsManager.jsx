@@ -98,7 +98,7 @@ const AdminLocationsManager = () => {
                 placeholder="BUSCAR SEDE POR NOMBRE O DISTRITO..."
                 wrapperClassName="relative group"
                 iconClassName="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted group-focus-within:text-brand-primary transition-colors"
-                className="w-full bg-brand-surface border border-brand-border rounded-2xl pl-12 pr-4 py-3 text-xs font-bold uppercase tracking-widest outline-none focus:ring-2 focus:ring-blue-500/20 transition-all shadow-sm"
+                className="w-full bg-brand-surface border border-brand-border rounded-2xl pl-12 pr-4 py-3 text-xs font-bold uppercase tracking-widest outline-none focus:ring-2 focus:ring-brand-accent/20 transition-all shadow-sm"
             />
 
             {/* Listado */}

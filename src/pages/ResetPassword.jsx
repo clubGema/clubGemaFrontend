@@ -36,21 +36,21 @@ export const ResetPassword = () => {
 
     return (
         /* Fondo Oscuro con degradado radial */
-        <div className="min-h-screen flex items-center justify-center bg-[#0a192f] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#112240] via-[#0a192f] to-[#020c1b] px-4">
+        <div className="min-h-screen flex items-center justify-center bg-[#0C0608] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#2D0911] via-[#0C0608] to-black px-4 py-8">
             <div className="max-w-md w-full">
 
                 {/* Card Principal */}
                 <div className="bg-brand-surface rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/10">
 
-                    {/* Encabezado Institucional GEMA ACADEMY */}
-                    <div className="bg-gradient-to-br from-brand-primary to-blue-800 p-10 text-center relative overflow-hidden">
+                    {/* Encabezado Institucional Imperio 7 */}
+                    <div className="bg-gradient-to-br from-brand-primary via-[#3A0B14] to-brand-primary-dark p-10 text-center relative overflow-hidden">
                         <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/5 rounded-full"></div>
 
                         <h1 className="text-3xl font-black text-white tracking-tight uppercase italic relative z-10">
-                            GEMA<span className="text-brand-accent not-italic">CLUB</span>
+                            IMPERIO<span className="text-brand-accent not-italic"> 7</span>
                         </h1>
-                        <div className="h-1.5 w-14 bg-brand-accent mx-auto mt-3 rounded-full relative z-10"></div>
-                        <p className="text-blue-100 mt-5 text-sm font-semibold tracking-wide relative z-10 uppercase">
+                        <div className="h-1.5 w-14 bg-brand-accent mx-auto mt-3 rounded-full relative z-10 shadow-accent-bar-sm"></div>
+                        <p className="text-amber-200 mt-5 text-sm font-semibold tracking-wide relative z-10 uppercase">
                             Nueva Contraseña
                         </p>
                     </div>
@@ -63,13 +63,13 @@ export const ResetPassword = () => {
                         <form onSubmit={handleSubmit} className="space-y-5">
                             {/* Campo: Nueva Contraseña */}
                             <div className="group">
-                                <label className="block text-[0.7rem] font-black text-brand-muted uppercase tracking-[0.15em] mb-2 ml-1 group-focus-within:text-blue-600 transition-colors">
+                                <label className="block text-[0.7rem] font-black text-brand-muted uppercase tracking-[0.15em] mb-2 ml-1 group-focus-within:text-brand-accent transition-colors">
                                     Nueva Contraseña
                                 </label>
                                 <input
                                     type="password"
                                     placeholder="••••••••"
-                                    className="w-full px-5 py-4 bg-brand-bg border-2 border-brand-border-soft rounded-2xl focus:ring-0 focus:border-blue-500 outline-none transition-all placeholder:text-slate-300 text-brand-body font-medium"
+                                    className="w-full px-5 py-4 bg-brand-bg border-2 border-brand-border-soft rounded-2xl focus:ring-0 focus:border-brand-accent outline-none transition-all placeholder:text-slate-300 text-brand-body font-medium"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
@@ -78,13 +78,13 @@ export const ResetPassword = () => {
 
                             {/* Campo: Confirmar Contraseña */}
                             <div className="group">
-                                <label className="block text-[0.7rem] font-black text-brand-muted uppercase tracking-[0.15em] mb-2 ml-1 group-focus-within:text-blue-600 transition-colors">
+                                <label className="block text-[0.7rem] font-black text-brand-muted uppercase tracking-[0.15em] mb-2 ml-1 group-focus-within:text-brand-accent transition-colors">
                                     Confirmar Contraseña
                                 </label>
                                 <input
                                     type="password"
                                     placeholder="••••••••"
-                                    className="w-full px-5 py-4 bg-brand-bg border-2 border-brand-border-soft rounded-2xl focus:ring-0 focus:border-blue-500 outline-none transition-all placeholder:text-slate-300 text-brand-body font-medium"
+                                    className="w-full px-5 py-4 bg-brand-bg border-2 border-brand-border-soft rounded-2xl focus:ring-0 focus:border-brand-accent outline-none transition-all placeholder:text-slate-300 text-brand-body font-medium"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     required
@@ -124,8 +124,8 @@ export const ResetPassword = () => {
                 </div>
 
                 {/* Footer Decorativo */}
-                <p className="text-center text-slate-500 text-[10px] mt-10 font-bold uppercase tracking-[0.2em] opacity-60">
-                    Club Gema © 2026 · Sports Management System
+                <p className="text-center text-stone-500 text-[10px] mt-10 font-bold uppercase tracking-[0.2em] opacity-75">
+                    Imperio 7 © 2026 · Sports Management System
                 </p>
             </div>
         </div>

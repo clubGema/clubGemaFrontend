@@ -47,7 +47,7 @@ const InjuryRequestForm = ({ onSuccess }) => {
             </h3>
             <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                    <label className="block text-xs font-bold text-blue-200 uppercase mb-2">Descripción del problema</label>
+                    <label className="block text-xs font-bold text-brand-primary-soft uppercase mb-2">Descripción del problema</label>
                     <textarea
                         required
                         rows="4"
@@ -59,7 +59,7 @@ const InjuryRequestForm = ({ onSuccess }) => {
                 </div>
 
                 {/* <div>
-                    <label className="block text-xs font-bold text-blue-200 uppercase mb-2">Evidencia Médica</label>
+                    <label className="block text-xs font-bold text-brand-primary-soft uppercase mb-2">Evidencia Médica</label>
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <Upload size={16} className="text-gray-500" />
@@ -109,7 +109,7 @@ const InjuryRequestForm = ({ onSuccess }) => {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-brand-accent hover:bg-brand-accent-dark text-white font-black py-4 rounded-xl shadow-lg shadow-orange-900/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-widest text-sm"
+                    className="w-full bg-brand-accent hover:bg-brand-accent-dark text-white font-black py-4 rounded-xl shadow-lg shadow-brand-primary-dark/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-widest text-sm"
                 >
                     {loading ? 'Subiendo Evidencia...' : 'ENVIAR SOLICITUD'}
                 </button>

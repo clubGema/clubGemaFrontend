@@ -33,7 +33,7 @@ export const getEstadoPagoBadge = (estado) => {
     switch (estado?.toUpperCase()) {
         case 'PAGADA':
         case 'PAGADO': return STATUS_SUCCESS;
-        case 'PENDIENTE': return 'bg-orange-100 text-orange-700 border-orange-200';
+        case 'PENDIENTE': return 'bg-brand-accent-soft text-brand-accent-dark border-brand-accent/30';
         case 'VENCIDO': return 'bg-red-100 text-red-700 border-red-200';
         default: return 'bg-brand-surface-alt text-slate-500 border-brand-border';
     }
@@ -44,7 +44,7 @@ export const getEstadoClaseBadge = (estado) => {
     switch (estado?.toUpperCase()) {
         case 'PRESENTE': return STATUS_SUCCESS;
         case 'FALTA': return 'text-red-600 bg-red-50 border-red-100';
-        case 'PROGRAMADA': return 'text-blue-600 bg-blue-50 border-blue-100';
+        case 'PROGRAMADA': return 'text-brand-primary bg-brand-primary-soft border-brand-primary/10';
         default: return 'text-brand-muted bg-brand-bg border-brand-border-soft';
     }
 };
@@ -57,7 +57,7 @@ export const getEstadoInscripcionBadge = (estado) => {
         case 'INACTIVO': return 'text-slate-500 bg-brand-bg border-brand-border';
         case 'FINALIZADO': return 'text-slate-500 bg-brand-surface-alt border-brand-border';
         case 'PENDIENTE_PAGO': return 'text-amber-600 bg-amber-50 border-amber-100';
-        case 'CONGELADO': return 'text-blue-600 bg-blue-50 border-blue-100';
+        case 'CONGELADO': return 'text-brand-primary bg-brand-primary-soft border-brand-primary/10';
         default: return 'text-brand-muted bg-brand-bg border-brand-border-soft';
     }
 };

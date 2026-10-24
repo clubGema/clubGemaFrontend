@@ -142,7 +142,7 @@ const AdminPaymentManager = () => {
         switch (status) {
             case 'APROBADO': return STATUS_SUCCESS;
             case 'RECHAZADO': return 'bg-red-100 text-red-600 border-red-200';
-            default: return 'bg-orange-100 text-brand-accent-dark border-orange-200';
+            default: return 'bg-brand-accent-soft text-brand-accent-dark border-brand-accent/30';
         }
     };
 
@@ -154,7 +154,7 @@ const AdminPaymentManager = () => {
         <div className="space-y-6 animate-fade-in-up p-1 pb-20">
             <header className="flex justify-between items-center">
                 <div>
-                    <PageTitle title="Gestión de" accent="Ingresos" subtitle="Monitor de pagos - Club Gema" />
+                    <PageTitle title="Gestión de" accent="Ingresos" subtitle="Monitor de pagos - Imperio 7 Club" />
                 </div>
 
                 <div className="flex bg-brand-surface p-1 rounded-xl border border-brand-border shadow-sm">
@@ -179,7 +179,7 @@ const AdminPaymentManager = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="BUSCAR POR ALUMNO O CÓDIGO..."
                     wrapperClassName="flex-1 relative"
-                    className="w-full pl-12 pr-4 py-3 bg-brand-bg border-none rounded-2xl text-[10px] font-black uppercase outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full pl-12 pr-4 py-3 bg-brand-bg border-none rounded-2xl text-[10px] font-black uppercase outline-none focus:ring-2 focus:ring-brand-accent/20"
                 />
                 <div className="flex flex-wrap gap-2">
                     <div className="flex items-center gap-2 bg-brand-bg px-4 py-2 rounded-2xl border border-brand-border-soft">
@@ -229,7 +229,7 @@ const AdminPaymentManager = () => {
                                     key={p.id}
                                     // 🔥 CAMBIO: Ahora llama a la función de carga profunda
                                     onClick={() => handleSelectPayment(p)}
-                                    className={`bg-brand-surface rounded-[2.5rem] border-2 p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer group relative overflow-hidden border-brand-border hover:border-blue-300`}
+                                    className={`bg-brand-surface rounded-[2.5rem] border-2 p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer group relative overflow-hidden border-brand-border hover:border-brand-primary/30`}
                                 >
 
                                     <div className={`flex justify-between items-start mb-6`}>
@@ -261,7 +261,7 @@ const AdminPaymentManager = () => {
 
                                                     {/* TELÉFONO PERSONAL (Con mensaje de respaldo) */}
                                                     <div className="flex items-center gap-1.5 text-[10px] font-black uppercase">
-                                                        <Phone size={12} className={`${usuario?.telefono_personal ? 'text-blue-400' : 'text-slate-300'} shrink-0`} />
+                                                        <Phone size={12} className={`${usuario?.telefono_personal ? 'text-brand-accent' : 'text-slate-300'} shrink-0`} />
                                                         {usuario?.telefono_personal ? (
                                                             <span className="text-brand-primary">{usuario.telefono_personal}</span>
                                                         ) : (
@@ -288,7 +288,7 @@ const AdminPaymentManager = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <AlertCircle className="absolute -right-8 -bottom-8 text-slate-50 group-hover:text-blue-50/30 transition-colors duration-500" size={140} />
+                                    <AlertCircle className="absolute -right-8 -bottom-8 text-slate-50 group-hover:text-brand-primary-soft/30 transition-colors duration-500" size={140} />
                                 </motion.div>
                             );
                         })}

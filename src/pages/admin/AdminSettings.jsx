@@ -20,9 +20,9 @@ const AdminSettings = () => {
     const getSettingIcon = (clave) => {
         const key = clave.toUpperCase();
         if (key.includes('PAGO') || key.includes('PRECIO')) return <Wallet className="text-emerald-500" />;
-        if (key.includes('TEMPORADA') || key.includes('FECHA')) return <Calendar className="text-blue-500" />;
+        if (key.includes('TEMPORADA') || key.includes('FECHA')) return <Calendar className="text-brand-primary" />;
         if (key.includes('NOTIF') || key.includes('AVISO')) return <Bell className="text-brand-accent" />;
-        if (key.includes('SEGURIDAD') || key.includes('AUTH')) return <ShieldCheck className="text-indigo-500" />;
+        if (key.includes('SEGURIDAD') || key.includes('AUTH')) return <ShieldCheck className="text-brand-primary" />;
         if (key.includes('SISTEMA') || key.includes('DB')) return <Database className="text-slate-500" />;
         return <Zap className="text-yellow-500" />;
     };
@@ -69,7 +69,7 @@ const AdminSettings = () => {
             {/* Cabecera Estilo Dashboard */}
             <div className="bg-brand-surface p-8 rounded-[2.5rem] border border-brand-border-soft shadow-sm flex flex-col md:flex-row justify-between items-center gap-6">
                 <div className="flex items-center gap-5">
-                    <div className="w-16 h-16 bg-gradient-to-br from-brand-primary to-blue-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-blue-200">
+                    <div className="w-16 h-16 bg-gradient-to-br from-brand-primary to-brand-primary rounded-2xl flex items-center justify-center text-white shadow-xl shadow-brand-primary/20">
                         <Settings size={32} className="animate-spin-slow" />
                     </div>
                     <div>
@@ -96,12 +96,12 @@ const AdminSettings = () => {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {settings.map((item) => (
-                        <div key={item.id} className={`group relative bg-brand-surface rounded-[2rem] border-2 transition-all duration-500 ${editingId === item.id ? 'border-orange-400 shadow-2xl scale-[1.02] z-10' : 'border-brand-border-soft hover:border-blue-200 hover:shadow-xl shadow-slate-200/50'
+                        <div key={item.id} className={`group relative bg-brand-surface rounded-[2rem] border-2 transition-all duration-500 ${editingId === item.id ? 'border-brand-accent shadow-2xl scale-[1.02] z-10' : 'border-brand-border-soft hover:border-brand-primary/20 hover:shadow-xl shadow-slate-200/50'
                             }`}>
                             <div className="p-6">
                                 {/* Badge de Clave Técnica */}
                                 <div className="flex justify-between items-start mb-4">
-                                    <div className={`p-3 rounded-2xl transition-colors ${editingId === item.id ? 'bg-orange-100' : 'bg-brand-bg group-hover:bg-brand-primary-soft'}`}>
+                                    <div className={`p-3 rounded-2xl transition-colors ${editingId === item.id ? 'bg-brand-accent-soft' : 'bg-brand-bg group-hover:bg-brand-primary-soft'}`}>
                                         {getSettingIcon(item.clave)}
                                     </div>
                                     <span className="text-[9px] font-black text-slate-300 uppercase tracking-tighter bg-brand-bg px-2 py-1 rounded-md">
@@ -127,7 +127,7 @@ const AdminSettings = () => {
                                                 type="text"
                                                 value={editValue}
                                                 onChange={(e) => setEditValue(e.target.value)}
-                                                className="w-full bg-brand-surface border-2 border-orange-400 rounded-xl px-4 py-2.5 text-base font-black text-brand-accent-dark outline-none shadow-inner"
+                                                className="w-full bg-brand-surface border-2 border-brand-accent rounded-xl px-4 py-2.5 text-base font-black text-brand-accent-dark outline-none shadow-inner"
                                             />
                                             <div className="flex gap-2">
                                                 <button
@@ -153,7 +153,7 @@ const AdminSettings = () => {
                                             </span>
                                             <button
                                                 onClick={() => { setEditingId(item.id); setEditValue(item.valor); }}
-                                                className="p-2 bg-brand-surface text-brand-muted hover:text-blue-600 rounded-xl border border-brand-border hover:border-blue-200 transition-all shadow-sm"
+                                                className="p-2 bg-brand-surface text-brand-muted hover:text-brand-primary rounded-xl border border-brand-border hover:border-brand-primary/20 transition-all shadow-sm"
                                             >
                                                 <Edit3 size={16} />
                                             </button>
@@ -163,15 +163,15 @@ const AdminSettings = () => {
                             </div>
 
                             {/* Decoración Inferior */}
-                            <div className={`h-1.5 w-full absolute bottom-0 left-0 rounded-b-[2rem] transition-colors ${editingId === item.id ? 'bg-brand-accent' : 'bg-transparent group-hover:bg-blue-400'}`}></div>
+                            <div className={`h-1.5 w-full absolute bottom-0 left-0 rounded-b-[2rem] transition-colors ${editingId === item.id ? 'bg-brand-accent' : 'bg-transparent group-hover:bg-brand-primary-light'}`}></div>
                         </div>
                     ))}
                 </div>
             )}
 
-            <div className="bg-brand-primary-soft/50 p-6 rounded-[2rem] border border-blue-100 flex items-start gap-4">
-                <Info className="text-blue-500 shrink-0" size={20} />
-                <p className="text-[11px] text-blue-700 font-bold leading-relaxed uppercase italic">
+            <div className="bg-brand-primary-soft/50 p-6 rounded-[2rem] border border-brand-primary/10 flex items-start gap-4">
+                <Info className="text-brand-primary shrink-0" size={20} />
+                <p className="text-[11px] text-brand-primary font-bold leading-relaxed uppercase italic">
                     Atención: Los cambios en estos valores impactan directamente en el motor de cálculo del sistema (asistencias, pagos y penalizaciones). Procede con precaución.
                 </p>
             </div>

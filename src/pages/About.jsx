@@ -10,8 +10,8 @@ const About = () => {
       <section className="relative min-h-[45vh] md:min-h-[50vh] flex items-center bg-brand-primary-dark py-8 md:py-12 px-6 overflow-hidden">
         {/* Decoración de fondo */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-          <div className="absolute -top-[10%] -right-[5%] w-[500px] h-[500px] bg-brand-accent/10 blur-[120px] rounded-full"></div>
-          <div className="absolute -bottom-[10%] -left-[5%] w-[400px] h-[400px] bg-blue-500/10 blur-[120px] rounded-full"></div>
+          <div className="absolute -top-[10%] -right-[5%] w-[500px] h-[500px] bg-brand-accent/15 blur-[120px] rounded-full"></div>
+          <div className="absolute -bottom-[10%] -left-[5%] w-[400px] h-[400px] bg-brand-primary/30 blur-[120px] rounded-full"></div>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto text-center">
@@ -21,10 +21,10 @@ const About = () => {
           </div>
 
           <h1 className="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter leading-[0.9]">
-            Nuestra <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-brand-accent-dark">Esencia</span>
+            Nuestra <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-brand-accent to-amber-400">Esencia</span>
           </h1>
-          <p className="mt-8 text-brand-muted max-w-2xl mx-auto text-lg font-medium leading-relaxed">
-            Formamos atletas integrales. En Gema, la técnica se encuentra con la mentalidad ganadora para crear la próxima generación de campeones.
+          <p className="mt-8 text-stone-300 max-w-2xl mx-auto text-lg font-medium leading-relaxed">
+            Formamos atletas integrales. En Imperio 7, la técnica se encuentra con la mentalidad ganadora para forjar verdaderos campeones.
           </p>
         </div>
       </section>
@@ -61,7 +61,7 @@ const About = () => {
             </div>
             {/* El Badge "Rendimiento" ahora tiene z-30 para estar al frente de todo en su área */}
             <div className="absolute -bottom-10 -right-6 bg-brand-primary text-white p-8 rounded-3xl shadow-2xl z-30 hidden sm:block">
-              <Zap className="text-orange-400 mb-2" size={32} />
+              <Zap className="text-brand-accent mb-2" size={32} />
               <p className="text-sm font-black uppercase tracking-widest leading-none">Alto</p>
               <p className="text-2xl font-black italic tracking-tighter">Rendimiento</p>
             </div>
@@ -113,7 +113,7 @@ const About = () => {
               to="/register"
               className="inline-block bg-brand-accent hover:bg-brand-accent-dark text-white font-black uppercase tracking-[0.2em] px-10 py-5 rounded-2xl text-sm shadow-xl shadow-brand-accent/20 transition-all hover:-translate-y-1 active:scale-95 text-center"
             >
-              Únete al Club Gema
+              Únete a Imperio 7
             </Link>
           </div>
         </div>

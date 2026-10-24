@@ -16,7 +16,7 @@ const UNICA_VACIA = { fecha: null, horarioId: null };
 
 const initialState = {
   step: 1,
-  modalidad: null,
+  modalidad: MODALIDAD.MENSUAL,
   sede: null,
   nivelId: null,
   mensual: MENSUAL_VACIO,

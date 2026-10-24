@@ -93,7 +93,7 @@ const AdminCreateBenefits = () => {
     if (loading) return (
         <LoadingSpinner
             className="flex flex-col items-center justify-center h-64 text-slate-500 gap-3"
-            label="Sincronizando Catálogo Gema..."
+            label="Sincronizando Catálogo Imperio 7..."
             labelClassName="font-black italic animate-pulse tracking-widest uppercase"
         />
     );
@@ -132,7 +132,7 @@ const AdminCreateBenefits = () => {
                                     placeholder="EJ. BECA EXCELENCIA..."
                                     value={formData.nombre}
                                     onChange={(e) => setFormData({ ...formData, nombre: e.target.value.toUpperCase() })}
-                                    className="w-full bg-brand-bg border border-brand-border rounded-2xl px-4 py-3 text-xs font-bold uppercase outline-none focus:ring-2 focus:ring-blue-500/10 transition-all"
+                                    className="w-full bg-brand-bg border border-brand-border rounded-2xl px-4 py-3 text-xs font-bold uppercase outline-none focus:ring-2 focus:ring-brand-accent/10 transition-all"
                                 />
                             </div>
 
@@ -163,7 +163,7 @@ const AdminCreateBenefits = () => {
                                     placeholder="0.00"
                                     value={formData.valor_por_defecto}
                                     onChange={(e) => setFormData({ ...formData, valor_por_defecto: e.target.value })}
-                                    className="w-full bg-brand-bg border border-brand-border rounded-2xl px-4 py-3 text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500/10 transition-all"
+                                    className="w-full bg-brand-bg border border-brand-border rounded-2xl px-4 py-3 text-xs font-bold outline-none focus:ring-2 focus:ring-brand-accent/10 transition-all"
                                 />
                             </div>
 
@@ -184,8 +184,8 @@ const AdminCreateBenefits = () => {
 
                     {/* TABLA: BENEFICIOS VIGENTES */}
                     <div className="bg-brand-surface rounded-[2rem] border border-brand-border shadow-sm overflow-hidden">
-                        <div className="px-6 py-4 bg-brand-primary-soft/50 border-b border-blue-100 flex items-center gap-2">
-                            <Check className="text-blue-600" size={18} />
+                        <div className="px-6 py-4 bg-brand-primary-soft/50 border-b border-brand-primary/10 flex items-center gap-2">
+                            <Check className="text-brand-primary" size={18} />
                             <span className="text-[11px] font-black uppercase tracking-widest text-brand-primary">Beneficios Vigentes</span>
                         </div>
                         <div className="overflow-x-auto">

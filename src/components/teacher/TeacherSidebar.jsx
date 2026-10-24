@@ -31,21 +31,24 @@ const TeacherSidebar = ({ isOpen, onClose }) => {
       <aside className={`
         hidden md:flex flex-col
         fixed inset-y-0 left-0 z-50 w-64 h-screen 
-        bg-gradient-to-b from-brand-primary to-brand-primary-dark text-white 
-        border-r border-white/10 shadow-2xl
+        bg-gradient-to-b from-[#3D0A14] via-[#1A050A] to-[#0A0204] text-white 
+        border-r border-[#D4AF37]/20 shadow-2xl
         overflow-hidden
       `}>
 
         {/* SECCIÓN LOGO: Branding oficial unificado */}
         <div className="flex-none py-8 px-6 flex flex-col items-center border-b border-white/10">
-          <div className="relative z-10 w-[170px] aspect-square bg-brand-surface rounded-full p-2 shadow-2xl flex items-center justify-center border-4 border-white/20 overflow-hidden">
+          <div className="relative z-10 w-[150px] aspect-square bg-brand-surface rounded-full p-2.5 shadow-2xl flex items-center justify-center border-4 border-brand-accent/40 overflow-hidden hover:border-brand-accent transition-colors">
             <Link to="/" className="relative z-10">
-              <img src={THEME_ASSETS.logoFramed} alt="Logo Club Gema" className="w-full h-full object-cover" />
+              <img src={THEME_ASSETS.logoFramed} alt="Logo Imperio 7" className="w-full h-full object-cover" />
             </Link>
           </div>
           <div className="text-center mt-4">
             <span className="block font-black text-xl tracking-tighter uppercase italic text-white leading-none">
-              Gema<span className="text-brand-accent font-black">Coordinador</span>
+              Imperio<span className="text-brand-accent font-black">7</span>
+            </span>
+            <span className="text-[8.5px] font-black uppercase tracking-[0.3em] text-[#F5D77F] italic mt-1 block">
+              Coordinador
             </span>
             <div className="h-1 w-8 bg-brand-accent mx-auto mt-2 rounded-full shadow-accent-bar-sm"></div>
           </div>
@@ -53,7 +56,7 @@ const TeacherSidebar = ({ isOpen, onClose }) => {
 
         {/* NAVEGACIÓN: Con scroll interno oculto */}
         <nav className="flex-1 py-6 px-3 space-y-2 overflow-y-auto scrollbar-hide">
-          <p className="px-4 text-[10px] font-black text-blue-300/50 uppercase tracking-[0.2em] mb-4">
+          <p className="px-4 text-[10px] font-black text-amber-200/40 uppercase tracking-[0.2em] mb-4">
             Panel de Coordinador
           </p>
 
@@ -84,13 +87,13 @@ const clasesItems = (items, location, onClose) => items.map((item) => {
       to={item.path}
       onClick={onClose}
       className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group ${isActive
-        ? 'bg-brand-accent text-white shadow-lg shadow-orange-900/40'
-        : 'text-blue-100/60 hover:bg-white/5 hover:text-white'
+        ? 'bg-brand-accent/25 text-white shadow-inner border border-brand-accent/35 font-bold'
+        : 'text-stone-300/60 hover:bg-white/5 hover:text-white'
         }`}
     >
       <item.icon
         size={20}
-        className={`${isActive ? 'text-white' : 'group-hover:text-orange-400'} transition-colors`}
+        className={`${isActive ? 'text-brand-accent' : 'group-hover:text-brand-accent'} transition-colors`}
       />
       <span className={`text-sm ${isActive ? 'font-bold' : 'font-medium'}`}>
         {item.label}

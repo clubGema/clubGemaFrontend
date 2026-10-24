@@ -12,7 +12,7 @@ const StudentProfileCard = ({ alumno, detalle, onOpenPasswordModal }) => (
                     <h3 className="text-4xl font-black text-slate-800 uppercase italic tracking-tighter leading-none">{alumno.full_name}</h3>
                     <div className="flex gap-2 mt-2">
                         {alumno.sedes.map((s, i) => (
-                            <span key={i} className="px-3 py-1 bg-orange-100 text-brand-accent-dark rounded-lg text-[9px] font-black uppercase italic border border-orange-200">{s}</span>
+                            <span key={i} className="px-3 py-1 bg-brand-accent-soft text-brand-accent-dark rounded-lg text-[9px] font-black uppercase italic border border-brand-accent/30">{s}</span>
                         ))}
                     </div>
                 </div>
@@ -24,19 +24,19 @@ const StudentProfileCard = ({ alumno, detalle, onOpenPasswordModal }) => (
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-slate-50 pt-4">
                 <div className="flex items-center gap-2 text-slate-500 text-sm font-bold uppercase tracking-tighter">
-                    <Fingerprint size={16} className="text-blue-500" /> {alumno.dni}
+                    <Fingerprint size={16} className="text-brand-primary" /> {alumno.dni}
                 </div>
                 <div className="flex items-center gap-2 text-slate-500 text-sm font-bold lowercase">
-                    <Mail size={16} className="text-blue-500" /> {detalle.email}
+                    <Mail size={16} className="text-brand-primary" /> {detalle.email}
                 </div>
                 <div className="flex items-center gap-2 text-slate-500 text-sm font-bold uppercase tracking-tighter">
-                    <Calendar size={16} className="text-blue-500" /> {detalle.cumpleanos}
+                    <Calendar size={16} className="text-brand-primary" /> {detalle.cumpleanos}
                 </div>
                 <div className="flex items-center gap-2 text-slate-500 text-sm font-bold uppercase tracking-tighter">
-                    <Phone size={16} className="text-blue-500" /> {alumno.telefono}
+                    <Phone size={16} className="text-brand-primary" /> {alumno.telefono}
                 </div>
                 <div className="flex items-center gap-2 text-slate-500 text-sm font-bold tracking-tighter">
-                    <User size={16} className="text-blue-500" /> {detalle.username || 'Sin nombre de usuario'}
+                    <User size={16} className="text-brand-primary" /> {detalle.username || 'Sin nombre de usuario'}
                 </div>
             </div>
 

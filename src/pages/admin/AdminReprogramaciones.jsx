@@ -40,25 +40,25 @@ const AdminReprogramaciones = () => {
                 <div className="max-w-7xl mx-auto px-6 relative z-10">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                         <div className="max-w-2xl">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-400/20 text-blue-100 rounded-full text-xs font-bold uppercase tracking-widest mb-4 backdrop-blur-md border border-white/10">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-primary-light/20 text-brand-primary-soft rounded-full text-xs font-bold uppercase tracking-widest mb-4 backdrop-blur-md border border-white/10">
                                 <Cpu size={14} />
                                 Panel de Control Administrativo
                             </div>
                             <h1 className="text-3xl md:text-5xl font-black text-white italic tracking-tighter mb-4 drop-shadow-lg leading-none">
-                                REPROGRAMACIÓN <span className="text-blue-400">MASIVA</span>
+                                REPROGRAMACIÓN <span className="text-brand-accent">MASIVA</span>
                             </h1>
-                            <p className="text-blue-100/80 text-base md:text-lg font-medium leading-relaxed">
+                            <p className="text-brand-primary-soft/80 text-base md:text-lg font-medium leading-relaxed">
                                 Gestiona cambios globales en el calendario del club. Mueve bloques completos de clases y otorga compensaciones automáticas.
                             </p>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full md:w-auto">
                             <div className="bg-white/10 backdrop-blur-xl border border-white/10 p-4 rounded-2xl flex items-center gap-4">
-                                <div className="p-2 bg-blue-500 rounded-xl shadow-lg">
+                                <div className="p-2 bg-brand-primary rounded-xl shadow-lg">
                                     <Bell size={20} className="text-white" />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-black text-blue-300 uppercase tracking-widest">Notificaciones</p>
+                                    <p className="text-[10px] font-black text-brand-accent uppercase tracking-widest">Notificaciones</p>
                                     <p className="text-sm font-bold text-white">Push Automáticas</p>
                                 </div>
                             </div>
@@ -85,8 +85,8 @@ const AdminReprogramaciones = () => {
                             PASO 1 OBLIGATORIO
                         </div>
 
-                        <section className="bg-gradient-to-b from-white to-orange-50 rounded-[2rem] p-6 shadow-xl shadow-orange-100/50 border-2 border-orange-200 relative overflow-hidden">
-                            <AlertOctagon className="absolute -right-6 -top-6 text-orange-100 w-32 h-32 opacity-50 pointer-events-none" />
+                        <section className="bg-gradient-to-b from-white to-brand-accent-soft rounded-[2rem] p-6 shadow-xl shadow-brand-accent/15 border-2 border-brand-accent/30 relative overflow-hidden">
+                            <AlertOctagon className="absolute -right-6 -top-6 text-brand-accent-soft w-32 h-32 opacity-50 pointer-events-none" />
                             <div className="relative z-10">
                                 <div className="flex items-start gap-4 mb-3">
                                     <div className="p-3 bg-red-100 text-red-600 rounded-2xl shadow-inner shrink-0 mt-1">
@@ -97,7 +97,7 @@ const AdminReprogramaciones = () => {
                                         <p className="text-[10px] font-black text-brand-accent-dark uppercase tracking-[0.15em] mb-1">¡Evita regalar clases!</p>
                                     </div>
                                 </div>
-                                <div className="bg-brand-surface p-4 rounded-2xl border border-orange-100 shadow-sm mb-5">
+                                <div className="bg-brand-surface p-4 rounded-2xl border border-brand-accent-soft shadow-sm mb-5">
                                     <p className="text-slate-600 text-[11px] font-bold leading-relaxed">
                                         Si vas a cancelar por <span className="text-red-500 font-black">FERIADO</span>, regístralo aquí primero.
                                     </p>
@@ -142,7 +142,7 @@ const AdminReprogramaciones = () => {
                     <section className="space-y-4">
                         <div className="flex items-center gap-3 pl-2">
                             <History size={20} className="text-brand-primary" />
-                            <h2 className="text-sm font-black text-brand-body uppercase tracking-widest underline decoration-blue-500/30 underline-offset-8">
+                            <h2 className="text-sm font-black text-brand-body uppercase tracking-widest underline decoration-brand-primary/30 underline-offset-8">
                                 Historial de Lotes
                             </h2>
                         </div>

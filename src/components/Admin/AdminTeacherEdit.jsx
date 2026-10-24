@@ -77,11 +77,11 @@ const AdminTeacherEdit = ({ teacherData, onBack, onSuccess }) => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-1">
                                 <label className="text-[9px] font-black text-brand-muted uppercase ml-1">Nombres</label>
-                                <input name="nombres" value={formData.nombres} onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/10" />
+                                <input name="nombres" value={formData.nombres} onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-accent/10" />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[9px] font-black text-brand-muted uppercase ml-1">Apellidos</label>
-                                <input name="apellidos" value={formData.apellidos} onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/10" />
+                                <input name="apellidos" value={formData.apellidos} onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-accent/10" />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[9px] font-black text-brand-muted uppercase ml-1">Email</label>

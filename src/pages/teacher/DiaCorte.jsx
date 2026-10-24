@@ -166,7 +166,7 @@ const DiaCorte = () => {
     <div className="space-y-6 max-w-7xl mx-auto animate-fade-in pb-12 px-2 sm:px-4">
 
       {/* HEADER PRINCIPAL */}
-      <div className="bg-gradient-to-r from-brand-primary via-[#1e3a8a] to-brand-primary-dark rounded-[2rem] p-6 sm:p-8 shadow-xl text-white flex flex-col md:flex-row justify-between items-start md:items-end gap-6 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-brand-primary via-brand-primary-light to-brand-primary-dark rounded-[2rem] p-6 sm:p-8 shadow-xl text-white flex flex-col md:flex-row justify-between items-start md:items-end gap-6 relative overflow-hidden">
         <div className="relative z-10 space-y-2">
           <span className="inline-flex items-center gap-2 bg-brand-accent text-white text-[10px] font-black uppercase px-3 py-1 rounded-lg tracking-widest">
             <CalendarClock size={12} /> Control de Membresías y Vigencia
@@ -174,12 +174,12 @@ const DiaCorte = () => {
           <h1 className="text-2xl sm:text-4xl font-black uppercase tracking-tight italic text-white leading-none">
             Días de Corte de Alumnos
           </h1>
-          <p className="text-blue-100/70 text-xs sm:text-sm font-medium max-w-2xl">
+          <p className="text-brand-primary-soft/70 text-xs sm:text-sm font-medium max-w-2xl">
             Supervisa el estado de ciclo de cada integrante de tus clases. Identifica a tiempo quiénes vencen pronto para recordarles la renovación de su matrícula.
           </p>
         </div>
 
-        <div className="relative z-10 bg-white/10 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/10 text-xs font-black uppercase tracking-wider text-blue-100 flex items-center gap-2 shrink-0">
+        <div className="relative z-10 bg-white/10 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/10 text-xs font-black uppercase tracking-wider text-brand-primary-soft flex items-center gap-2 shrink-0">
           <Clock size={16} className="text-brand-accent" />
           <span>Ciclo estándar: 4 clases / 30 días</span>
         </div>
@@ -193,13 +193,13 @@ const DiaCorte = () => {
           onClick={() => setFilterTab('todos')}
           className={`p-4 sm:p-5 rounded-2xl border text-left transition-all cursor-pointer ${
             filterTab === 'todos'
-              ? 'bg-blue-50/70 border-brand-primary ring-2 ring-brand-primary/20 shadow-sm'
+              ? 'bg-brand-primary-soft/70 border-brand-primary ring-2 ring-brand-primary/20 shadow-sm'
               : 'bg-brand-surface border-brand-border hover:border-slate-300'
           }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Total Alumnos</span>
-            <UserCircle size={18} className="text-blue-600" />
+            <UserCircle size={18} className="text-brand-primary" />
           </div>
           <p className="text-2xl sm:text-3xl font-black text-brand-primary mt-1">{metricas.total}</p>
           <span className="text-[10px] text-slate-400 font-bold uppercase">En tus horarios</span>
@@ -211,7 +211,7 @@ const DiaCorte = () => {
           onClick={() => setFilterTab('vence_pronto')}
           className={`p-4 sm:p-5 rounded-2xl border text-left transition-all cursor-pointer ${
             filterTab === 'vence_pronto'
-              ? 'bg-orange-50 border-brand-accent ring-2 ring-brand-accent/30 shadow-sm'
+              ? 'bg-brand-accent-soft border-brand-accent ring-2 ring-brand-accent/30 shadow-sm'
               : metricas.vencePronto > 0
               ? 'bg-amber-50/50 border-amber-200 hover:border-brand-accent'
               : 'bg-brand-surface border-brand-border'
@@ -263,11 +263,11 @@ const DiaCorte = () => {
       </div>
 
       {/* BANNER ORIENTATIVO DEL COORDINADOR */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50/50 border border-blue-200/60 p-4 sm:p-5 rounded-2xl flex items-start gap-3 shadow-xs">
-        <Info size={20} className="text-blue-600 shrink-0 mt-0.5" />
-        <div className="text-xs text-blue-900 leading-relaxed font-medium">
-          <strong className="font-black text-blue-950 uppercase tracking-wide">Sentido del Radar de Corte:</strong>{' '}
-          Los alumnos con etiqueta <span className="bg-orange-100 text-brand-accent-dark font-black px-1.5 py-0.5 rounded">VENCE HOY</span> o{' '}
+      <div className="bg-gradient-to-r from-brand-primary-soft to-brand-primary-soft/50 border border-brand-primary/20 p-4 sm:p-5 rounded-2xl flex items-start gap-3 shadow-xs">
+        <Info size={20} className="text-brand-primary shrink-0 mt-0.5" />
+        <div className="text-xs text-brand-primary-dark leading-relaxed font-medium">
+          <strong className="font-black text-brand-heading uppercase tracking-wide">Sentido del Radar de Corte:</strong>{' '}
+          Los alumnos con etiqueta <span className="bg-brand-accent-soft text-brand-accent-dark font-black px-1.5 py-0.5 rounded">VENCE HOY</span> o{' '}
           <span className="bg-amber-100 text-amber-800 font-black px-1.5 py-0.5 rounded">VENCE PRONTO</span> están cursando su última semana de ciclo. Recuerda informarles en la cancha que deben renovar su matrícula en la plataforma para asegurar su lugar en el siguiente mes.
         </div>
       </div>
@@ -306,7 +306,7 @@ const DiaCorte = () => {
             className={`px-3.5 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all ${
               filterTab === 'vence_pronto'
                 ? 'bg-brand-accent text-white shadow-xs'
-                : 'bg-orange-50 text-brand-accent-dark hover:bg-orange-100'
+                : 'bg-brand-accent-soft text-brand-accent-dark hover:bg-brand-accent-soft'
             }`}
           >
             Por Vencer ({metricas.vencePronto})
@@ -387,7 +387,7 @@ const DiaCorte = () => {
                         : alumno.estadoCiclo === 'VENCIDO'
                         ? 'bg-rose-100 text-rose-700 border border-rose-200'
                         : alumno.estadoCiclo === 'INDIVIDUAL'
-                        ? 'bg-blue-100 text-blue-800'
+                        ? 'bg-brand-primary-soft text-brand-primary-dark'
                         : 'bg-emerald-100 text-emerald-800'
                     }`}
                   >
@@ -439,15 +439,15 @@ const DiaCorte = () => {
                 const principal = alumno.principal;
 
                 return (
-                  <tr key={alumno.id} className="hover:bg-blue-50/30 transition-colors group">
+                  <tr key={alumno.id} className="hover:bg-brand-primary-soft/30 transition-colors group">
                     {/* Alumno */}
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-700 to-brand-primary text-white font-black flex items-center justify-center text-xs shrink-0 shadow-xs">
+                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-primary to-brand-primary text-white font-black flex items-center justify-center text-xs shrink-0 shadow-xs">
                           {alumno.nombre_completo ? alumno.nombre_completo.charAt(0).toUpperCase() : 'A'}
                         </div>
                         <div>
-                          <p className="font-black text-brand-primary uppercase text-xs group-hover:text-blue-600 transition-colors">
+                          <p className="font-black text-brand-primary uppercase text-xs group-hover:text-brand-primary transition-colors">
                             {alumno.nombre_completo}
                           </p>
                           <span className="text-[10px] text-slate-400 font-bold">
@@ -535,7 +535,7 @@ const DiaCorte = () => {
                             : alumno.estadoCiclo === 'VENCIDO'
                             ? 'bg-rose-100 text-rose-700 border border-rose-200'
                             : alumno.estadoCiclo === 'INDIVIDUAL'
-                            ? 'bg-blue-100 text-blue-800'
+                            ? 'bg-brand-primary-soft text-brand-primary-dark'
                             : 'bg-emerald-100 text-emerald-800'
                         }`}
                       >

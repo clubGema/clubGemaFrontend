@@ -9,7 +9,7 @@ const Title = ({ children }) => (
 );
 
 const StepModalidadSede = ({ state, derived, actions }) => (
-  <div className="space-y-10">
+  <div className="max-w-3xl mx-auto space-y-10">
     <section>
       <h2 className="text-3xl md:text-4xl font-black text-brand-primary italic uppercase tracking-tighter leading-none mb-6">
         ¿Qué modalidad <span className="text-brand-accent">buscas?</span>

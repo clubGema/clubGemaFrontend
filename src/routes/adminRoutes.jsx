@@ -51,6 +51,7 @@ export const getAdminRoutes = () => (
             <Route path="admin/publications" element={<AdminPublications />} />
             <Route path="admin/anuncios-beneficios" element={<AdminCreateBenefitsAnuncio />} />
             <Route path="admin/payment-validation" element={<AdminPaymentManager />} />
+            <Route path="admin/clases-individuales" element={<AdminGuestPasses />} />
             <Route path="admin/guest-passes" element={<AdminGuestPasses />} />
             <Route path="admin/cash-flow" element={<AdminCashFlow />} />
             <Route path="admin/merch" element={<AdminMerchManager />} />

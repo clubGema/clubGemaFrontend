@@ -26,7 +26,7 @@ const ClaseUnicaDetailsFields = ({
             </label>
             <select
                 disabled={disabled}
-                className="w-full bg-brand-bg border border-brand-border rounded-2xl px-5 py-4 text-sm font-bold text-brand-primary focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all uppercase cursor-pointer disabled:border-green-500 disabled:text-brand-primary disabled:opacity-100 disabled:bg-green-50 disabled:cursor-not-allowed"
+                className="w-full bg-brand-bg border border-brand-border rounded-2xl px-5 py-4 text-sm font-bold text-brand-primary focus:ring-4 focus:ring-brand-accent/20 focus:border-brand-accent outline-none transition-all uppercase cursor-pointer disabled:border-green-500 disabled:text-brand-primary disabled:opacity-100 disabled:bg-green-50 disabled:cursor-not-allowed"
                 value={metodoPago}
                 onChange={(e) => onMetodoPagoChange(e.target.value)}
             >

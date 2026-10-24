@@ -4,7 +4,7 @@ import { BRAND_COLORS, GOLD_PREMIUM, LOGIN_COLORS, alpha } from './src/config/th
 
 // La paleta vive en src/config/themeColors.js porque también la consume el
 // código que necesita los colores como valores JS (estilos inline de
-// react-hot-toast en App.jsx). Ver ese archivo para rebrandear.
+// Rebranding Imperio 7 Club - Palette update
 const ACCENT = BRAND_COLORS.accent;
 
 export default {

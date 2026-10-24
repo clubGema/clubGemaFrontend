@@ -62,8 +62,8 @@ const Profile = () => {
   const alumnosData = user.alumnos || {};
   const direccionesData = alumnosData.direcciones || {};
 
-  const fullName = `${user.nombres || ''} ${user.apellidos || ''}`.trim() || 'Atleta Gema';
-  const userInitial = user.nombres?.charAt(0).toUpperCase() || 'G';
+  const fullName = `${user.nombres || ''} ${user.apellidos || ''}`.trim() || 'Atleta Imperio 7';
+  const userInitial = user.nombres?.charAt(0).toUpperCase() || 'I';
 
   const userBirth = user.fecha_nacimiento
     ? new Date(user.fecha_nacimiento).toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'UTC' })
@@ -80,7 +80,7 @@ const Profile = () => {
       {/* Navegación Superior */}
       <div className="flex justify-between items-center mb-6">
         <Link to="/dashboard/student" className="flex items-center gap-2 text-brand-muted hover:text-brand-primary transition-all group">
-          <div className="bg-brand-surface p-2 rounded-xl shadow-sm border border-brand-border-soft group-hover:border-orange-200">
+          <div className="bg-brand-surface p-2 rounded-xl shadow-sm border border-brand-border-soft group-hover:border-brand-accent/40">
             <ArrowLeft size={16} />
           </div>
           <span className="text-[10px] font-black uppercase tracking-widest italic">Volver al Panel</span>
@@ -90,11 +90,11 @@ const Profile = () => {
       {/* Hero Card Premium */}
       <div className="relative mb-8 md:mb-12">
         <div className="bg-gradient-to-br from-brand-primary to-brand-primary-dark rounded-[2rem] md:rounded-[3.5rem] p-6 sm:p-8 md:p-12 text-white shadow-2xl relative overflow-hidden border border-white/5">
-          <img src={THEME_ASSETS.logoWatermark} className="absolute -right-10 -bottom-10 md:-right-20 md:-bottom-20 w-64 md:w-80 opacity-[0.05] rotate-12 pointer-events-none" alt="" />
+          <img src={THEME_ASSETS.logoWatermark} className="absolute -right-10 -bottom-10 md:-right-20 md:-bottom-20 w-64 md:w-80 opacity-[0.06] rotate-12 pointer-events-none" alt="" />
 
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8 relative z-10">
             <div className="relative shrink-0">
-              <div className="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-[2rem] md:rounded-[3rem] bg-brand-surface p-1 shadow-2xl transform rotate-3">
+              <div className="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-[2rem] md:rounded-[3.5rem] bg-brand-surface p-1 shadow-2xl transform rotate-3">
                 <div className="w-full h-full rounded-[1.7rem] sm:rounded-[2.2rem] md:rounded-[2.8rem] bg-brand-surface-alt flex items-center justify-center text-5xl md:text-6xl font-black text-brand-primary italic">
                   {userInitial}
                 </div>
@@ -107,7 +107,7 @@ const Profile = () => {
             <div className="flex-1 text-center md:text-left w-full">
               <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-6">
                 <div className="space-y-2">
-                  <p className="text-brand-accent font-black uppercase tracking-[0.4em] text-[10px] italic">Expediente Oficial Gema</p>
+                  <p className="text-brand-accent font-black uppercase tracking-[0.4em] text-[10px] italic">Expediente Oficial Imperio 7</p>
                   <h1 className="text-xl sm:text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-tight break-words">
                     {fullName}
                   </h1>
@@ -231,14 +231,14 @@ const Badge = ({ label, active }) => (
 
 const InfoCard = ({ icon, label, value, color, footer, subText, isLarge }) => {
   const styles = {
-    blue: "bg-brand-primary-soft text-blue-600",
+    blue: "bg-brand-primary-soft text-brand-primary",
     orange: "bg-brand-accent-soft text-brand-accent-dark",
-    indigo: "bg-indigo-50 text-indigo-600",
+    indigo: "bg-brand-primary-soft text-brand-primary",
     rose: "bg-rose-50 text-rose-600"
   };
 
   return (
-    <div className={`bg-brand-surface p-5 sm:p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-brand-border-soft shadow-xl shadow-slate-200/40 group transition-all duration-300 ${isLarge ? 'border-orange-100 ring-2 sm:ring-4 ring-orange-50/50' : ''}`}>
+    <div className={`bg-brand-surface p-5 sm:p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-brand-border-soft shadow-xl shadow-slate-200/40 group transition-all duration-300 ${isLarge ? 'border-brand-accent-soft ring-2 sm:ring-4 ring-brand-accent-soft/50' : ''}`}>
       <div className="flex items-center sm:items-start gap-4 sm:gap-6">
         <div className={`shrink-0 p-3 sm:p-4 md:p-5 rounded-xl sm:rounded-2xl transition-all group-hover:bg-brand-accent group-hover:text-white ${styles[color]}`}>
           {React.cloneElement(icon, { size: isLarge ? 24 : 20, className: isLarge ? 'sm:w-[28px] sm:h-[28px]' : 'sm:w-[22px] sm:h-[22px]', strokeWidth: 2.5 })}
@@ -263,7 +263,7 @@ const InfoCard = ({ icon, label, value, color, footer, subText, isLarge }) => {
 // 🔥 NUEVO: tarjeta de contacto de emergencia — misma familia visual que InfoCard,
 // pero con badge "Principal" cuando corresponde y sin subText/footer genéricos.
 const ContactCard = ({ contacto }) => (
-  <div className={`bg-brand-surface p-5 sm:p-6 rounded-[2rem] border shadow-xl shadow-slate-200/40 group transition-all duration-300 relative ${contacto.es_principal ? 'border-orange-100 ring-2 sm:ring-4 ring-orange-50/50' : 'border-brand-border-soft'}`}>
+  <div className={`bg-brand-surface p-5 sm:p-6 rounded-[2rem] border shadow-xl shadow-slate-200/40 group transition-all duration-300 relative ${contacto.es_principal ? 'border-brand-accent-soft ring-2 sm:ring-4 ring-brand-accent-soft/50' : 'border-brand-border-soft'}`}>
     <div className="flex items-start gap-4 sm:gap-5">
       <div className="shrink-0 p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all group-hover:bg-brand-accent group-hover:text-white bg-emerald-50 text-emerald-600">
         <Phone size={20} className="sm:w-[22px] sm:h-[22px]" strokeWidth={2.5} />

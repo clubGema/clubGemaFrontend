@@ -29,8 +29,8 @@ const RecoveryTicketList = ({ tickets, selectedTicket, onSelect }) => {
                         key={ticket.id}
                         onClick={() => onSelect(isSelected ? null : ticket)}
                         className={`relative p-6 rounded-[2rem] border-2 text-left transition-all duration-300 transform ${isSelected
-                            ? 'bg-brand-accent border-orange-600 shadow-2xl shadow-orange-200 scale-[1.03] -translate-y-1'
-                            : 'bg-brand-surface border-brand-border-soft hover:border-orange-200 hover:shadow-xl shadow-sm'
+                            ? 'bg-brand-accent border-brand-accent-dark shadow-2xl shadow-brand-accent/25 scale-[1.03] -translate-y-1'
+                            : 'bg-brand-surface border-brand-border-soft hover:border-brand-accent/30 hover:shadow-xl shadow-sm'
                             }`}
                     >
                         {/* Indicador de Estado Superior  */}
@@ -55,7 +55,7 @@ const RecoveryTicketList = ({ tickets, selectedTicket, onSelect }) => {
 
                         {/* Información Principal */}
                         <div className="space-y-1">
-                            <p className={`text-[11px] font-bold uppercase tracking-[0.15em] ${isSelected ? 'text-orange-100' : 'text-brand-muted'
+                            <p className={`text-[11px] font-bold uppercase tracking-[0.15em] ${isSelected ? 'text-brand-accent-soft' : 'text-brand-muted'
                                 }`}>
                                 Sesión perdida
                             </p>
@@ -71,7 +71,7 @@ const RecoveryTicketList = ({ tickets, selectedTicket, onSelect }) => {
                         </div>
 
                         {/* Footer del Card */}
-                        <div className={`mt-5 pt-4 flex items-center gap-2 border-t text-xs font-bold ${isSelected ? 'border-white/20 text-orange-50' : 'border-slate-50 text-slate-500'
+                        <div className={`mt-5 pt-4 flex items-center gap-2 border-t text-xs font-bold ${isSelected ? 'border-white/20 text-brand-accent-soft' : 'border-slate-50 text-slate-500'
                             }`}>
                             <Clock size={14} strokeWidth={3} />
                             {isVip || !fechaVencimiento ? (

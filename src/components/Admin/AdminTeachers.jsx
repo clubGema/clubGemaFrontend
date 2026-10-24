@@ -111,11 +111,11 @@ const AdminTeachers = ({ onBack }) => {
                         <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Nombres</label>
-                                <input name="nombres" placeholder="Ej: María" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/20" />
+                                <input name="nombres" placeholder="Ej: María" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-accent/20" />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Apellidos</label>
-                                <input name="apellidos" placeholder="Ej: González" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/20" />
+                                <input name="apellidos" placeholder="Ej: González" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-accent/20" />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Tipo de Doc.</label>
@@ -127,11 +127,11 @@ const AdminTeachers = ({ onBack }) => {
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Nro. Documento (Será la clave)</label>
-                                <input name="numero_documento" placeholder="45678901" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/20 shadow-inner" />
+                                <input name="numero_documento" placeholder="45678901" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-accent/20 shadow-inner" />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">F. Nacimiento</label>
-                                <input name="fecha_nacimiento" type='date' onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/20" />
+                                <input name="fecha_nacimiento" type='date' onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-accent/20" />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Género</label>
@@ -153,11 +153,11 @@ const AdminTeachers = ({ onBack }) => {
                         <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Email</label>
-                                <input name="email" type="email" placeholder="coordinador.nuevo@gmail.com" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/20" />
+                                <input name="email" type="email" placeholder="coordinador.nuevo@gmail.com" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-accent/20" />
                             </div>
                             <div className="space-y-1">
                                 <label className="text-[10px] font-black text-brand-muted uppercase ml-1">Teléfono Personal</label>
-                                <input name="telefono_personal" placeholder="+51 912345678" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/20" />
+                                <input name="telefono_personal" placeholder="+51 912345678" onChange={handleChange} className="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-brand-accent/20" />
                             </div>
                         </div>
                     </div>

@@ -35,7 +35,7 @@ const ComentarioCell = memo(({ valor, onCommit }) => {
             type="text"
             value={texto}
             placeholder="Añadir comentario..."
-            className="w-full p-2 border border-transparent hover:border-slate-300 focus:border-blue-500 rounded bg-transparent focus:bg-brand-surface outline-none transition-all font-medium text-slate-600"
+            className="w-full p-2 border border-transparent hover:border-slate-300 focus:border-brand-accent rounded bg-transparent focus:bg-brand-surface outline-none transition-all font-medium text-slate-600"
             onChange={(e) => setTexto(e.target.value)}
             onBlur={() => { if (texto !== String(valor ?? '')) onCommit(texto); }}
             onKeyDown={(e) => { if (e.key === 'Enter') e.target.blur(); }}
@@ -172,7 +172,7 @@ const DashboardOperations = ({ reporte = [], onExport, isExporting }) => {
                                                         <div className="flex flex-col gap-1 max-h-48 overflow-y-auto">
                                                             {/* CAMBIO: Usamos localReporte */}
                                                             {[...new Set(localReporte.map(item => item[key]))].filter(Boolean).map(opt => (
-                                                                <button key={opt} onClick={() => setFilterState({...filterState, [key]: opt})} className={`flex justify-between items-center px-3 py-2 text-xs rounded-lg transition-colors ${filterState[key] === opt ? 'bg-blue-600 text-white' : 'hover:bg-brand-surface-alt'}`}>
+                                                                <button key={opt} onClick={() => setFilterState({...filterState, [key]: opt})} className={`flex justify-between items-center px-3 py-2 text-xs rounded-lg transition-colors ${filterState[key] === opt ? 'bg-brand-primary text-white' : 'hover:bg-brand-surface-alt'}`}>
                                                                     {opt} {filterState[key] === opt && <Check size={12} />}
                                                                 </button>
                                                             ))}
