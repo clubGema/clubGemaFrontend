@@ -18,6 +18,11 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
       const fechaInscripcion = ins.fecha_inscripcion ? new Date(ins.fecha_inscripcion) : null;
       const fechaCorte = fechaInscripcion ? addDays(fechaInscripcion, 29) : null;
       const fNac = ins.alumnos?.usuarios?.fecha_nacimiento;
+      const esFaltaAnticipada = Boolean(
+        ins.registro_especifico?.falta_anticipada ||
+        ins.registro_especifico?.comentario?.includes('[FALTA_ANTICIPADA]')
+      );
+      const estadoReal = ins.registro_especifico?.estado || 'PROGRAMADA';
 
       return {
         asistenciaId: ins.registro_especifico?.id,
@@ -26,7 +31,8 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
         dni: ins.alumnos?.usuarios?.numero_documento || 'S/D',
         fechaNacimiento: fNac ? format(parseISO(fNac.slice(0, 10)), 'dd/MM/yyyy') : 'N/A',
         edad: fNac ? differenceInYears(new Date(), new Date(fNac)) : null,
-        estado: ins.registro_especifico?.estado || 'PROGRAMADA',
+        estado: esFaltaAnticipada && estadoReal === 'PROGRAMADA' ? 'FALTA' : estadoReal,
+        esFaltaAnticipada,
         esRecuperacion: ins.tipo_sesion === 'RECUPERACION' || ins.estado === 'RECUPERACION',
         esReposicion: ins.tipo_sesion === 'REPOSICION' || ins.registro_especifico?.fecha_original != null,
         esLesion: ins.registro_especifico?.estado === 'JUSTIFICADO_LESION',
@@ -229,6 +235,11 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
                       {alumno.esLesion && (
                         <span className="bg-rose-50 text-rose-700 text-[10px] font-black px-2 py-0.5 rounded-md border border-rose-200 uppercase">
                           Justificado Médico
+                        </span>
+                      )}
+                      {alumno.esFaltaAnticipada && (
+                        <span className="bg-amber-100 text-amber-800 text-[10px] font-black px-2 py-0.5 rounded-md border border-amber-300 uppercase flex items-center gap-1">
+                          <AlertTriangle size={10} /> Avisó Falta Anticipada
                         </span>
                       )}
                       {alumno.esRecuperacion && (

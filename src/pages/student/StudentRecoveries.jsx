@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, RefreshCw, AlertCircle, Filter } from 'lucide-react';
+import { ArrowLeft, RefreshCw, AlertCircle, Filter, CalendarPlus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
@@ -12,6 +12,7 @@ import { calcularSlotsDisponibles } from './recoveries/slotFiltering';
 
 // Componentes
 import RecoveryTicketList from '../../components/student/Recoveries/RecoveryTicketList';
+import AdvanceRecoveryModal from '../../components/student/Recoveries/AdvanceRecoveryModal';
 import AvailableSlotsGrid from '../../components/student/Recoveries/AvailableSlotsGrid';
 import RecoveryHistoryList from '../../components/student/Recoveries/RecoveryHistoryList';
 import RecoveryStatsCards from './recoveries/RecoveryStatsCards';
@@ -42,6 +43,7 @@ const StudentRecoveries = () => {
 
     const [filtroSede, setFiltroSede] = useState('');
     const [cancelTargetId, setCancelTargetId] = useState(null);
+    const [showAdvanceModal, setShowAdvanceModal] = useState(false);
 
     // 1. Cargar datos iniciales
     const loadData = async () => {
@@ -90,7 +92,8 @@ const StudentRecoveries = () => {
     useEffect(() => {
         setFiltroSede('');
         if (selectedTicket && horariosPatron.length > 0) {
-            const slotsLimpios = calcularSlotsDisponibles(horariosPatron, historial, stats);
+            const fechaLimiteTicket = selectedTicket.es_por_lesion ? null : selectedTicket.fecha_caducidad;
+            const slotsLimpios = calcularSlotsDisponibles(horariosPatron, historial, stats, fechaLimiteTicket);
             setAvailableSlots(slotsLimpios);
             toast.success("Horarios disponibles cargados 👇", { id: 'slots-loaded' });
         } else {
@@ -187,9 +190,19 @@ const StudentRecoveries = () => {
                             Centro de <span className="text-brand-accent">Recuperación</span>
                         </h1>
                     </div>
-                    <button onClick={loadData} className="p-3 bg-white/5 hover:bg-white/10 rounded-xl text-white transition-colors border border-brand-border text-brand-muted">
-                        <RefreshCw size={20} className={loading ? "animate-spin" : ""} />
-                    </button>
+                    <div className="flex items-center gap-2.5">
+                        <button
+                            type="button"
+                            onClick={() => setShowAdvanceModal(true)}
+                            className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-brand-accent hover:bg-brand-accent-dark text-white text-xs font-black uppercase italic tracking-wider shadow-lg transition-all active:scale-95"
+                        >
+                            <CalendarPlus size={16} />
+                            <span>Avisar Falta / Recuperar Anticipadamente</span>
+                        </button>
+                        <button onClick={loadData} className="p-3 bg-white/5 hover:bg-white/10 rounded-xl text-white transition-colors border border-brand-border text-brand-muted">
+                            <RefreshCw size={20} className={loading ? "animate-spin" : ""} />
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -274,6 +287,12 @@ const StudentRecoveries = () => {
                     />
                 </div>
             )}
+
+            <AdvanceRecoveryModal
+                isOpen={showAdvanceModal}
+                onClose={() => setShowAdvanceModal(false)}
+                onSuccess={loadData}
+            />
 
             <ConfirmModal
                 isOpen={!!cancelTargetId}

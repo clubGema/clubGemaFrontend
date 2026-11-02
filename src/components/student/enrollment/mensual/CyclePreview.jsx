@@ -3,14 +3,24 @@ import { Info } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 
-const CyclePreview = ({ fechas }) => {
+const CyclePreview = ({ fechas, meses = 1 }) => {
   const conClase = fechas.filter(f => !f.feriado).length;
+  const mesesVal = Math.max(1, Number(meses) || 1);
 
   return (
     <div className="bg-brand-surface rounded-[2.5rem] p-6 border-2 border-brand-border-soft">
       <div className="flex items-center justify-between mb-4">
         <p className="text-[10px] font-black text-brand-muted uppercase tracking-[0.2em]">Tus clases del ciclo</p>
-        <span className="px-3 py-1 rounded-xl bg-brand-primary text-white text-[10px] font-black italic">{conClase} clases</span>
+        <div className="flex items-center gap-2">
+          {mesesVal > 1 && (
+            <span className="px-3 py-1 rounded-xl bg-brand-accent text-white text-[10px] font-black italic">
+              {mesesVal} meses
+            </span>
+          )}
+          <span className="px-3 py-1 rounded-xl bg-brand-primary text-white text-[10px] font-black italic">
+            {conClase} clases
+          </span>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -34,7 +44,9 @@ const CyclePreview = ({ fechas }) => {
       <div className="mt-4 flex items-center gap-3 bg-brand-primary-soft/50 p-3 rounded-2xl border border-brand-primary/20">
         <Info size={16} className="text-brand-primary shrink-0" />
         <p className="text-[9px] font-bold text-brand-primary-dark uppercase leading-tight italic">
-          Tus 30 días de ciclo contarán a partir de la fecha que inicies. Fechas referenciales: se confirman al generar la matrícula.
+          {mesesVal > 1
+            ? `Tu ciclo de ${mesesVal} meses (${conClase} clases programadas) contará a partir de la fecha elegida. Fechas referenciales: se confirman al generar la matrícula.`
+            : `Tus clases contarán a partir de la fecha que inicies (${conClase} clases programadas). Fechas referenciales: se confirman al generar la matrícula.`}
         </p>
       </div>
     </div>

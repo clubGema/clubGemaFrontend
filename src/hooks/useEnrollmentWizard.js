@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
  */
 export const MODALIDAD = { MENSUAL: 'MENSUAL', UNICA: 'UNICA' };
 
-const MENSUAL_VACIO = { horarioIds: [], opcionInicio: null, fechaInicio: null };
+const MENSUAL_VACIO = { horarioIds: [], opcionInicio: null, fechaInicio: null, meses: 1 };
 const UNICA_VACIA = { fecha: null, horarioId: null };
 
 const initialState = {
@@ -37,10 +37,12 @@ function reducer(state, action) {
     case 'TOGGLE_HORARIO': {
       const ids = state.mensual.horarioIds;
       const horarioIds = ids.includes(action.id) ? ids.filter(i => i !== action.id) : [...ids, action.id];
-      return { ...state, mensual: { horarioIds, opcionInicio: null, fechaInicio: null } };
+      return { ...state, mensual: { ...state.mensual, horarioIds, opcionInicio: null, fechaInicio: null } };
     }
     case 'SET_INICIO':
       return { ...state, mensual: { ...state.mensual, opcionInicio: action.opcion, fechaInicio: action.fecha } };
+    case 'SET_MESES':
+      return { ...state, mensual: { ...state.mensual, meses: Math.max(1, Number(action.meses) || 1) } };
 
     case 'SET_FECHA_UNICA':
       return { ...state, unica: { fecha: action.fecha, horarioId: action.horarioId ?? null } };
@@ -113,7 +115,7 @@ export function useEnrollmentWizard(horarios) {
     if (step === 1) return Boolean(modalidad && sede && nivelId);
     if (step === 2) {
       return modalidad === MODALIDAD.MENSUAL
-        ? mensual.horarioIds.length > 0 && Boolean(mensual.fechaInicio)
+        ? mensual.horarioIds.length > 0 && Boolean(mensual.fechaInicio) && (mensual.meses >= 1)
         : Boolean(unica.fecha && unica.horarioId);
     }
     return false;
@@ -124,6 +126,7 @@ export function useEnrollmentWizard(horarios) {
     setSede: (value) => dispatch({ type: 'SET_SEDE', value }),
     setNivel: (value) => dispatch({ type: 'SET_NIVEL', value }),
     setInicio: (opcion, fecha) => dispatch({ type: 'SET_INICIO', opcion, fecha }),
+    setMeses: (meses) => dispatch({ type: 'SET_MESES', meses }),
     setFechaUnica: (fecha, horarioId) => dispatch({ type: 'SET_FECHA_UNICA', fecha, horarioId }),
     setHorarioUnica: (id) => dispatch({ type: 'SET_HORARIO_UNICA', id }),
     next: () => dispatch({ type: 'GO_TO', step: Math.min(step + 1, 3) }),

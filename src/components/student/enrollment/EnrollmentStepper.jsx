@@ -66,9 +66,12 @@ const EnrollmentStepper = ({ userId, onSuccess }) => {
     ?? null;
   const faltaSedeRecojo = false;
 
-  const precioBase = state.modalidad === MODALIDAD.MENSUAL
+  const precioUnitario = state.modalidad === MODALIDAD.MENSUAL
     ? precioMensual(planes, derived.horariosElegidos.length)
     : precioClaseUnica(planes);
+
+  const mesesMultiplicador = state.modalidad === MODALIDAD.MENSUAL ? (state.mensual.meses || 1) : 1;
+  const precioBase = precioUnitario != null ? precioUnitario * mesesMultiplicador : null;
 
   const totalMerch = useMemo(() => {
     return cartLines(catalogoMerch, extras.merchQty).reduce((acc, line) => acc + line.subtotal, 0);
@@ -89,10 +92,15 @@ const EnrollmentStepper = ({ userId, onSuccess }) => {
     const esMensual = state.modalidad === MODALIDAD.MENSUAL;
     try {
       if (esMensual) {
-        await enrollmentService.inscribirMensual({
+        const fnInscribir = (state.mensual.meses > 1)
+          ? enrollmentService.inscribirMesesAdelantados
+          : enrollmentService.inscribirMensual;
+
+        await fnInscribir({
           alumnoId: userId,
           horarioIds: state.mensual.horarioIds,
           fechaInicio: state.mensual.fechaInicio,
+          meses: state.mensual.meses || 1,
           extras: { ...extras, sedeId: sedeRecojoId },
         });
       } else {
@@ -127,8 +135,31 @@ const EnrollmentStepper = ({ userId, onSuccess }) => {
       <StepIndicator current={state.step} />
 
       {state.step === 1 && <StepModalidadSede state={state} derived={derived} actions={actions} />}
-      {state.step === 2 && <StepHorarioFechas state={state} derived={derived} actions={actions} userId={userId} feriados={feriados} />}
-      {state.step === 3 && <StepCheckout state={state} derived={derived} extras={extras} onExtrasChange={setExtras} catalogoMerch={catalogoMerch} ownedMerchCounts={ownedMerchCounts} sedes={sedes} sedeRecojoId={sedeRecojoId} precioBase={precioBase} submitError={submitError} onBack={volver} />}
+      {state.step === 2 && (
+        <StepHorarioFechas
+          state={state}
+          derived={derived}
+          actions={actions}
+          userId={userId}
+          feriados={feriados}
+          precioUnitario={precioUnitario}
+        />
+      )}
+      {state.step === 3 && (
+        <StepCheckout
+          state={state}
+          derived={derived}
+          extras={extras}
+          onExtrasChange={setExtras}
+          catalogoMerch={catalogoMerch}
+          ownedMerchCounts={ownedMerchCounts}
+          sedes={sedes}
+          sedeRecojoId={sedeRecojoId}
+          precioBase={precioBase}
+          submitError={submitError}
+          onBack={volver}
+        />
+      )}
 
       <div className="fixed bottom-10 inset-x-0 flex justify-center gap-3 z-[150] px-4 pointer-events-none">
         {state.step > 1 && (

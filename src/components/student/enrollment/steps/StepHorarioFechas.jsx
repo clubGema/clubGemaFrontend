@@ -4,7 +4,7 @@ import MensualSchedule from '../mensual/MensualSchedule';
 import UnicaSchedule from '../unica/UnicaSchedule';
 
 // Aquí ocurre la bifurcación: el paso 1 decide qué rama se muestra.
-const StepHorarioFechas = ({ state, derived, actions, userId, feriados }) => (
+const StepHorarioFechas = ({ state, derived, actions, userId, feriados, precioUnitario }) => (
   state.modalidad === MODALIDAD.MENSUAL ? (
     <MensualSchedule
       userId={userId}
@@ -14,6 +14,8 @@ const StepHorarioFechas = ({ state, derived, actions, userId, feriados }) => (
       feriados={feriados}
       onToggle={actions.toggleHorario}
       onSelectInicio={actions.setInicio}
+      onSelectMeses={actions.setMeses}
+      precioUnitario={precioUnitario}
     />
   ) : (
     <div>

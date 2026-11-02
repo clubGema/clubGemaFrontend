@@ -55,6 +55,7 @@ const StepCheckout = ({ state, derived, extras, onExtrasChange, catalogoMerch, o
         nivelNombre={nivelNombre}
         horarios={derived.horariosElegidos}
         fechaInicio={state.mensual.fechaInicio}
+        meses={state.mensual.meses || 1}
         fechaUnica={state.unica.fecha}
         horarioUnico={horarioUnico}
         precioBase={precioBase}

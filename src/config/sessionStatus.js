@@ -25,13 +25,22 @@ export const SESSION_VISUAL = {
     cell: 'border-emerald-500 bg-emerald-50 text-emerald-700',
   },
   FALTA: {
-    label: 'Faltaste',
-    legend: 'Faltaste',
+    label: 'Falta',
+    legend: 'Falta',
     Icon: XCircle,
     card: 'bg-red-50/50 border-red-200 shadow-sm',
     dateBox: 'bg-red-600 text-white',
     badge: 'bg-red-100 text-red-700 border-red-200',
     cell: 'border-rose-500 bg-rose-50 text-rose-700',
+  },
+  FALTA_ANTICIPADA: {
+    label: 'Falta avisada',
+    legend: 'Falta avisada',
+    Icon: XCircle,
+    card: 'bg-amber-50/60 border-amber-200 shadow-sm',
+    dateBox: 'bg-amber-600 text-white',
+    badge: 'bg-amber-100 text-amber-800 border-amber-200',
+    cell: 'border-amber-500 bg-amber-50 text-amber-700',
   },
   JUSTIFICADA: {
     label: 'Justificada',
@@ -91,7 +100,7 @@ export const SESSION_VISUAL = {
 };
 
 // Orden de la leyenda del calendario.
-export const CALENDAR_LEGEND_KEYS = ['PRESENTE', 'FALTA', 'REPOSICION', 'RECUPERACION', 'PROGRAMADA', 'MOVIDA'];
+export const CALENDAR_LEGEND_KEYS = ['PRESENTE', 'FALTA', 'FALTA_ANTICIPADA', 'REPOSICION', 'RECUPERACION', 'PROGRAMADA', 'MOVIDA'];
 
 /**
  * Clave visual de una sesión normalizada (ver utils/studentAgenda.js).
@@ -99,6 +108,9 @@ export const CALENDAR_LEGEND_KEYS = ['PRESENTE', 'FALTA', 'REPOSICION', 'RECUPER
  * reposición a la que asististe se ve como "asististe".
  */
 export const getSessionVisualKey = (sesion, now = new Date()) => {
+  if (sesion.raw?.comentario?.includes('[FALTA_ANTICIPADA]') || sesion.raw?.falta_anticipada) {
+    return 'FALTA_ANTICIPADA';
+  }
   switch (sesion.estado) {
     case 'PRESENTE':
     case 'FALTA':

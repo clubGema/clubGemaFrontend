@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Trophy, CalendarDays, Clock } from 'lucide-react';
+import { MapPin, Trophy, CalendarDays, Clock, Sparkles } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { MODALIDAD } from '../../../hooks/useEnrollmentWizard';
@@ -20,15 +20,32 @@ const Row = ({ icon: Icon, label, children }) => (
   </div>
 );
 
-const EnrollmentSummary = ({ modalidad, sede, nivelNombre, horarios, fechaInicio, fechaUnica, horarioUnico, precioBase, extras }) => {
+const EnrollmentSummary = ({
+  modalidad,
+  sede,
+  nivelNombre,
+  horarios,
+  fechaInicio,
+  meses = 1,
+  fechaUnica,
+  horarioUnico,
+  precioBase,
+  extras = [],
+}) => {
   const total = precioBase == null ? null : precioBase + extras.reduce((acc, e) => acc + e.price, 0);
   const esMensual = modalidad === MODALIDAD.MENSUAL;
+  const mesesVal = Math.max(1, Number(meses) || 1);
+  const esAdelantado = esMensual && mesesVal > 1;
 
   return (
     <div className="bg-brand-surface rounded-[2.5rem] p-8 border-2 border-brand-border-soft space-y-6">
-      <span className="px-4 py-1.5 rounded-xl text-[10px] font-black uppercase italic tracking-widest bg-brand-accent text-white">
-        {esMensual ? 'Matrícula mensual' : 'Clase única'}
-      </span>
+      <div className="flex items-center gap-2">
+        <span className="px-4 py-1.5 rounded-xl text-[10px] font-black uppercase italic tracking-widest bg-brand-accent text-white">
+          {esMensual
+            ? (esAdelantado ? `Matrícula adelantada (${mesesVal} meses)` : 'Matrícula mensual')
+            : 'Clase única'}
+        </span>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <Row icon={MapPin} label="Sede">{sede}</Row>
@@ -37,6 +54,11 @@ const EnrollmentSummary = ({ modalidad, sede, nivelNombre, horarios, fechaInicio
           <>
             <Row icon={CalendarDays} label="Días">{horarios.map(h => DIAS_CORTOS[h.dia_semana]).join(' + ')}</Row>
             <Row icon={Clock} label="Empiezas">{fechaLarga(fechaInicio)}</Row>
+            {esAdelantado && (
+              <Row icon={Sparkles} label="Duración">
+                {mesesVal} meses ({horarios.length * 4 * mesesVal} clases)
+              </Row>
+            )}
           </>
         ) : (
           <>
@@ -48,8 +70,19 @@ const EnrollmentSummary = ({ modalidad, sede, nivelNombre, horarios, fechaInicio
 
       <div className="border-t border-brand-border-soft pt-5 space-y-3">
         {precioBase != null && (
-          <div className="flex justify-between text-xs font-black uppercase italic text-slate-700">
-            <span>{esMensual ? 'Servicio de clases (Mensual)' : 'Clase única'}</span>
+          <div className="flex justify-between items-start text-xs font-black uppercase italic text-slate-700">
+            <div>
+              <span>
+                {esMensual
+                  ? (esAdelantado ? `Servicio de clases (${mesesVal} meses por adelantado)` : 'Servicio de clases (Mensual)')
+                  : 'Clase única'}
+              </span>
+              {esAdelantado && (
+                <span className="block text-[10px] text-brand-muted font-bold not-italic lowercase">
+                  {soles(precioBase / mesesVal)} × {mesesVal} meses
+                </span>
+              )}
+            </div>
             <span className="text-brand-primary">{soles(precioBase)}</span>
           </div>
         )}

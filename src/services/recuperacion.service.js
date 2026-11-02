@@ -30,6 +30,28 @@ const recuperacionService = {
         return result.data;
     },
 
+    // 🗓️ Recuperación anticipada: próximas clases del paquete actual
+    obtenerClasesAnticipables: async () => {
+        const response = await apiFetch.get(`${API_ROUTES.RECUPERACIONES.BASE}/anticipadas/clases`);
+        const result = await parseJsonResponse(response, "Error al obtener tus próximas clases");
+        return result.data;
+    },
+
+    // 🗓️ Avisar falta anticipada (y opcionalmente agendar la recuperación en el mismo paso)
+    marcarFaltaAnticipada: async (data) => {
+        // data = { registroId, horarioDestinoId?, fechaProgramada? }
+        const response = await apiFetch.post(`${API_ROUTES.RECUPERACIONES.BASE}/anticipadas`, data);
+        const result = await parseJsonResponse(response, "Error al registrar la falta anticipada");
+        return result.data;
+    },
+
+    // 🗓️ Cancelar el aviso de falta anticipada
+    cancelarFaltaAnticipada: async (registroId) => {
+        const response = await apiFetch.delete(`${API_ROUTES.RECUPERACIONES.BASE}/anticipadas/${registroId}`);
+        const result = await parseJsonResponse(response, "Error al cancelar el aviso de falta");
+        return result.data;
+    },
+
     // Listado para la pantalla de depuracion de recuperaciones (admin).
     listarDepuracion: async () => {
         const response = await apiFetch.get(API_ROUTES.RECUPERACIONES.LISTAR_DEPURACION);

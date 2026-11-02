@@ -31,7 +31,7 @@ const DashboardEstudiante = () => {
     calendarRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const { sesiones, proximas, pasadas, nextClass, now, loading } = useStudentAgenda(userId);
+  const { sesiones, proximas, pasadas, nextClass, now, loading, refetch } = useStudentAgenda(userId);
   const finance = useStudentFinance(userId);
   const { notifications, unreadCount, markAsRead } = useStudentNotifications(userId);
 
@@ -97,7 +97,7 @@ const DashboardEstudiante = () => {
               )}
             </div>
 
-            <UpcomingAgenda proximas={proximas} pasadas={pasadas} now={now} onVerCalendario={handleVerCalendario} />
+            <UpcomingAgenda proximas={proximas} pasadas={pasadas} now={now} onVerCalendario={handleVerCalendario} onAgendaChange={refetch} />
           </div>
 
           <div className="space-y-6">

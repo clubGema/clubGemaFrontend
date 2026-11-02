@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { Zap, CalendarCheck, CalendarDays, History, ChevronDown } from 'lucide-react';
+import { Zap, CalendarCheck, CalendarDays, History, ChevronDown, CalendarPlus } from 'lucide-react';
+import AdvanceRecoveryModal from '../Recoveries/AdvanceRecoveryModal';
 import EmptyState from '../../shared/EmptyState';
 import SessionCard from './SessionCard';
 import PastHistoryPanel from './PastHistoryPanel';
@@ -12,8 +13,9 @@ const MAX_PROXIMAS = 4;
  * Las siguientes clases (hasta MAX_PROXIMAS) y, plegado debajo, el historial.
  * El pasado nunca se mezcla con las próximas: hay que pedirlo con el botón.
  */
-const UpcomingAgenda = ({ proximas, pasadas, now, onVerCalendario }) => {
+const UpcomingAgenda = ({ proximas, pasadas, now, onVerCalendario, onAgendaChange }) => {
   const [showHistory, setShowHistory] = useState(false);
+  const [showAdvanceModal, setShowAdvanceModal] = useState(false);
   const resumen = useMemo(() => proximas.slice(0, MAX_PROXIMAS), [proximas]);
   const grupos = useMemo(() => groupProximas(resumen, now), [resumen, now]);
   const restantes = proximas.length - resumen.length;
@@ -26,6 +28,33 @@ const UpcomingAgenda = ({ proximas, pasadas, now, onVerCalendario }) => {
           <h2 className="font-black text-brand-primary uppercase tracking-tight text-sm md:text-lg italic leading-none">Tus próximas clases</h2>
         </div>
         <Zap size={20} className="text-brand-accent fill-brand-accent/20 shrink-0" />
+      </div>
+
+      {/* Banner destacado: "¿No podrás asistir a alguna de tus clases?" */}
+      <div className="p-4 md:px-6 md:pt-6 bg-brand-bg/30">
+        <div className="relative overflow-hidden bg-gradient-to-r from-brand-primary via-[#481119] to-brand-primary rounded-2xl p-4 md:p-5 text-white shadow-lg border border-brand-accent/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start md:items-center gap-3.5">
+            <div className="w-11 h-11 rounded-xl bg-brand-accent/25 border border-brand-accent/40 flex items-center justify-center shrink-0 text-brand-accent mt-0.5 md:mt-0">
+              <CalendarPlus size={22} className="stroke-[2.5]" />
+            </div>
+            <div className="space-y-0.5">
+              <h3 className="text-xs md:text-sm font-black uppercase tracking-tight text-white italic">
+                ¿No podrás asistir a alguna de tus clases?
+              </h3>
+              <p className="text-[11px] md:text-xs text-brand-accent font-medium">
+                Agenda anticipadamente tu recuperación dentro de tu ciclo
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowAdvanceModal(true)}
+            className="w-full md:w-auto px-5 py-2.5 rounded-xl bg-brand-accent hover:bg-brand-accent-dark text-white font-black text-xs uppercase italic tracking-wider shadow-md hover:shadow-lg transition-all active:scale-95 whitespace-nowrap text-center shrink-0 flex items-center justify-center gap-2"
+          >
+            <CalendarPlus size={15} />
+            <span>Agendar recuperación</span>
+          </button>
+        </div>
       </div>
 
       <div className="p-4 md:p-6 space-y-6 bg-brand-bg/30">
@@ -77,6 +106,11 @@ const UpcomingAgenda = ({ proximas, pasadas, now, onVerCalendario }) => {
           </div>
         )}
       </div>
+      <AdvanceRecoveryModal
+        isOpen={showAdvanceModal}
+        onClose={() => setShowAdvanceModal(false)}
+        onSuccess={onAgendaChange}
+      />
     </div>
   );
 };

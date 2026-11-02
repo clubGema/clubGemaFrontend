@@ -38,14 +38,26 @@ export const enrollmentService = {
         return result.data;
     },
 
-    inscribirMensual: async ({ alumnoId, horarioIds, fechaInicio, extras }) => {
+    inscribirMensual: async ({ alumnoId, horarioIds, fechaInicio, meses, extras }) => {
         const response = await apiFetch.post(API_ROUTES.INSCRIPCIONES.BASE, {
             alumno_id: alumnoId,
             horario_ids: horarioIds,
             fecha_inicio_electiva: fechaInicio,
+            ...(meses ? { meses_adelantados: meses } : {}),
             ...extrasToPayload(extras),
         });
         return parseJsonResponse(response, 'Error al procesar la matrícula');
+    },
+
+    inscribirMesesAdelantados: async ({ alumnoId, horarioIds, fechaInicio, meses, extras }) => {
+        const response = await apiFetch.post(API_ROUTES.INSCRIPCIONES.MESES_ADELANTADOS, {
+            alumno_id: alumnoId,
+            horario_ids: horarioIds,
+            meses_adelantados: meses,
+            fecha_inicio_electiva: fechaInicio,
+            ...extrasToPayload(extras),
+        });
+        return parseJsonResponse(response, 'Error al procesar la matrícula por meses adelantados');
     },
 
     inscribirUnica: async ({ alumnoId, horarioId, fecha }) => {

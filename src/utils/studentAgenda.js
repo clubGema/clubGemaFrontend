@@ -116,7 +116,7 @@ const normalizarRecuperacion = (raw) => {
 const INSCRIPCION_VIGENTE = new Set(['ACTIVO', 'PENDIENTE_PAGO']);
 
 // Asistencia ya registrada: es historial real, no depende de cómo terminó la inscripción.
-const ASISTENCIA_REGISTRADA = new Set(['COMPLETADA_PRESENTE', 'COMPLETADA_FALTA', 'JUSTIFICADO_LESION']);
+const ASISTENCIA_REGISTRADA = new Set(['COMPLETADA_PRESENTE', 'COMPLETADA_FALTA', 'JUSTIFICADO_LESION', 'PRESENTE', 'FALTA']);
 
 // Misma resolución de la llave que usa MyRegistrations.
 const inscripcionDeAsistencia = (a) => a.inscripcion_id ?? a.id_inscripcion ?? a.inscripciones?.id;

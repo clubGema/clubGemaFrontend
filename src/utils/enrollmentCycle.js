@@ -24,26 +24,40 @@ export const ultimaClaseProgramada = (registros, desde) => {
 };
 
 /**
- * Previsualización REFERENCIAL del ciclo: cada fecha dentro de los 30 días
- * desde `fechaInicio` cuyo día de semana esté entre `diasSemana` (1=lunes …
- * 7=domingo, igual que `horario.dia_semana`). Las que caen en feriado se
- * devuelven marcadas para que la UI las muestre como "sin clase".
+ * Previsualización REFERENCIAL del ciclo: cada fecha calculada a razón de 4 clases
+ * por mes por cada día de semana elegido (1=lunes … 7=domingo, igual que
+ * `horario.dia_semana`). Para `meses` adelantados se generan 4 * meses clases por día.
+ * Las que caen en feriado se devuelven marcadas para que la UI las muestre como "sin clase".
  *
  * El backend sigue siendo autoritativo (enganche de paquetes, reposiciones).
  */
-export const buildCyclePreview = ({ fechaInicio, diasSemana, feriados = [], duracionDias = CYCLE_DAYS }) => {
-  if (!fechaInicio || diasSemana.length === 0) return [];
+export const buildCyclePreview = ({ fechaInicio, diasSemana, feriados = [], duracionDias, meses = 1 }) => {
+  if (!fechaInicio || !diasSemana || diasSemana.length === 0) return [];
 
-  const diasSet = new Set(diasSemana.map(Number));
+  const cantidadMeses = Math.max(1, Number(meses) || 1);
+  const limitePorDia = cantidadMeses * 4;
   const feriadosSet = new Set(feriados.map(toDateKey));
-  const inicio = parseISO(fechaInicio);
+  const inicio = parseDateOnly(fechaInicio);
+
   const fechas = [];
 
-  for (let i = 0; i < duracionDias; i++) {
-    const dia = addDays(inicio, i);
-    if (!diasSet.has(getISODay(dia))) continue;
-    const key = format(dia, 'yyyy-MM-dd');
-    fechas.push({ fecha: key, diaSemana: getISODay(dia), feriado: feriadosSet.has(key) });
+  for (const diaSemana of diasSemana) {
+    const diaTarget = Number(diaSemana);
+    // Encontrar el primer día >= inicio que sea diaTarget
+    const offset = (diaTarget - getISODay(inicio) + 7) % 7;
+    let fechaActual = addDays(inicio, offset);
+
+    for (let i = 0; i < limitePorDia; i++) {
+      const key = format(fechaActual, 'yyyy-MM-dd');
+      fechas.push({
+        fecha: key,
+        diaSemana: diaTarget,
+        feriado: feriadosSet.has(key),
+      });
+      fechaActual = addDays(fechaActual, 7);
+    }
   }
-  return fechas;
+
+  // Ordenar cronológicamente
+  return fechas.sort((a, b) => a.fecha.localeCompare(b.fecha));
 };
