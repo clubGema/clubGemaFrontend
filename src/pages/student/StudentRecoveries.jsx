@@ -123,7 +123,8 @@ const StudentRecoveries = () => {
                 alumnoId: userId,
                 recuperacionId: selectedTicket.id,
                 horarioDestinoId: slot.horarioData.id,
-                fechaProgramada: new Date(slot.fecha).toISOString(),
+                // fix de zona horaria - Fecha plana YYYY-MM-DD sin distorsión por huso horario del navegador
+                fechaProgramada: String(slot.fecha).slice(0, 10),
             });
 
             await toast.promise(promise, {

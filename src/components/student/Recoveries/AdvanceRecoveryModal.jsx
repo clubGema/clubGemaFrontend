@@ -134,7 +134,8 @@ const AdvanceRecoveryModal = ({ isOpen, onClose, onSuccess }) => {
       const payload = {
         registroId: selectedClase.registro_id,
         horarioDestinoId: selectedSlot.horarioData.id,
-        fechaProgramada: new Date(selectedSlot.fecha).toISOString(),
+        // fix de zona horaria - Fecha plana YYYY-MM-DD sin distorsión por huso horario del navegador
+        fechaProgramada: String(selectedSlot.fecha).slice(0, 10),
       };
 
       await recuperacionService.marcarFaltaAnticipada(payload);
