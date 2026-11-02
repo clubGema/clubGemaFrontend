@@ -39,6 +39,16 @@ const AdminInjuriesManager = () => {
         setEvidenceViewerOpen(true);
     };
 
+    const formatDate = (date) => {
+        const d = new Date(date);
+
+        return d.toLocaleDateString('es-ES', {
+            timeZone: 'UTC',
+            day: '2-digit',
+            month: 'short'
+        });
+    };
+
     return (
         <div className="p-4 md:p-10 max-w-7xl mx-auto min-h-screen bg-brand-bg/50">
             {/* 1. HEADER ADAPTATIVO */}
@@ -68,7 +78,7 @@ const AdminInjuriesManager = () => {
 
             {/* 2. CONTENEDOR PRINCIPAL (Móvil: Grid / Desktop: Tabla) */}
             <div className="bg-transparent md:bg-brand-surface md:rounded-[2.5rem] md:border md:border-brand-border/60 md:overflow-hidden md:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.05)]">
-                
+
                 {/* --- VISTA DESKTOP (TABLA) --- */}
                 <div className="hidden md:block overflow-x-auto">
                     <table className="w-full border-collapse">
@@ -77,7 +87,7 @@ const AdminInjuriesManager = () => {
                                 <th className="px-8 py-7 text-left text-[10px] font-black uppercase tracking-widest text-brand-muted">Alumno</th>
                                 <th className="px-8 py-7 text-left text-[10px] font-black uppercase tracking-widest text-brand-muted">Motivo</th>
                                 <th className="px-8 py-7 text-center text-[10px] font-black uppercase tracking-widest text-brand-muted">Adjunto</th>
-                                <th className="px-8 py-7 text-center text-[10px] font-black uppercase tracking-widest text-brand-muted">Fecha</th>
+                                <th className="px-8 py-7 text-center text-[10px] font-black uppercase tracking-widest text-brand-muted">Periodo</th>
                                 <th className="px-8 py-7 text-center text-[10px] font-black uppercase tracking-widest text-brand-muted">Acción</th>
                             </tr>
                         </thead>
@@ -99,7 +109,7 @@ const AdminInjuriesManager = () => {
                                     </td>
                                     <td className="px-8 py-6 text-center">
                                         <span className="text-[10px] font-black text-slate-600 bg-brand-surface-alt px-3 py-1.5 rounded-full uppercase italic">
-                                            {new Date(sol.fecha_solicitud).toLocaleDateString('es-PE', { day: '2-digit', month: 'short' })}
+                                            {sol.fecha_inicio && sol.fecha_fin ? (`${formatDate(sol.fecha_inicio)} - ${formatDate(sol.fecha_fin)}`) : 'Sin Fecha'}
                                         </span>
                                     </td>
                                     <td className="px-8 py-6 text-center">
@@ -148,7 +158,7 @@ const AdminInjuriesManager = () => {
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-3 mt-6">
-                                    <button onClick={() => openEvidenceViewer(sol.url_evidencia_medica)} className="flex items-center justify-center gap-2 bg-brand-primary-soft text-brand-primary py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all"><Eye size={16}/> Evidencia</button>
+                                    <button onClick={() => openEvidenceViewer(sol.url_evidencia_medica)} className="flex items-center justify-center gap-2 bg-brand-primary-soft text-brand-primary py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all"><Eye size={16} /> Evidencia</button>
                                     <button onClick={() => openEvaluateModal(sol)} className="bg-brand-accent text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-brand-accent/20 active:scale-95 transition-all">Evaluar</button>
                                 </div>
                             </div>

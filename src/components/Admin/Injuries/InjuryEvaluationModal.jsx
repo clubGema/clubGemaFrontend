@@ -7,9 +7,6 @@ import { BRAND_COLORS } from "../../../config/themeColors.js";
 const InjuryEvaluationModal = ({ isOpen, onClose, solicitud, onEvaluateSuccess }) => {
     const [evalData, setEvalData] = useState({
         estado: 'APROBADA',
-        tipo: 'RANGO',
-        fechaInicio: new Date().toISOString().split('T')[0],
-        fechaFin: '',
         notas: ''
     });
     const [loading, setLoading] = useState(false);
@@ -95,45 +92,6 @@ const InjuryEvaluationModal = ({ isOpen, onClose, solicitud, onEvaluateSuccess }
                                 <X size={14} strokeWidth={4} /> RECHAZAR
                             </button>
                         </div>
-
-                        {/* Campos Dinámicos */}
-                        {evalData.estado === 'APROBADA' && (
-                            <div className="space-y-5 animate-in fade-in slide-in-from-top-2 duration-300">
-                                <div className="bg-brand-primary/5 p-5 rounded-[1.5rem] border border-brand-primary/10">
-                                    <label className="block text-[10px] font-black text-brand-primary uppercase tracking-widest mb-4">Alcance de la Justificación</label>
-                                    <div className="flex gap-8">
-                                        <label className="flex items-center gap-2.5 cursor-pointer group">
-                                            <input type="radio" name="tipo" checked={evalData.tipo === 'RANGO'} onChange={() => setEvalData({ ...evalData, tipo: 'RANGO' })} className="w-4 h-4 accent-brand-accent shadow-sm" />
-                                            <span className="text-xs font-black text-slate-600 group-hover:text-brand-primary uppercase tracking-tight">Temporal</span>
-                                        </label>
-                                        <label className="flex items-center gap-2.5 cursor-pointer group">
-                                            <input type="radio" name="tipo" checked={evalData.tipo === 'INDEFINIDO'} onChange={() => setEvalData({ ...evalData, tipo: 'INDEFINIDO' })} className="w-4 h-4 accent-brand-accent shadow-sm" />
-                                            <span className="text-xs font-black text-slate-600 group-hover:text-brand-primary uppercase tracking-tight">Indefinida</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <label className="block text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Fecha Inicio</label>
-                                        <input type="date" required className="w-full bg-brand-bg border border-brand-border rounded-2xl px-4 py-3 text-brand-body text-xs focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/10 outline-none transition-all font-bold shadow-sm" value={evalData.fechaInicio} onChange={(e) => setEvalData({ ...evalData, fechaInicio: e.target.value })} />
-                                    </div>
-                                    {evalData.tipo === 'RANGO' && (
-                                        <div className="space-y-2">
-                                            <label className="block text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Fecha Final</label>
-                                            <input type="date" required className="w-full bg-brand-bg border border-brand-border rounded-2xl px-4 py-3 text-brand-body text-xs focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/10 outline-none transition-all font-bold shadow-sm" value={evalData.fechaFin} onChange={(e) => setEvalData({ ...evalData, fechaFin: e.target.value })} />
-                                        </div>
-                                    )}
-                                </div>
-
-                                {evalData.tipo === 'INDEFINIDO' && (
-                                    <div className="text-[9px] font-black text-amber-700 bg-amber-50 p-4 rounded-2xl border border-amber-200/50 flex gap-3 items-center uppercase tracking-wider leading-relaxed">
-                                        <AlertTriangle size={18} className="shrink-0 text-amber-500" />
-                                        <span>Suspensión de asistencia hasta fin de ciclo.</span>
-                                    </div>
-                                )}
-                            </div>
-                        )}
 
                         <div className="space-y-2">
                             <label className="block text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Dictamen y Observaciones</label>

@@ -5,7 +5,7 @@ import lesionService from '../../../services/lesion.service';
 
 const InjuryRequestForm = ({ onSuccess }) => {
     const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({ descripcion: '', evidencia: null });
+    const [formData, setFormData] = useState({ descripcion: '', evidencia: null, fechaInicio: new Date().toISOString().split('T')[0], fechaFin: '' });
     const [previewUrl, setPreviewUrl] = useState(null);
 
     const handleSubmit = async (e) => {
@@ -22,6 +22,8 @@ const InjuryRequestForm = ({ onSuccess }) => {
             const payload = new FormData();
             payload.append('descripcion', formData.descripcion);
             payload.append('evidencia', formData.evidencia);
+            payload.append('fechaInicio', formData.fechaInicio);
+            payload.append('fechaFin', formData.fechaFin);
 
             await lesionService.crearSolicitud(payload);
 
@@ -31,7 +33,7 @@ const InjuryRequestForm = ({ onSuccess }) => {
 
             e.target.reset();
 
-            if (onSuccess) onSuccess(); // Callback para avisar al padre que cambie de tab
+            if (onSuccess) onSuccess();
 
         } catch (error) {
             toast.error(error.message);
@@ -58,28 +60,22 @@ const InjuryRequestForm = ({ onSuccess }) => {
                     />
                 </div>
 
-                {/* <div>
-                    <label className="block text-xs font-bold text-brand-primary-soft uppercase mb-2">Evidencia Médica</label>
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Upload size={16} className="text-gray-500" />
+                <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-brand-primary-soft uppercase tracking-widest ml-1">Periodo de descanso</label>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <label className="block text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Desde</label>
+                            <input type="date" required className="w-full bg-brand-bg border border-brand-border rounded-2xl px-4 py-3 text-brand-body text-xs focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/10 outline-none transition-all font-bold shadow-sm" value={formData.fechaInicio} onChange={(e) => setFormData({ ...formData, fechaInicio: e.target.value })} />
                         </div>
-                        <input
-                            type="file"
-                            accept="image/png, image/jpeg, image/jpg, image/webp"
-                            required
-                            className="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white focus:outline-none focus:border-brand-accent transition-colors
-                            file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:uppercase file:tracking-widest file:bg-gray-500 file:text-white hover:file:bg-gray-600 file:cursor-pointer cursor-pointer"
-                            onChange={(e) => setFormData({ ...formData, evidencia: e.target.files[0] })}
-                        />
+                        <div className="space-y-2">
+                            <label className="block text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Hasta</label>
+                            <input type="date" required className="w-full bg-brand-bg border border-brand-border rounded-2xl px-4 py-3 text-brand-body text-xs focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/10 outline-none transition-all font-bold shadow-sm" value={formData.fechaFin} onChange={(e) => setFormData({ ...formData, fechaFin: e.target.value })} />
+                        </div>
                     </div>
-                    <p className="text-[10px] text-gray-400 mt-2 ml-1">
-                        * Sube tu evidencia médica (JPG, PNG).
-                    </p>
-                </div> */}
+                </div>
 
                 <div className="space-y-1">
-                    <label className="text-[10px] font-black text-brand-muted uppercase tracking-widest ml-1">Evidencia Médica</label>
+                    <label className="text-[10px] font-bold text-brand-primary-soft uppercase tracking-widest ml-1">Evidencia Médica</label>
                     <p className="text-[10px] text-gray-400 mt-2 ml-1">* Subir imagen (JPG, JPEG o PNG).</p>
                     <input
                         type="file"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, XCircle, Clock, FileText } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, FileText, CalendarDays } from 'lucide-react';
 
 const InjuryHistoryItem = ({ solicitud }) => {
     const getStatusBadge = (status) => {
@@ -10,12 +10,39 @@ const InjuryHistoryItem = ({ solicitud }) => {
         }
     };
 
+    const formatDate = (date) => {
+        const d = new Date(date);
+
+        return d.toLocaleDateString('es-ES', {
+            timeZone: 'UTC',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    };
+
     return (
         <div className="group bg-brand-surface border border-gray-200 rounded-3xl p-6 flex flex-col shadow-xl md:flex-row justify-between items-start md:items-center gap-4 hover:border-brand-primary hover:bg-brand-primary transition-all duration-300">
             <div>
                 <div className="flex items-center gap-3 mb-2">
                     {getStatusBadge(solicitud.estado)}
                     <span className="text-xs text-gray-500 group-hover:text-white transition-colors">{new Date(solicitud.fecha_solicitud).toLocaleDateString()}</span>
+                </div>
+                {/* Periodo de la lesión */}
+                <div className="flex flex-wrap items-center gap-3 mb-3">
+                    <div className="flex items-center gap-2 text-xs bg-brand-primary/10 group-hover:bg-white/20 px-3 py-2 rounded-lg border border-brand-primary/20 transition-colors">
+                        <CalendarDays size={14} className="text-brand-primary group-hover:text-white" />
+                        <span className="text-slate-600 group-hover:text-white">
+                            <span className="font-bold">Inicio:</span> {formatDate(solicitud.fecha_inicio)}
+                        </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-xs bg-brand-primary/10 group-hover:bg-white/20 px-3 py-2 rounded-lg border border-brand-primary/20 transition-colors">
+                        <CalendarDays size={14} className="text-brand-primary group-hover:text-white" />
+                        <span className="text-slate-600 group-hover:text-white">
+                            <span className="font-bold">Fin:</span> {formatDate(solicitud.fecha_fin)}
+                        </span>
+                    </div>
                 </div>
                 <p className="text-slate-600 font-medium group-hover:text-white transition-colors">{solicitud.descripcion_lesion}</p>
                 {solicitud.notas_admin && (
