@@ -98,12 +98,11 @@ export const API_ROUTES = {
     HISTORIAL: (id) => `/cuentas-por-cobrar/historial/${id}`,
     SUGERIR_FECHA: (id) => `/cuentas-por-cobrar/renovacion-sugerida/${id}`,
     GENERAR_ADELANTADO: (id) => `/cuentas-por-cobrar/generar-adelantado/${id}`,
- GENERAR_ADELANTADO_VALIDADO: (id) => `/cuentas-por-cobrar/generar-adelantado-validado/${id}`,
-},
+    GENERAR_ADELANTADO_VALIDADO: (id) => `/cuentas-por-cobrar/generar-adelantado-validado/${id}`,
+  },
   CLASES: {
     BASE: "/clases",
     REPROGRAMAR_MASIVO: "/clases/reprogramar-masivo",
-    REVERTIR_MASIVO: "/clases/revertir-masivo",
     ACTIVAS_MASIVAS: "/clases/reprogramaciones-masivas-activas",
     HORARIOS_CON_ASISTENCIA: "/clases/horarios-con-asistencia",
   },
@@ -130,7 +129,7 @@ export const API_ROUTES = {
   BENEFICIOS_PENDIENTES: {
     BASE: "/beneficioPendiente",
   },
-   ALUMNOS: {
+  ALUMNOS: {
     BASE: "/alumno",
     MI_PERFIL: "/alumno/mi-perfil",
     DIA_CORTE: "/alumno/gestion/resumen-cortes",
@@ -186,7 +185,7 @@ export const API_ROUTES = {
     DESGLOSE_INGRESOS: "/caja/desglose-ingresos",
     BY_ID: (id) => `/caja/${id}`,
   },
-      HISTORIAL_ACADEMICO: {
+  HISTORIAL_ACADEMICO: {
     BASE: "/historial-academico",
     ALUMNO: (alumnoId) => `/historial-academico/alumno/${alumnoId}`,
     ALUMNO_DETALLE: (alumnoId) => `/historial-academico/alumno-detalle/${alumnoId}`,
