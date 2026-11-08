@@ -25,7 +25,7 @@ const ModalityChoice = ({ value = MODALIDAD.MENSUAL, onChange }) => (
         Mensual
       </h3>
       <p className="text-xs font-bold text-slate-600 uppercase tracking-wider mt-2">
-        Ciclo de 30 días continuos con tus días fijos de la semana
+        Ciclo regular continuos con tus días fijos de la semana
       </p>
     </div>
   </div>

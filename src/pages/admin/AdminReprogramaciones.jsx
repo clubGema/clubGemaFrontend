@@ -68,7 +68,7 @@ const AdminReprogramaciones = () => {
                                 </div>
                                 <div>
                                     <p className="text-[10px] font-black text-green-300 uppercase tracking-widest">Seguridad</p>
-                                    <p className="text-sm font-bold text-white">Ciclo +7 Días</p>
+                                    <p className="text-sm font-bold text-white">Ciclo Regular</p>
                                 </div>
                             </div>
                         </div>
