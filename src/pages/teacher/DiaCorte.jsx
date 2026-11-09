@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  Search, AlertCircle, Loader2, Info, UserCircle, CalendarClock, 
-  AlertTriangle, CheckCircle, Clock, ShieldAlert, Sparkles, Filter, 
-  MapPin, Copy, Check 
+import {
+  Search, AlertCircle, Loader2, Info, UserCircle, CalendarClock,
+  AlertTriangle, CheckCircle, Clock, ShieldAlert, Sparkles, Filter,
+  MapPin, Copy, Check
 } from 'lucide-react';
 import { apiFetch } from '../../interceptors/api';
 import { API_ROUTES } from '../../constants/apiRoutes';
@@ -191,11 +191,10 @@ const DiaCorte = () => {
         <button
           type="button"
           onClick={() => setFilterTab('todos')}
-          className={`p-4 sm:p-5 rounded-2xl border text-left transition-all cursor-pointer ${
-            filterTab === 'todos'
-              ? 'bg-brand-primary-soft/70 border-brand-primary ring-2 ring-brand-primary/20 shadow-sm'
-              : 'bg-brand-surface border-brand-border hover:border-slate-300'
-          }`}
+          className={`p-4 sm:p-5 rounded-2xl border text-left transition-all cursor-pointer ${filterTab === 'todos'
+            ? 'bg-brand-primary-soft/70 border-brand-primary ring-2 ring-brand-primary/20 shadow-sm'
+            : 'bg-brand-surface border-brand-border hover:border-slate-300'
+            }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Total Alumnos</span>
@@ -209,13 +208,12 @@ const DiaCorte = () => {
         <button
           type="button"
           onClick={() => setFilterTab('vence_pronto')}
-          className={`p-4 sm:p-5 rounded-2xl border text-left transition-all cursor-pointer ${
-            filterTab === 'vence_pronto'
-              ? 'bg-brand-accent-soft border-brand-accent ring-2 ring-brand-accent/30 shadow-sm'
-              : metricas.vencePronto > 0
+          className={`p-4 sm:p-5 rounded-2xl border text-left transition-all cursor-pointer ${filterTab === 'vence_pronto'
+            ? 'bg-brand-accent-soft border-brand-accent ring-2 ring-brand-accent/30 shadow-sm'
+            : metricas.vencePronto > 0
               ? 'bg-amber-50/50 border-amber-200 hover:border-brand-accent'
               : 'bg-brand-surface border-brand-border'
-          }`}
+            }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-black uppercase tracking-widest text-amber-800">Vencen Pronto / Hoy</span>
@@ -229,11 +227,10 @@ const DiaCorte = () => {
         <button
           type="button"
           onClick={() => setFilterTab('vencidos')}
-          className={`p-4 sm:p-5 rounded-2xl border text-left transition-all cursor-pointer ${
-            filterTab === 'vencidos'
-              ? 'bg-rose-50 border-rose-500 ring-2 ring-rose-500/20 shadow-sm'
-              : 'bg-brand-surface border-brand-border hover:border-slate-300'
-          }`}
+          className={`p-4 sm:p-5 rounded-2xl border text-left transition-all cursor-pointer ${filterTab === 'vencidos'
+            ? 'bg-rose-50 border-rose-500 ring-2 ring-rose-500/20 shadow-sm'
+            : 'bg-brand-surface border-brand-border hover:border-slate-300'
+            }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-black uppercase tracking-widest text-rose-800">Ciclo Vencido</span>
@@ -247,11 +244,10 @@ const DiaCorte = () => {
         <button
           type="button"
           onClick={() => setFilterTab('al_dia')}
-          className={`p-4 sm:p-5 rounded-2xl border text-left transition-all cursor-pointer ${
-            filterTab === 'al_dia'
-              ? 'bg-emerald-50 border-emerald-600 ring-2 ring-emerald-600/20 shadow-sm'
-              : 'bg-brand-surface border-brand-border hover:border-slate-300'
-          }`}
+          className={`p-4 sm:p-5 rounded-2xl border text-left transition-all cursor-pointer ${filterTab === 'al_dia'
+            ? 'bg-emerald-50 border-emerald-600 ring-2 ring-emerald-600/20 shadow-sm'
+            : 'bg-brand-surface border-brand-border hover:border-slate-300'
+            }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-black uppercase tracking-widest text-emerald-800">Al Día</span>
@@ -291,11 +287,10 @@ const DiaCorte = () => {
           <button
             type="button"
             onClick={() => setFilterTab('todos')}
-            className={`px-3.5 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all ${
-              filterTab === 'todos'
-                ? 'bg-brand-primary text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-            }`}
+            className={`px-3.5 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all ${filterTab === 'todos'
+              ? 'bg-brand-primary text-white shadow-xs'
+              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
           >
             Todos ({metricas.total})
           </button>
@@ -303,11 +298,10 @@ const DiaCorte = () => {
           <button
             type="button"
             onClick={() => setFilterTab('vence_pronto')}
-            className={`px-3.5 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all ${
-              filterTab === 'vence_pronto'
-                ? 'bg-brand-accent text-white shadow-xs'
-                : 'bg-brand-accent-soft text-brand-accent-dark hover:bg-brand-accent-soft'
-            }`}
+            className={`px-3.5 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all ${filterTab === 'vence_pronto'
+              ? 'bg-brand-accent text-white shadow-xs'
+              : 'bg-brand-accent-soft text-brand-accent-dark hover:bg-brand-accent-soft'
+              }`}
           >
             Por Vencer ({metricas.vencePronto})
           </button>
@@ -315,11 +309,10 @@ const DiaCorte = () => {
           <button
             type="button"
             onClick={() => setFilterTab('vencidos')}
-            className={`px-3.5 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all ${
-              filterTab === 'vencidos'
-                ? 'bg-rose-600 text-white shadow-xs'
-                : 'bg-rose-50 text-rose-700 hover:bg-rose-100'
-            }`}
+            className={`px-3.5 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all ${filterTab === 'vencidos'
+              ? 'bg-rose-600 text-white shadow-xs'
+              : 'bg-rose-50 text-rose-700 hover:bg-rose-100'
+              }`}
           >
             Vencidos ({metricas.vencidos})
           </button>
@@ -327,11 +320,10 @@ const DiaCorte = () => {
           <button
             type="button"
             onClick={() => setFilterTab('al_dia')}
-            className={`px-3.5 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all ${
-              filterTab === 'al_dia'
-                ? 'bg-emerald-600 text-white shadow-xs'
-                : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-            }`}
+            className={`px-3.5 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all ${filterTab === 'al_dia'
+              ? 'bg-emerald-600 text-white shadow-xs'
+              : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+              }`}
           >
             Al Día ({metricas.alDia})
           </button>
@@ -340,11 +332,10 @@ const DiaCorte = () => {
             <button
               type="button"
               onClick={() => setFilterTab('individual')}
-              className={`px-3.5 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all ${
-                filterTab === 'individual'
-                  ? 'bg-slate-700 text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
+              className={`px-3.5 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all ${filterTab === 'individual'
+                ? 'bg-slate-700 text-white shadow-xs'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
             >
               Individuales ({metricas.individuales})
             </button>
@@ -379,17 +370,16 @@ const DiaCorte = () => {
 
                   {/* Badge de Estado */}
                   <span
-                    className={`px-2.5 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider whitespace-nowrap ${
-                      alumno.estadoCiclo === 'VENCE_HOY'
-                        ? 'bg-brand-accent text-white shadow-xs animate-pulse'
-                        : alumno.estadoCiclo === 'VENCE_PRONTO'
+                    className={`px-2.5 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider whitespace-nowrap ${alumno.estadoCiclo === 'VENCE_HOY'
+                      ? 'bg-brand-accent text-white shadow-xs animate-pulse'
+                      : alumno.estadoCiclo === 'VENCE_PRONTO'
                         ? 'bg-amber-100 text-amber-800 border border-amber-200'
                         : alumno.estadoCiclo === 'VENCIDO'
-                        ? 'bg-rose-100 text-rose-700 border border-rose-200'
-                        : alumno.estadoCiclo === 'INDIVIDUAL'
-                        ? 'bg-brand-primary-soft text-brand-primary-dark'
-                        : 'bg-emerald-100 text-emerald-800'
-                    }`}
+                          ? 'bg-rose-100 text-rose-700 border border-rose-200'
+                          : alumno.estadoCiclo === 'INDIVIDUAL'
+                            ? 'bg-brand-primary-soft text-brand-primary-dark'
+                            : 'bg-emerald-100 text-emerald-800'
+                      }`}
                   >
                     {alumno.etiquetaTiempo}
                   </span>
@@ -413,8 +403,8 @@ const DiaCorte = () => {
                     {alumno.esIndividual
                       ? 'No aplica (Clase Única)'
                       : alumno.fechaCorte
-                      ? format(alumno.fechaCorte, "dd 'de' MMMM, yyyy", { locale: es })
-                      : '---'}
+                        ? format(alumno.fechaCorte, "dd 'de' MMMM, yyyy", { locale: es })
+                        : '---'}
                   </span>
                 </div>
               </div>
@@ -506,17 +496,29 @@ const DiaCorte = () => {
                         </span>
                       ) : alumno.fechaCorte ? (
                         <div className="inline-flex flex-col items-center">
-                          <span className={`font-black text-xs ${
-                            alumno.estadoCiclo === 'VENCIDO'
-                              ? 'text-rose-600'
-                              : alumno.estadoCiclo === 'VENCE_HOY'
+                          <span className={`font-black text-xs ${alumno.estadoCiclo === 'VENCIDO'
+                            ? 'text-rose-600'
+                            : alumno.estadoCiclo === 'VENCE_HOY'
                               ? 'text-brand-accent-dark font-black'
                               : 'text-slate-800'
-                          }`}>
-                            {format(alumno.fechaCorte, "dd 'de' MMMM", { locale: es })}
+                            }`}>
+                            {(() => {
+                              const fecha = new Date(alumno.fechaCorte);
+                              return fecha.toLocaleDateString('es-ES', {
+                                day: 'numeric',
+                                month: 'long',
+                                timeZone: 'UTC'
+                              });
+                            })()}
                           </span>
                           <span className="text-[9px] text-slate-400 font-semibold">
-                            {format(alumno.fechaCorte, 'yyyy')}
+                            {(() => {
+                              const fecha = new Date(alumno.fechaCorte);
+                              return fecha.toLocaleDateString('es-ES', {
+                                year: 'numeric',
+                                timeZone: 'UTC'
+                              });
+                            })()}
                           </span>
                         </div>
                       ) : (
@@ -527,17 +529,16 @@ const DiaCorte = () => {
                     {/* Estado del ciclo con badge */}
                     <td className="px-6 py-4 text-center">
                       <span
-                        className={`inline-block px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider ${
-                          alumno.estadoCiclo === 'VENCE_HOY'
-                            ? 'bg-brand-accent text-white shadow-xs animate-pulse'
-                            : alumno.estadoCiclo === 'VENCE_PRONTO'
+                        className={`inline-block px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider ${alumno.estadoCiclo === 'VENCE_HOY'
+                          ? 'bg-brand-accent text-white shadow-xs animate-pulse'
+                          : alumno.estadoCiclo === 'VENCE_PRONTO'
                             ? 'bg-amber-100 text-amber-800 border border-amber-200'
                             : alumno.estadoCiclo === 'VENCIDO'
-                            ? 'bg-rose-100 text-rose-700 border border-rose-200'
-                            : alumno.estadoCiclo === 'INDIVIDUAL'
-                            ? 'bg-brand-primary-soft text-brand-primary-dark'
-                            : 'bg-emerald-100 text-emerald-800'
-                        }`}
+                              ? 'bg-rose-100 text-rose-700 border border-rose-200'
+                              : alumno.estadoCiclo === 'INDIVIDUAL'
+                                ? 'bg-brand-primary-soft text-brand-primary-dark'
+                                : 'bg-emerald-100 text-emerald-800'
+                          }`}
                       >
                         {alumno.etiquetaTiempo}
                       </span>

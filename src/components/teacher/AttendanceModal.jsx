@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { 
-  X, Check, UserMinus, Loader2, ShieldAlert, RefreshCw, Baby, 
-  AlertTriangle, CheckCheck, UserCheck, HelpCircle, Calendar 
+import {
+  X, Check, UserMinus, Loader2, ShieldAlert, RefreshCw, Baby,
+  AlertTriangle, CheckCheck, UserCheck, HelpCircle, Calendar
 } from 'lucide-react';
 import { asistenciaService } from '../../services/asistencia.service';
 import toast from 'react-hot-toast';
 import { format, addDays, isPast, isToday, differenceInYears, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { useEffect } from 'react';
 
 const AttendanceModal = ({ clase, onClose, onRefresh }) => {
   const [isSaving, setIsSaving] = useState(false);
@@ -15,8 +16,7 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
   // Inicialización de la lista de asistencia
   const [listaAsistencia, setListaAsistencia] = useState(
     clase.inscripcionesEnEstaFecha?.map(ins => {
-      const fechaInscripcion = ins.fecha_inscripcion ? new Date(ins.fecha_inscripcion) : null;
-      const fechaCorte = fechaInscripcion ? addDays(fechaInscripcion, 29) : null;
+      const fechaCorte = ins.inscripciones_deudas_link?.[0]?.fecha_fin_ciclo || null;
       const fNac = ins.alumnos?.usuarios?.fecha_nacimiento;
       const esFaltaAnticipada = Boolean(
         ins.registro_especifico?.falta_anticipada ||
@@ -49,12 +49,12 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
   const presentes = listaAsistencia.filter(a => a.estado === 'PRESENTE').length;
   const faltas = listaAsistencia.filter(a => a.estado === 'FALTA').length;
   const justificados = listaAsistencia.filter(a => a.esLesion || a.estado === 'JUSTIFICADO_LESION').length;
-  const pendientes = listaAsistencia.filter(a => 
+  const pendientes = listaAsistencia.filter(a =>
     !a.esLesion && a.estado !== 'PRESENTE' && a.estado !== 'FALTA' && a.estado !== 'JUSTIFICADO_LESION'
   ).length;
 
-  const porcentajeRegistrado = totalAlumnos > 0 
-    ? Math.round(((totalAlumnos - pendientes) / totalAlumnos) * 100) 
+  const porcentajeRegistrado = totalAlumnos > 0
+    ? Math.round(((totalAlumnos - pendientes) / totalAlumnos) * 100)
     : 100;
 
   // Actualizar estado local individual
@@ -216,15 +216,14 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
               return (
                 <div
                   key={alumno.asistenciaId}
-                  className={`p-4 sm:p-5 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs ${
-                    estaPendiente
-                      ? 'bg-amber-50/40 border-amber-300 ring-1 ring-amber-300/40'
-                      : alumno.estado === 'PRESENTE'
+                  className={`p-4 sm:p-5 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs ${estaPendiente
+                    ? 'bg-amber-50/40 border-amber-300 ring-1 ring-amber-300/40'
+                    : alumno.estado === 'PRESENTE'
                       ? 'bg-white border-emerald-200 hover:border-emerald-300'
                       : alumno.estado === 'FALTA'
-                      ? 'bg-white border-rose-200 hover:border-rose-300'
-                      : 'bg-white border-brand-border-soft'
-                  }`}
+                        ? 'bg-white border-rose-200 hover:border-rose-300'
+                        : 'bg-white border-brand-border-soft'
+                    }`}
                 >
                   {/* Info Alumno */}
                   <div className="space-y-1.5 min-w-0">
@@ -269,15 +268,19 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
                         </span>
                       ) : alumno.fechaCorte ? (
                         <span
-                          className={`px-2 py-0.5 rounded font-black ${
-                            alumno.vencido
-                              ? 'bg-red-50 text-red-600 border border-red-200'
-                              : alumno.esHoyCorte
+                          className={`px-2 py-0.5 rounded font-black ${alumno.vencido
+                            ? 'bg-red-50 text-red-600 border border-red-200'
+                            : alumno.esHoyCorte
                               ? 'bg-brand-accent-soft text-brand-accent-dark border border-brand-accent/30'
                               : 'bg-emerald-50 text-emerald-700'
-                          }`}
+                            }`}
                         >
-                          Corte: {format(alumno.fechaCorte, 'dd/MM', { locale: es })}
+                          Corte: {(() => {
+                            const fecha = new Date(alumno.fechaCorte);
+                            const dia = String(fecha.getUTCDate()).padStart(2, '0');
+                            const mes = String(fecha.getUTCMonth() + 1).padStart(2, '0');
+                            return `${dia}/${mes}`;
+                          })()}
                         </span>
                       ) : null}
 
@@ -295,13 +298,12 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
                       type="button"
                       onClick={() => handleLocalUpdate(alumno.asistenciaId, 'PRESENTE')}
                       disabled={alumno.esLesion}
-                      className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all active:scale-95 ${
-                        alumno.estado === 'PRESENTE'
-                          ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30 ring-2 ring-emerald-500'
-                          : alumno.esLesion
+                      className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all active:scale-95 ${alumno.estado === 'PRESENTE'
+                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30 ring-2 ring-emerald-500'
+                        : alumno.esLesion
                           ? 'bg-slate-100 text-slate-300 cursor-not-allowed'
                           : 'bg-slate-100 text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200'
-                      }`}
+                        }`}
                       title="Marcar Presente"
                     >
                       <Check size={16} strokeWidth={3} />
@@ -312,13 +314,12 @@ const AttendanceModal = ({ clase, onClose, onRefresh }) => {
                       type="button"
                       onClick={() => handleLocalUpdate(alumno.asistenciaId, 'FALTA')}
                       disabled={alumno.esLesion}
-                      className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all active:scale-95 ${
-                        alumno.estado === 'FALTA'
-                          ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30 ring-2 ring-rose-500'
-                          : alumno.esLesion
+                      className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all active:scale-95 ${alumno.estado === 'FALTA'
+                        ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30 ring-2 ring-rose-500'
+                        : alumno.esLesion
                           ? 'bg-slate-100 text-slate-300 cursor-not-allowed'
                           : 'bg-slate-100 text-slate-600 hover:bg-rose-50 hover:text-rose-700 border border-slate-200'
-                      }`}
+                        }`}
                       title="Marcar Falta"
                     >
                       <UserMinus size={16} strokeWidth={3} />
