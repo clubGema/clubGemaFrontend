@@ -151,10 +151,6 @@ const CicloHistoryPanel = ({ historial, loadingCiclos, onSelectMes, onSelectIndi
                                                 <span className="text-[10px] font-black text-brand-body truncate">{ciclo.fecha_inicio_ciclo_label}</span>
                                             </div>
                                             <div className="flex flex-col min-w-0">
-                                                <span className="text-[8px] text-brand-muted uppercase font-black tracking-widest">Fin real</span>
-                                                <span className="text-[10px] font-black text-brand-body truncate">{ciclo.fecha_fin_ciclo_label}</span>
-                                            </div>
-                                            <div className="flex flex-col min-w-0">
                                                 <span className="text-[8px] text-brand-muted uppercase font-black tracking-widest">Corte</span>
                                                 <span className="text-[10px] font-black text-brand-body truncate">{ciclo.fecha_corte_ciclo_label}</span>
                                             </div>
