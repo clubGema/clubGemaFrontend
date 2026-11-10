@@ -53,6 +53,20 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
 
     if (!selectedAlumno) return null;
 
+    const handleHistorialChange = async (nuevoEstado) => {
+        const estadoAnterior = detalle?.salud?.historial;
+        setDetalle((prev) =>
+            prev ? { ...prev, salud: { ...prev.salud, historial: nuevoEstado } } : prev
+        );
+
+        const ok = await onStatusHistoryChange?.(nuevoEstado);
+        if (ok === false) {
+            setDetalle((prev) =>
+                prev ? { ...prev, salud: { ...prev.salud, historial: estadoAnterior } } : prev
+            );
+        }
+    };
+
     // Evita el crash: mientras no haya detalle cargado, no renderiza el
     // cuerpo que depende de direccion/salud/contactoEmergencia/email/etc.
     if (loadingDetalle || !detalle) {
@@ -88,7 +102,7 @@ const StudentDetails = ({ selectedAlumno, onBack, onStatusHistoryChange }) => {
                         detalle={detalle}
                         onOpenPasswordModal={() => setIsPasswordModalOpen(true)}
                     />
-                    <StudentHealthCard detalle={detalle} onStatusHistoryChange={onStatusHistoryChange} />
+                    <StudentHealthCard detalle={detalle} onStatusHistoryChange={handleHistorialChange} />
                 </div>
 
                 {/* COLUMNA DERECHA (Emergencia y Ciclos) */}
