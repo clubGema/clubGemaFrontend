@@ -25,6 +25,9 @@ const AdminPaymentValidation = ({ onBack, paymentData, onSuccess }) => {
     const [fechaInicioClases, setFechaInicioClases] = useState(
         paymentData?.cuentas_por_cobrar?.inscripciones_deudas_link?.[0]?.inscripciones?.fecha_inscripcion || hoyLocal
     );
+    const [fechaFinClases, setFechaFinClases] = useState(
+        paymentData?.cuentas_por_cobrar?.inscripciones_deudas_link?.[0]?.fecha_fin_ciclo
+    );
 
     const [inscripcionesVinculadas, setInscripcionesVinculadas] = useState(
         paymentData?.cuentas_por_cobrar?.inscripciones_deudas_link || []
@@ -205,92 +208,92 @@ const AdminPaymentValidation = ({ onBack, paymentData, onSuccess }) => {
 
                     {/* Una orden de solo merch no tiene inscripciones: no hay ciclo que mostrar ni ajustar */}
                     {inscripcionesVinculadas.length > 0 && (
-                    <div className="bg-brand-surface p-8 rounded-[3rem] border border-brand-border-soft shadow-sm relative overflow-hidden">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-slate-50 pb-6">
-                            <div>
-                                <h3 className="font-black uppercase italic text-slate-800 text-lg tracking-tighter">Detalle de Inscripción</h3>
-                                <p className="text-[10px] text-brand-muted font-bold uppercase mt-1">Ubicación y Cronograma seleccionado</p>
+                        <div className="bg-brand-surface p-8 rounded-[3rem] border border-brand-border-soft shadow-sm relative overflow-hidden">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-slate-50 pb-6">
+                                <div>
+                                    <h3 className="font-black uppercase italic text-slate-800 text-lg tracking-tighter">Detalle de Inscripción</h3>
+                                    <p className="text-[10px] text-brand-muted font-bold uppercase mt-1">Ubicación y Cronograma seleccionado</p>
+                                </div>
+
+                                {/* 🚩 REGLA DE ORO: Solo mostramos el botón si NO hay abonos previos */}
+                                {paymentData?.estado_validacion === 'APROBADO' && paymentData?.cuenta_id && (
+                                    <button onClick={() => setShowAjusteModal(true)} className="bg-brand-primary text-white px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase italic hover:bg-brand-accent transition-all flex items-center gap-2 shadow-lg">
+                                        <Calendar size={14} /> Ajustar fecha de inicio
+                                    </button>
+                                )}
+                                {paymentData?.estado_validacion === 'APROBADO' ? null : infoFinanciera.esPrimerPago ? (
+                                    <button onClick={() => setShowDateModal(true)} className="bg-brand-accent text-white px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase italic hover:bg-brand-primary-dark transition-all flex items-center gap-2 shadow-lg shadow-brand-accent/25">
+                                        <Calendar size={14} /> AJUSTAR FECHA DE INICIO
+                                    </button>
+                                ) : (
+                                    <div className="bg-brand-primary-soft px-5 py-3 rounded-2xl border border-brand-primary/10 flex items-center gap-2">
+                                        <ShieldCheck size={16} className="text-brand-primary" />
+                                        <span className="text-[9px] font-black text-brand-primary uppercase italic">Ciclo ya iniciado (Abono previo)</span>
+                                    </div>
+                                )}
                             </div>
 
-                            {/* 🚩 REGLA DE ORO: Solo mostramos el botón si NO hay abonos previos */}
-                            {paymentData?.estado_validacion === 'APROBADO' && paymentData?.cuenta_id && (
-                                <button onClick={() => setShowAjusteModal(true)} className="bg-brand-primary text-white px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase italic hover:bg-brand-accent transition-all flex items-center gap-2 shadow-lg">
-                                    <Calendar size={14} /> Ajustar fecha de inicio
-                                </button>
-                            )}
-                            {paymentData?.estado_validacion === 'APROBADO' ? null : infoFinanciera.esPrimerPago ? (
-                                <button onClick={() => setShowDateModal(true)} className="bg-brand-accent text-white px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase italic hover:bg-brand-primary-dark transition-all flex items-center gap-2 shadow-lg shadow-brand-accent/25">
-                                    <Calendar size={14} /> AJUSTAR FECHA DE INICIO
-                                </button>
-                            ) : (
-                                <div className="bg-brand-primary-soft px-5 py-3 rounded-2xl border border-brand-primary/10 flex items-center gap-2">
-                                    <ShieldCheck size={16} className="text-brand-primary" />
-                                    <span className="text-[9px] font-black text-brand-primary uppercase italic">Ciclo ya iniciado (Abono previo)</span>
-                                </div>
-                            )}
-                        </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {inscripcionesVinculadas.map((link, idx) => {
+                                    const h = link.inscripciones?.horarios_clases;
+                                    const diasSemana = ['', 'LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO', 'DOMINGO'];
+                                    const tipoInsc = link.inscripciones?.tipo_inscripcion;
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {inscripcionesVinculadas.map((link, idx) => {
-                                const h = link.inscripciones?.horarios_clases;
-                                const diasSemana = ['', 'LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO', 'DOMINGO'];
-                                const tipoInsc = link.inscripciones?.tipo_inscripcion;
+                                    return (
+                                        <div key={idx} className="bg-brand-bg p-6 rounded-[2.5rem] border-2 border-slate-50 hover:bg-brand-surface hover:border-brand-primary/20 transition-all">
+                                            <div className="space-y-4">
+                                                {tipoInsc === 'REGULAR' ? (
+                                                    <div className="flex items-center justify-between gap-2 bg-brand-surface p-3 rounded-2xl border border-brand-border-soft shadow-sm">
+                                                        <div className="text-center flex-1">
+                                                            <p className="text-[7px] font-black text-brand-muted uppercase">Inicia</p>
+                                                            <p className="text-[10px] font-black text-brand-primary">{formatFechaLocal(fechaInicioClases)}</p>
+                                                        </div>
+                                                        <ArrowRight size={14} className="text-slate-300" />
+                                                        <div className="text-center flex-1">
+                                                            <p className="text-[7px] font-black text-brand-muted uppercase">Vence</p>
+                                                            <p className="text-[10px] font-black text-brand-accent-dark">{formatFechaLocal(fechaFinClases)}</p>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center justify-between gap-2 bg-brand-surface p-3 rounded-2xl border border-brand-border-soft shadow-sm">
+                                                        <div className="text-center flex-1">
+                                                            <p className="text-[7px] font-black text-brand-muted uppercase">Fecha de la Clase</p>
+                                                            <p className="text-[10px] font-black text-brand-primary">{formatFechaLocal(fechaInicioClases)}</p>
+                                                        </div>
+                                                    </div>
+                                                )}
 
-                                return (
-                                    <div key={idx} className="bg-brand-bg p-6 rounded-[2.5rem] border-2 border-slate-50 hover:bg-brand-surface hover:border-brand-primary/20 transition-all">
-                                        <div className="space-y-4">
-                                            {tipoInsc === 'REGULAR' ? (
-                                                <div className="flex items-center justify-between gap-2 bg-brand-surface p-3 rounded-2xl border border-brand-border-soft shadow-sm">
-                                                    <div className="text-center flex-1">
-                                                        <p className="text-[7px] font-black text-brand-muted uppercase">Inicia</p>
-                                                        <p className="text-[10px] font-black text-brand-primary">{formatFechaLocal(fechaInicioClases)}</p>
+                                                <div className="space-y-2 pt-2">
+                                                    <div className="flex items-start gap-2">
+                                                        <MapPin size={14} className="text-brand-primary mt-0.5" />
+                                                        <div>
+                                                            <p className="text-[10px] font-black text-slate-800 uppercase leading-none">{h?.canchas?.sedes?.nombre}</p>
+                                                            <p className="text-[9px] font-bold text-brand-muted uppercase">{h?.canchas?.nombre}</p>
+                                                        </div>
                                                     </div>
-                                                    <ArrowRight size={14} className="text-slate-300" />
-                                                    <div className="text-center flex-1">
-                                                        <p className="text-[7px] font-black text-brand-muted uppercase">Vence</p>
-                                                        <p className="text-[10px] font-black text-brand-accent-dark">{formatFechaLocal(calcularFechaFin(fechaInicioClases))}</p>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <div className="flex items-center justify-between gap-2 bg-brand-surface p-3 rounded-2xl border border-brand-border-soft shadow-sm">
-                                                    <div className="text-center flex-1">
-                                                        <p className="text-[7px] font-black text-brand-muted uppercase">Fecha de la Clase</p>
-                                                        <p className="text-[10px] font-black text-brand-primary">{formatFechaLocal(fechaInicioClases)}</p>
+                                                    <div className="flex items-center gap-2">
+                                                        <Activity size={14} className="text-brand-accent" />
+                                                        <p className="text-[9px] font-black text-slate-600 uppercase">Nivel: {h?.niveles_entrenamiento?.nombre}</p>
                                                     </div>
                                                 </div>
-                                            )}
 
-                                            <div className="space-y-2 pt-2">
-                                                <div className="flex items-start gap-2">
-                                                    <MapPin size={14} className="text-brand-primary mt-0.5" />
-                                                    <div>
-                                                        <p className="text-[10px] font-black text-slate-800 uppercase leading-none">{h?.canchas?.sedes?.nombre}</p>
-                                                        <p className="text-[9px] font-bold text-brand-muted uppercase">{h?.canchas?.nombre}</p>
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <Activity size={14} className="text-brand-accent" />
-                                                    <p className="text-[9px] font-black text-slate-600 uppercase">Nivel: {h?.niveles_entrenamiento?.nombre}</p>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex items-center justify-between border-t border-brand-border-soft pt-4">
-                                                <div className="flex items-center gap-2">
-                                                    <Clock size={16} className="text-brand-primary" />
-                                                    <div>
-                                                        <p className="text-[9px] font-black text-brand-muted uppercase tracking-tighter leading-none">{diasSemana[h?.dia_semana]}</p>
-                                                        <p className="text-sm font-black italic text-brand-primary mt-0.5">
-                                                            {renderHoraLimpia(h?.hora_inicio)} - {renderHoraLimpia(h?.hora_fin)}
-                                                        </p>
+                                                <div className="flex items-center justify-between border-t border-brand-border-soft pt-4">
+                                                    <div className="flex items-center gap-2">
+                                                        <Clock size={16} className="text-brand-primary" />
+                                                        <div>
+                                                            <p className="text-[9px] font-black text-brand-muted uppercase tracking-tighter leading-none">{diasSemana[h?.dia_semana]}</p>
+                                                            <p className="text-sm font-black italic text-brand-primary mt-0.5">
+                                                                {renderHoraLimpia(h?.hora_inicio)} - {renderHoraLimpia(h?.hora_fin)}
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )
-                            })}
+                                    )
+                                })}
+                            </div>
                         </div>
-                    </div>
                     )}
 
                     <div className="bg-brand-surface rounded-[3rem] border border-brand-border-soft shadow-sm p-8 text-center relative overflow-hidden">
