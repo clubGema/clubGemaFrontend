@@ -1,7 +1,7 @@
 import React from 'react';
 import { Sparkles, Lock, Unlock } from 'lucide-react';
 import { formatSoles } from '../../utils/formatSoles';
-import { maxQty } from '../../utils/merchCart';
+import { esCamisetaMerch, estaAgotadoMerch, maxQty } from '../../utils/merchCart';
 import MerchImage from './MerchImage';
 import QuantitySelector from './QuantitySelector';
 
@@ -10,9 +10,10 @@ const ULTIMAS_UNIDADES = 5;
 // Tarjeta "desbloqueable" del catálogo. `ownedCount` = unidades que el alumno ya tiene;
 // `qty` / `onQtyChange` controlan la cantidad a comprar (sin ellos la tarjeta es informativa).
 const MerchCard = ({ item, ownedCount = 0, qty = 0, onQtyChange }) => {
+  const sinLimiteStock = esCamisetaMerch(item);
   const stock = item.stock != null ? Number(item.stock) : null;
-  const agotado = stock !== null && stock <= 0;
-  const ultimas = stock !== null && stock > 0 && stock <= ULTIMAS_UNIDADES;
+  const agotado = estaAgotadoMerch(item);
+  const ultimas = !sinLimiteStock && stock !== null && stock > 0 && stock <= ULTIMAS_UNIDADES;
   const desbloqueado = ownedCount > 0;
 
   return (

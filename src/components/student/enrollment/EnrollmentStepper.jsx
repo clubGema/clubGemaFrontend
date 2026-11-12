@@ -9,7 +9,7 @@ import { feriadoService } from '../../../services/feriado.service';
 import { enrollmentService } from '../../../services/enrollment.service';
 import { merchService } from '../../../services/merch.service';
 import { ESTADO_COLECCION } from '../../../config/merch';
-import { qtyMapToIds, cartLines } from '../../../utils/merchCart';
+import { qtyMapToIds, cartLines, esCamisetaMerch, withQty } from '../../../utils/merchCart';
 import { precioClaseUnica, precioMensual } from '../../../utils/enrollmentPricing';
 import LoadingSpinner from '../../shared/LoadingSpinner';
 import StepIndicator from './StepIndicator';
@@ -59,10 +59,45 @@ const EnrollmentStepper = ({ userId, onSuccess }) => {
     [coleccionMerch]
   );
 
-  // Sede de recojo: automáticamente la sede elegida en la matrícula
+  // Camisetas Oficiales (todas las tallas) para ofrecerlas justo después de previsualizar los días del ciclo.
+  const camisetasOficiales = useMemo(
+    () => catalogoMerch.filter(esCamisetaMerch),
+    [catalogoMerch]
+  );
+
+  // Al elegir una talla en el Paso 2 se limpia cualquier otra talla previa y se asigna la cantidad a la talla elegida.
+  const handleSelectCamiseta = (merchId, qty) => {
+    setExtras((prev) => {
+      const nextQty = { ...prev.merchQty };
+      camisetasOficiales.forEach((c) => {
+        delete nextQty[c.id];
+      });
+      return {
+        ...prev,
+        merchQty: withQty(nextQty, merchId, qty),
+      };
+    });
+  };
+
+  const handleClearCamisetas = () => {
+    setExtras((prev) => {
+      const nextQty = { ...prev.merchQty };
+      camisetasOficiales.forEach((c) => {
+        delete nextQty[c.id];
+      });
+      return { ...prev, merchQty: nextQty };
+    });
+  };
+
+  // Sede de recojo: toma la sede elegida explícitamente o la primera sede de los horarios seleccionados
+  const sedesHorariosNombres = useMemo(
+    () => [...new Set(derived.horariosElegidos.map((h) => h.cancha?.sede?.nombre).filter(Boolean))],
+    [derived.horariosElegidos]
+  );
+  const sedePrincipalNombre = sedesHorariosNombres[0] || state.sedesElegidas?.[0] || state.sede;
   const sedeRecojoId = extras.sedeId
-    ?? sedes.find(s => s.nombre === state.sede)?.id
-    ?? sedes.find(s => s.nombre?.toLowerCase() === state.sede?.toLowerCase())?.id
+    ?? sedes.find(s => s.nombre === sedePrincipalNombre)?.id
+    ?? sedes.find(s => s.nombre?.toLowerCase() === sedePrincipalNombre?.toLowerCase())?.id
     ?? null;
   const faltaSedeRecojo = false;
 
@@ -143,6 +178,10 @@ const EnrollmentStepper = ({ userId, onSuccess }) => {
           userId={userId}
           feriados={feriados}
           precioUnitario={precioUnitario}
+          camisetasOficiales={camisetasOficiales}
+          merchQty={extras.merchQty}
+          onSelectCamiseta={handleSelectCamiseta}
+          onClearCamisetas={handleClearCamisetas}
         />
       )}
       {state.step === 3 && (

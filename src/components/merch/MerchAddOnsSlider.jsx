@@ -1,7 +1,7 @@
 import React from 'react';
 import { Gift } from 'lucide-react';
 import { formatSoles } from '../../utils/formatSoles';
-import { maxQty } from '../../utils/merchCart';
+import { estaAgotadoMerch, maxQty } from '../../utils/merchCart';
 import MerchImage from './MerchImage';
 import QuantitySelector from './QuantitySelector';
 
@@ -23,7 +23,7 @@ const MerchAddOnsSlider = ({ items, quantities, onQtyChange, ownedCounts = {} })
       <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 -mx-1 px-1 [scrollbar-width:thin]">
         {items.map((item) => {
           const qty = quantities[item.id] || 0;
-          const agotado = item.stock != null && Number(item.stock) <= 0;
+          const agotado = estaAgotadoMerch(item);
           const owned = ownedCounts[item.id] || 0;
           return (
             <div

@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { useFetch } from '../../hooks/useFetch';
 import { merchService } from '../../services/merch.service';
 import { formatSoles } from '../../utils/formatSoles';
+import { esCamisetaMerch } from '../../utils/merchCart';
 import PageTitle from '../../components/shared/PageTitle';
 import SearchInput from '../../components/shared/SearchInput';
 import LoadingSpinner from '../../components/shared/LoadingSpinner';
@@ -122,6 +123,7 @@ const AdminMerchManager = () => {
                         <tbody>
                             {filtrados.map(p => {
                                 const inactivo = p.estado === 'INACTIVO';
+                                const esCamiseta = esCamisetaMerch(p);
                                 return (
                                     <tr key={p.id} className={`border-b border-brand-border-soft last:border-0 ${inactivo ? 'bg-brand-bg/60 opacity-70' : ''}`}>
                                         <td className="px-5 py-3">
@@ -130,14 +132,27 @@ const AdminMerchManager = () => {
                                             </div>
                                         </td>
                                         <td className="px-5 py-3">
-                                            <p className="text-sm font-black text-brand-heading uppercase italic leading-tight">{p.nombre}</p>
+                                            <div className="flex items-center gap-2 flex-wrap">
+                                                <p className="text-sm font-black text-brand-heading uppercase italic leading-tight">{p.nombre}</p>
+                                                {esCamiseta && (
+                                                    <span className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-brand-gold-soft text-brand-gold-dark border border-brand-gold/40">
+                                                        Fijo en Matrícula
+                                                    </span>
+                                                )}
+                                            </div>
                                             {p.descripcion && <p className="text-[10px] font-bold text-brand-muted line-clamp-1 max-w-xs">{p.descripcion}</p>}
                                         </td>
                                         <td className="px-5 py-3 text-sm font-black text-green-600 italic">{formatSoles(p.precio)}</td>
                                         <td className="px-5 py-3">
-                                            <span className={`text-xs font-black px-2.5 py-1 rounded-full ${Number(p.stock) === 0 ? 'bg-red-50 text-red-600' : Number(p.stock) <= STOCK_BAJO ? 'bg-brand-accent-soft text-brand-accent-dark' : 'bg-brand-surface-alt text-slate-600'}`}>
-                                                {p.stock}
-                                            </span>
+                                            {esCamiseta ? (
+                                                <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full bg-brand-primary-soft text-brand-primary">
+                                                    ∞ Sin límite ({p.stock})
+                                                </span>
+                                            ) : (
+                                                <span className={`text-xs font-black px-2.5 py-1 rounded-full ${Number(p.stock) === 0 ? 'bg-red-50 text-red-600' : Number(p.stock) <= STOCK_BAJO ? 'bg-brand-accent-soft text-brand-accent-dark' : 'bg-brand-surface-alt text-slate-600'}`}>
+                                                    {p.stock}
+                                                </span>
+                                            )}
                                         </td>
                                         <td className="px-5 py-3">
                                             <span className={`text-[9px] font-black uppercase px-2 py-1 rounded ${inactivo ? 'bg-red-50 text-red-500' : 'bg-brand-gold-soft text-brand-gold-dark'}`}>
@@ -157,9 +172,11 @@ const AdminMerchManager = () => {
                                                 >
                                                     {inactivo ? <PackageCheck size={16} /> : <PackageX size={16} />}
                                                 </button>
-                                                <button type="button" title="Eliminar" onClick={() => setDeleteTarget(p)} className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors">
-                                                    <Trash2 size={16} />
-                                                </button>
+                                                {!esCamiseta && (
+                                                    <button type="button" title="Eliminar" onClick={() => setDeleteTarget(p)} className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors">
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                )}
                                             </div>
                                         </td>
                                     </tr>

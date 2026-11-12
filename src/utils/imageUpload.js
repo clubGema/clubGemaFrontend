@@ -21,4 +21,5 @@ export const isSafeImageUrl = (url) =>
   typeof url === 'string' &&
   (/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(url) ||
     /^https?:\/\//i.test(url) ||
-    /^blob:https?:\/\//i.test(url));
+    /^blob:https?:\/\//i.test(url) ||
+    /^\/[A-Za-z0-9._/-]+\.(jpe?g|png|webp)$/i.test(url));
