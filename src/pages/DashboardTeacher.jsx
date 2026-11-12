@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { 
-  Users, Clock, MapPin, CheckCircle, Calendar as CalendarIcon, 
-  Loader2, ChevronRight, ChevronLeft, AlertTriangle, CheckCheck, 
-  RefreshCw, ShieldAlert, CalendarDays, ListFilter, Sparkles, AlertCircle 
+import {
+  Users, Clock, MapPin, CheckCircle, Calendar as CalendarIcon,
+  Loader2, ChevronRight, ChevronLeft, AlertTriangle, CheckCheck,
+  RefreshCw, ShieldAlert, CalendarDays, ListFilter, Sparkles, AlertCircle
 } from 'lucide-react';
 import AttendanceModal from '../components/teacher/AttendanceModal';
 import { useAuth } from '../context/AuthContext';
 import { asistenciaService } from '../services/asistencia.service';
 import toast from 'react-hot-toast';
-import { 
-  format, startOfMonth, endOfMonth, eachDayOfInterval, 
-  isSameDay, isToday, addMonths, subMonths, getDay, 
-  parseISO, isPast, isFuture, startOfToday 
+import {
+  format, startOfMonth, endOfMonth, eachDayOfInterval,
+  isSameDay, isToday, addMonths, subMonths, getDay,
+  parseISO, isPast, isFuture, startOfToday
 } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -26,11 +26,11 @@ const DashboardTeacher = () => {
   const [vistaModo, setVistaModo] = useState('dia'); // 'dia' | 'todas'
 
   const { user } = useAuth();
-  const coordinatorFullName = user?.user 
-    ? `${user.user.nombres} ${user.user.apellidos}` 
-    : user?.nombres 
-    ? `${user.nombres} ${user.apellidos}` 
-    : 'Coordinador Imperio 7';
+  const coordinatorFullName = user?.user
+    ? `${user.user.nombres} ${user.user.apellidos}`
+    : user?.nombres
+      ? `${user.nombres} ${user.apellidos}`
+      : 'Coordinador Imperio 7';
 
   // 1. Cargar agenda desde el backend
   const fetchAgenda = useCallback(async () => {
@@ -58,7 +58,7 @@ const DashboardTeacher = () => {
               reprogramacionData = reg.reprogramaciones_clases;
             }
 
-            const globalKey = `${fechaKey}-${timeRange}-${horario.id}`;
+            const globalKey = `${fechaKey}-${timeRange}`;
 
             if (!fechasUnicas[globalKey]) {
               const fechaDate = new Date(reg.fecha);
@@ -79,12 +79,13 @@ const DashboardTeacher = () => {
                 isFuture: fechaKey > hoyLimaStr,
                 dateFormatted: format(new Date(`${fechaKey}T12:00:00`), "EEEE dd 'de' MMMM", { locale: es }).toUpperCase(),
                 dateShort: format(new Date(`${fechaKey}T12:00:00`), 'dd MMM', { locale: es }).toUpperCase(),
-                inscripcionesEnEstaFecha: []
+                inscripcionesEnEstaFecha: [],
+                coordinadorId: horario.coordinador_id
               };
             }
-            fechasUnicas[globalKey].inscripcionesEnEstaFecha.push({ 
-              ...ins, 
-              registro_especifico: reg 
+            fechasUnicas[globalKey].inscripcionesEnEstaFecha.push({
+              ...ins,
+              registro_especifico: reg
             });
           });
         });
@@ -314,23 +315,20 @@ const DashboardTeacher = () => {
         </div>
 
         {/* Sin marcar (Alertas) */}
-        <div className={`p-4 sm:p-5 rounded-2xl border shadow-xs flex items-center gap-3 sm:gap-4 ${
-          totalAlumnosSinMarcar > 0 
-            ? 'bg-amber-50/80 border-amber-200' 
-            : 'bg-brand-surface border-brand-border'
-        }`}>
-          <div className={`p-3 rounded-xl ${
-            totalAlumnosSinMarcar > 0 
-              ? 'bg-amber-500 text-white shadow-xs' 
-              : 'bg-slate-100 text-slate-400'
+        <div className={`p-4 sm:p-5 rounded-2xl border shadow-xs flex items-center gap-3 sm:gap-4 ${totalAlumnosSinMarcar > 0
+          ? 'bg-amber-50/80 border-amber-200'
+          : 'bg-brand-surface border-brand-border'
           }`}>
+          <div className={`p-3 rounded-xl ${totalAlumnosSinMarcar > 0
+            ? 'bg-amber-500 text-white shadow-xs'
+            : 'bg-slate-100 text-slate-400'
+            }`}>
             <AlertCircle size={22} />
           </div>
           <div>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Sin Marcar</p>
-            <p className={`text-xl sm:text-2xl font-black tracking-tight ${
-              totalAlumnosSinMarcar > 0 ? 'text-amber-700' : 'text-slate-600'
-            }`}>
+            <p className={`text-xl sm:text-2xl font-black tracking-tight ${totalAlumnosSinMarcar > 0 ? 'text-amber-700' : 'text-slate-600'
+              }`}>
               {totalAlumnosSinMarcar}
             </p>
           </div>
@@ -349,22 +347,20 @@ const DashboardTeacher = () => {
         <div className="inline-flex bg-brand-surface p-1 rounded-2xl border border-brand-border shadow-xs self-start sm:self-auto">
           <button
             onClick={() => setVistaModo('dia')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
-              vistaModo === 'dia'
-                ? 'bg-brand-primary text-white shadow-sm'
-                : 'text-slate-600 hover:text-brand-primary hover:bg-slate-50'
-            }`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${vistaModo === 'dia'
+              ? 'bg-brand-primary text-white shadow-sm'
+              : 'text-slate-600 hover:text-brand-primary hover:bg-slate-50'
+              }`}
           >
             <CalendarDays size={15} />
             <span>Vista Calendario / Día</span>
           </button>
           <button
             onClick={() => setVistaModo('todas')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
-              vistaModo === 'todas'
-                ? 'bg-brand-primary text-white shadow-sm'
-                : 'text-slate-600 hover:text-brand-primary hover:bg-slate-50'
-            }`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${vistaModo === 'todas'
+              ? 'bg-brand-primary text-white shadow-sm'
+              : 'text-slate-600 hover:text-brand-primary hover:bg-slate-50'
+              }`}
           >
             <ListFilter size={15} />
             <span>Ver Toda la Temporada</span>
@@ -448,15 +444,14 @@ const DashboardTeacher = () => {
                     key={dayKey}
                     type="button"
                     onClick={() => setSelectedDate(day)}
-                    className={`h-11 sm:h-13 rounded-2xl flex flex-col items-center justify-center p-1 relative transition-all active:scale-95 ${
-                      estaSeleccionado
-                        ? 'bg-brand-primary text-white shadow-md shadow-brand-primary/30 ring-2 ring-brand-accent'
-                        : esHoy
+                    className={`h-11 sm:h-13 rounded-2xl flex flex-col items-center justify-center p-1 relative transition-all active:scale-95 ${estaSeleccionado
+                      ? 'bg-brand-primary text-white shadow-md shadow-brand-primary/30 ring-2 ring-brand-accent'
+                      : esHoy
                         ? 'bg-brand-accent-soft text-brand-accent-dark font-black border-2 border-brand-accent/50'
                         : tieneClases
-                        ? 'bg-slate-50 hover:bg-brand-primary-soft/70 text-slate-800 font-bold border border-slate-200/80'
-                        : 'text-slate-400 hover:bg-slate-50 font-medium'
-                    }`}
+                          ? 'bg-slate-50 hover:bg-brand-primary-soft/70 text-slate-800 font-bold border border-slate-200/80'
+                          : 'text-slate-400 hover:bg-slate-50 font-medium'
+                      }`}
                   >
                     <span className="text-xs sm:text-sm leading-none font-bold">
                       {format(day, 'd')}
@@ -553,13 +548,12 @@ const DashboardTeacher = () => {
                 {sesionesDelDia.map(claseItem => (
                   <div
                     key={claseItem.id}
-                    className={`bg-brand-surface rounded-[2rem] p-5 sm:p-7 border-2 transition-all shadow-md hover:shadow-xl relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-5 ${
-                      claseItem.requiereAtencion
-                        ? 'border-brand-accent bg-gradient-to-r from-brand-accent-soft/40 via-white to-white'
-                        : claseItem.attended
+                    className={`bg-brand-surface rounded-[2rem] p-5 sm:p-7 border-2 transition-all shadow-md hover:shadow-xl relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-5 ${claseItem.requiereAtencion
+                      ? 'border-brand-accent bg-gradient-to-r from-brand-accent-soft/40 via-white to-white'
+                      : claseItem.attended
                         ? 'border-emerald-200 bg-white'
                         : 'border-brand-border bg-white'
-                    }`}
+                      }`}
                   >
                     {/* Alerta de live session o pendiente */}
                     {claseItem.requiereAtencion && (
@@ -637,24 +631,23 @@ const DashboardTeacher = () => {
                         type="button"
                         onClick={() => !claseItem.isFuture && setSelectedClass(claseItem)}
                         disabled={claseItem.isFuture}
-                        className={`w-full sm:w-auto px-7 py-4 rounded-2xl font-black text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 active:scale-95 italic ${
-                          claseItem.isFuture
-                            ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
-                            : claseItem.requiereAtencion
+                        className={`w-full sm:w-auto px-7 py-4 rounded-2xl font-black text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 active:scale-95 italic ${claseItem.isFuture
+                          ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
+                          : claseItem.requiereAtencion
                             ? 'bg-brand-accent hover:bg-brand-accent-dark text-white shadow-brand-accent/30 ring-2 ring-brand-accent'
                             : claseItem.attended
-                            ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                            : 'bg-brand-primary hover:bg-[#152a63] text-white shadow-brand-primary/20'
-                        }`}
+                              ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                              : 'bg-brand-primary hover:bg-[#152a63] text-white shadow-brand-primary/20'
+                          }`}
                       >
                         <span>
                           {claseItem.isFuture
                             ? 'Sesión Futura'
                             : claseItem.requiereAtencion
-                            ? '¡Completar Asistencia!'
-                            : claseItem.attended
-                            ? 'Ver / Editar'
-                            : 'Tomar Asistencia'}
+                              ? '¡Completar Asistencia!'
+                              : claseItem.attended
+                                ? 'Ver / Editar'
+                                : 'Tomar Asistencia'}
                         </span>
                         <ChevronRight size={17} />
                       </button>
@@ -686,22 +679,20 @@ const DashboardTeacher = () => {
             {clases.map(item => (
               <div
                 key={item.id}
-                className={`bg-brand-surface rounded-[2rem] p-5 sm:p-6 border transition-all flex flex-col md:flex-row md:items-center justify-between gap-5 shadow-sm ${
-                  item.requiereAtencion
-                    ? 'border-brand-accent bg-brand-accent-soft/20'
-                    : item.isToday
+                className={`bg-brand-surface rounded-[2rem] p-5 sm:p-6 border transition-all flex flex-col md:flex-row md:items-center justify-between gap-5 shadow-sm ${item.requiereAtencion
+                  ? 'border-brand-accent bg-brand-accent-soft/20'
+                  : item.isToday
                     ? 'border-brand-primary bg-brand-primary-soft/20'
                     : 'border-brand-border'
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-5">
-                  <div className={`w-16 h-16 rounded-2xl flex flex-col items-center justify-center font-black shrink-0 ${
-                    item.isToday 
-                      ? 'bg-brand-accent text-white shadow-md' 
-                      : item.attended
+                  <div className={`w-16 h-16 rounded-2xl flex flex-col items-center justify-center font-black shrink-0 ${item.isToday
+                    ? 'bg-brand-accent text-white shadow-md'
+                    : item.attended
                       ? 'bg-emerald-600 text-white'
                       : 'bg-brand-primary text-white'
-                  }`}>
+                    }`}>
                     <span className="text-lg leading-none">{item.dateShort.split(' ')[0]}</span>
                     <span className="text-[9px] uppercase tracking-widest opacity-80">{item.dateShort.split(' ')[1]}</span>
                   </div>
@@ -733,13 +724,12 @@ const DashboardTeacher = () => {
                   type="button"
                   onClick={() => !item.isFuture && setSelectedClass(item)}
                   disabled={item.isFuture}
-                  className={`px-6 py-3.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all self-stretch md:self-center flex items-center justify-center gap-2 ${
-                    item.isFuture
-                      ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                      : item.requiereAtencion
+                  className={`px-6 py-3.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all self-stretch md:self-center flex items-center justify-center gap-2 ${item.isFuture
+                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                    : item.requiereAtencion
                       ? 'bg-brand-accent text-white hover:bg-brand-accent-dark'
                       : 'bg-brand-primary text-white hover:bg-[#152a63]'
-                  }`}
+                    }`}
                 >
                   <span>{item.isFuture ? 'Futura' : 'Asistencia'}</span>
                   <ChevronRight size={15} />
