@@ -13,7 +13,7 @@ export const calcularSlotsDisponibles = (horariosPatron, historial = [], stats =
         // fix de zona horaria - Extracción limpia YYYY-MM-DD del slot
         const fechaSlotTexto = String(slot.fecha).slice(0, 10);
 
-        if (finKey && fechaSlotTexto > finKey) {
+        if (finKey && fechaSlotTexto < finKey) {
             return false;
         }
 

@@ -10,7 +10,7 @@ import { API_ROUTES } from '../../constants/apiRoutes';
 import toast from 'react-hot-toast';
 import ConfirmModal from '../../components/shared/ConfirmModal';
 import { useAuth } from '../../context/AuthContext';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { parseDateOnly, toDateKey, esFechaValida, ultimaClaseProgramada } from '../../utils/enrollmentCycle';
 import { useFetch } from '../../hooks/useFetch';
@@ -141,8 +141,9 @@ const MyRegistrations = () => {
         setPendingPayment(deuda);
       }
     } catch (error) {
-        console.error('Error en fetchInitialData:', error);
-        toast.error("Error de sincronización"); }
+      console.error('Error en fetchInitialData:', error);
+      toast.error("Error de sincronización");
+    }
     finally { setLoading(false); }
   }, [userId]);
 
@@ -161,8 +162,9 @@ const MyRegistrations = () => {
       toast.dismiss(toastId);
       if (res.ok) setRenovacionModal({ open: true, pkgId, fechasSugeridas: data.fechaSugerida });
     } catch (error) {
-        console.error('Error en handlePrepaymentGroup:', error);
-        toast.dismiss(toastId); toast.error("Error"); }
+      console.error('Error en handlePrepaymentGroup:', error);
+      toast.dismiss(toastId); toast.error("Error");
+    }
   };
 
   const confirmarRenovacionMasiva = async (fechaInicio) => {
@@ -174,8 +176,9 @@ const MyRegistrations = () => {
       if (res.ok) { toast.success("¡Renovado! Paga para activar."); fetchInitialData(); refetchAsistencias(); }
       else { const r = await res.json(); toast.error(r.error || "Error"); }
     } catch (error) {
-        console.error('Error en confirmarRenovacionMasiva:', error);
-        toast.error("Error de red"); } finally { toast.dismiss(toastId); }
+      console.error('Error en confirmarRenovacionMasiva:', error);
+      toast.error("Error de red");
+    } finally { toast.dismiss(toastId); }
   };
 
   const handleAction = (reg) => {
@@ -191,8 +194,9 @@ const MyRegistrations = () => {
       const res = await apiFetch.patch(endpoint);
       if (res.ok) { toast.success("Actualizado"); fetchInitialData(); refetchAsistencias(); }
     } catch (error) {
-        console.error('Error en executeAction:', error);
-        toast.error("Error"); }
+      console.error('Error en executeAction:', error);
+      toast.error("Error");
+    }
   };
 
   const { currentPackages, historyItems } = useMemo(() => {
@@ -423,7 +427,7 @@ const MyRegistrations = () => {
                     </div>
                     <span className="text-[9px] font-black text-brand-muted border-brand-border-soft px-4 py-2 rounded-xl uppercase italic transition-colors">
                       {esClaseUnica(item)
-                        ? `CLASE ÚNICA · ${format(parseDateOnly(fechaClaseUnica(item)),'dd MMM yyyy', { locale: es })}`
+                        ? `CLASE ÚNICA · ${format(parseDateOnly(fechaClaseUnica(item)), 'dd MMM yyyy', { locale: es })}`
                         : item.tipo_inscripcion}
                     </span>
                     <span className="text-[9px] font-black text-brand-muted border-2 border-brand-border-soft px-4 py-2 rounded-xl group-hover:border-slate-700 group-hover:text-slate-300 uppercase italic transition-colors">

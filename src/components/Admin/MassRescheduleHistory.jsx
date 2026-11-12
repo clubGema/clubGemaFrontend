@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { 
-    CalendarClock, 
+import {
+    CalendarClock,
     CalendarX2,
     Users,
     MapPin,
@@ -77,18 +77,12 @@ const MassRescheduleHistory = ({ refreshSignal }) => { // 📥 Recibe la señal
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 bg-brand-bg rounded-2xl border border-brand-border-soft p-4 mb-4">
-                        <div className="border-r border-brand-border pr-2">
+                    <div className="grid gap-4 bg-brand-bg rounded-2xl border border-brand-border-soft p-4 mb-4">
+                        <div className="border-r border-brand-border pr-2 flex flex-col items-center justify-center text-center">
                             <span className="text-[8px] font-black text-brand-muted uppercase tracking-widest mb-1 block">Cancelada</span>
                             <div className="flex items-center gap-2 text-slate-800 font-bold text-xs uppercase">
                                 <CalendarClock size={14} className="text-red-500" />
                                 {formatearFechaUTC(item.fecha_origen)}
-                            </div>
-                        </div>
-                        <div className="pl-2 text-right">
-                            <span className="text-[8px] font-black text-brand-accent uppercase tracking-widest mb-1 block">Acción</span>
-                            <div className="flex items-center gap-1 text-brand-accent-dark font-black text-[9px] uppercase italic justify-end">
-                                <FastForward size={14} /> Ciclo +7 Días
                             </div>
                         </div>
                     </div>
