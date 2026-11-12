@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 import EnrollmentStepper from '../../components/student/enrollment/EnrollmentStepper';
 import ReportPaymentModal from "../../components/student/Payments/ReportPaymentModal";
 import ConfirmModal from "../../components/shared/ConfirmModal";
+import { beneficioService } from '../../services/beneficio.service';
 
 const Enrollment = () => {
   const { userId } = useAuth();
@@ -27,6 +28,11 @@ const Enrollment = () => {
     () => (userId ? enrollmentService.deudaPendiente(userId) : null),
     [userId],
     { errorMessage: 'Error de sincronización Imperio 7' }
+  );
+  const { data: beneficios, refetch: recargarBeneficios } = useFetch(
+    async () => await beneficioService.getBeneficios(userId) || [],
+    [userId],
+    { initialData: [] }
   );
 
   const handleOpenPayment = (debt) => {
@@ -51,6 +57,7 @@ const Enrollment = () => {
         setIsPayModalOpen(false);
         setSelectedDebtForPay(null);
         await refetchDeuda();
+        await recargarBeneficios();
         setStepperKey(k => k + 1);
       } else {
         const data = await response.json().catch(() => ({}));
@@ -78,6 +85,7 @@ const Enrollment = () => {
       console.error('Error al abrir pago inmediato:', e);
     } finally {
       refetchDeuda();
+      recargarBeneficios();
       setStepperKey(k => k + 1);
     }
   };
@@ -91,7 +99,7 @@ const Enrollment = () => {
       {/* CONTENIDO PRINCIPAL */}
       <div className="px-4 sm:px-6 md:px-8 transition-all duration-700">
         <div className="max-w-5xl mx-auto py-8">
-          
+
           {/* HEADER LIMPIO */}
           <header className="mb-8">
             <Link to="/dashboard/student" className="inline-flex items-center gap-1.5 text-brand-muted hover:text-brand-primary mb-3 text-[10px] font-black uppercase italic tracking-widest transition-colors">
@@ -149,7 +157,7 @@ const Enrollment = () => {
           )}
 
           {/* ASISTENTE DE MATRÍCULA */}
-          <EnrollmentStepper key={stepperKey} userId={userId} onSuccess={handleEnrolled} />
+          <EnrollmentStepper key={stepperKey} userId={userId} onSuccess={handleEnrolled} beneficios={beneficios} />
         </div>
       </div>
 
@@ -165,6 +173,7 @@ const Enrollment = () => {
             onSuccess={() => {
               setIsPayModalOpen(false);
               refetchDeuda();
+              recargarBeneficios();
               navigate('/dashboard/student');
             }}
           />

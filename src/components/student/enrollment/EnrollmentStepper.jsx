@@ -16,8 +16,9 @@ import StepIndicator from './StepIndicator';
 import StepModalidadSede from './steps/StepModalidadSede';
 import StepHorarioFechas from './steps/StepHorarioFechas';
 import StepCheckout from './steps/StepCheckout';
+import alumnoService from '../../../services/alumno.service';
 
-const EnrollmentStepper = ({ userId, onSuccess }) => {
+const EnrollmentStepper = ({ userId, onSuccess, beneficios }) => {
   const { horarios: horariosRaw, sedes, loading: loadingHorarios } = useCatalogos(['horarios', 'sedes']);
   const horarios = useMemo(() => horariosRaw.filter(h => h.activo), [horariosRaw]);
 
@@ -40,7 +41,16 @@ const EnrollmentStepper = ({ userId, onSuccess }) => {
     [],
     { initialData: [], errorMessage: 'No se pudieron cargar los precios' }
   );
-
+  const { data: planesLegacy } = useFetch(
+    async () => (await catalogoService.getLegacy()).data || [],
+    [],
+    { initialData: [], errorMessage: 'No se pudieron cargar los precios' }
+  );
+  const { data: esAntiguo } = useFetch(
+    async () => await alumnoService.verificarAntiguedad(),
+    [],
+    { initialData: false }
+  )
   // Si el merch falla al cargar, la matrícula sigue funcionando sin el slider.
   const { data: catalogoMerch } = useFetch(
     () => merchService.getCatalogo(),
@@ -101,9 +111,16 @@ const EnrollmentStepper = ({ userId, onSuccess }) => {
     ?? null;
   const faltaSedeRecojo = false;
 
-  const precioUnitario = state.modalidad === MODALIDAD.MENSUAL
-    ? precioMensual(planes, derived.horariosElegidos.length)
-    : precioClaseUnica(planes);
+  let precioUnitario;
+  if (esAntiguo) {
+    precioUnitario = state.modalidad === MODALIDAD.MENSUAL
+      ? precioMensual(planesLegacy, derived.horariosElegidos.length)
+      : precioClaseUnica(planesLegacy);
+  } else {
+    precioUnitario = state.modalidad === MODALIDAD.MENSUAL
+      ? precioMensual(planes, derived.horariosElegidos.length)
+      : precioClaseUnica(planes);
+  }
 
   const mesesMultiplicador = state.modalidad === MODALIDAD.MENSUAL ? (state.mensual.meses || 1) : 1;
   const precioBase = precioUnitario != null ? precioUnitario * mesesMultiplicador : null;
@@ -195,6 +212,7 @@ const EnrollmentStepper = ({ userId, onSuccess }) => {
           sedes={sedes}
           sedeRecojoId={sedeRecojoId}
           precioBase={precioBase}
+          beneficios={beneficios}
           submitError={submitError}
           onBack={volver}
         />

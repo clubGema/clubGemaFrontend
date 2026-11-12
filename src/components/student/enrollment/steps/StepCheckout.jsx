@@ -5,7 +5,7 @@ import { cartLines, withQty, cartTotal, esCamisetaMerch } from '../../../../util
 import MerchAddOnsSlider from '../../../merch/MerchAddOnsSlider';
 import EnrollmentSummary from '../EnrollmentSummary';
 
-const StepCheckout = ({ state, derived, extras, onExtrasChange, catalogoMerch, ownedMerchCounts, sedes, sedeRecojoId, precioBase, submitError, onBack }) => {
+const StepCheckout = ({ state, derived, extras, onExtrasChange, catalogoMerch, ownedMerchCounts, sedes, sedeRecojoId, precioBase, beneficios, submitError, onBack }) => {
   const esMensual = state.modalidad === MODALIDAD.MENSUAL;
   const nivelesElegidos = esMensual
     ? [...new Set((derived.horariosElegidos || []).map((h) => h.nivel?.nombre).filter(Boolean))]
@@ -79,6 +79,7 @@ const StepCheckout = ({ state, derived, extras, onExtrasChange, catalogoMerch, o
         fechaUnica={state.unica.fecha}
         horarioUnico={horarioUnico}
         precioBase={precioBase}
+        beneficios={beneficios}
         extras={extrasElegidos}
       />
 
@@ -154,11 +155,10 @@ const StepCheckout = ({ state, derived, extras, onExtrasChange, catalogoMerch, o
                         key={s.id}
                         type="button"
                         onClick={() => changeSedeRecojo(s.id)}
-                        className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase italic tracking-wider transition-all cursor-pointer ${
-                          activa
-                            ? 'bg-brand-primary text-white shadow-sm'
-                            : 'bg-white text-brand-primary border border-brand-gold/40 hover:bg-brand-primary-soft'
-                        }`}
+                        className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase italic tracking-wider transition-all cursor-pointer ${activa
+                          ? 'bg-brand-primary text-white shadow-sm'
+                          : 'bg-white text-brand-primary border border-brand-gold/40 hover:bg-brand-primary-soft'
+                          }`}
                       >
                         {s.nombre}
                       </button>

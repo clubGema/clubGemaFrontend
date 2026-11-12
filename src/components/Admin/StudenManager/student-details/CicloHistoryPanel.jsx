@@ -110,7 +110,7 @@ const CicloHistoryPanel = ({ historial, loadingCiclos, onSelectMes, onSelectIndi
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex items-center gap-1.5 flex-wrap">
                                                     <span className="text-[10px] font-black text-brand-primary uppercase tracking-widest bg-brand-primary-soft px-2 py-1 rounded-md">
-                                                        {obtenerRangoCiclo(ciclo.fecha_inicio_ciclo, ciclo.fecha_fin_ciclo)}
+                                                        {obtenerRangoCiclo(ciclo.fecha_inicio_ciclo, ciclo.fecha_fin_ciclo).replace('EN CURSO', ciclo.estado_ciclo === 'VENCIDO' ? 'VENCIDO' : ciclo.estado_ciclo === 'CERRADO' ? 'CERRADO' : 'EN CURSO')}
                                                     </span>
 
                                                     {ciclo.numero_mes_ciclo > 0 && (
@@ -120,17 +120,21 @@ const CicloHistoryPanel = ({ historial, loadingCiclos, onSelectMes, onSelectIndi
                                                     )}
                                                 </div>
 
-                                                <div className="text-[9px] font-bold text-slate-500 flex items-center gap-1.5 mt-2 min-w-0">
-                                                    <MapPin size={10} className="text-brand-accent shrink-0" />
-                                                    <span className="truncate">{ciclo.sede || 'S/D'}</span>
-                                                </div>
-                                                <div className="text-[9px] font-bold text-brand-muted flex items-center gap-1.5 mt-1 min-w-0">
-                                                    <User size={10} className="text-brand-muted shrink-0" />
-                                                    <span className="truncate">
-                                                        {ciclo.nivel || 'S/D'}
-                                                        {ciclo.profesor ? ` · ${ciclo.profesor}` : ''}
-                                                    </span>
-                                                </div>
+                                                {(ciclo.horarios?.length ? ciclo.horarios : [ciclo]).map((h, k) => (
+                                                    <div key={h.inscripcion_id ?? k} className={k === 0 ? 'mt-2' : 'mt-1.5 pt-1.5 border-t border-dashed border-brand-border-soft'}>
+                                                        <div className="text-[9px] font-bold text-slate-500 flex items-center gap-1.5 min-w-0">
+                                                            <MapPin size={10} className="text-brand-accent shrink-0" />
+                                                            <span className="truncate">{ciclo.sede || 'S/D'}</span>
+                                                        </div>
+                                                        <div className="text-[9px] font-bold text-brand-muted flex items-center gap-1.5 mt-1 min-w-0">
+                                                            <User size={10} className="text-brand-muted shrink-0" />
+                                                            <span className="truncate">
+                                                                {h.nivel || 'S/D'}
+                                                                {h.profesor ? ` · ${h.profesor}` : ''}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                ))}
                                             </div>
 
                                             <div className="flex flex-col items-end gap-1.5 shrink-0">
@@ -198,7 +202,8 @@ const CicloHistoryPanel = ({ historial, loadingCiclos, onSelectMes, onSelectIndi
                             />
                         )}
                     </>
-                )}
+                )
+                }
             </div>
         </div>
     );

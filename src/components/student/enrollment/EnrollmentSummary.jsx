@@ -30,9 +30,10 @@ const EnrollmentSummary = ({
   fechaUnica,
   horarioUnico,
   precioBase,
+  beneficios,
   extras = [],
 }) => {
-  const total = precioBase == null ? null : precioBase + extras.reduce((acc, e) => acc + e.price, 0);
+  const total = precioBase == null ? null : (Number(precioBase) + extras.reduce((acc, e) => acc + Number(e.price || 0), 0) - beneficios.reduce((acc, b) => acc + Number(b.tipos_beneficio?.valor_por_defecto || 0), 0));
   const esMensual = modalidad === MODALIDAD.MENSUAL;
   const mesesVal = Math.max(1, Number(meses) || 1);
   const esAdelantado = esMensual && mesesVal > 1;
@@ -104,6 +105,14 @@ const EnrollmentSummary = ({
             <span className="text-brand-primary">{soles(precioBase)}</span>
           </div>
         )}
+        {beneficios.map(b => (
+          <div key={b.id} className="flex justify-between text-[11px] font-black uppercase italic text-emerald-500">
+            <span className="flex items-center gap-1">
+              <span>Descuento:</span> {b.motivo ? b.motivo : b.tipos_beneficio.nombre}
+            </span>
+            <span>- {soles(b.tipos_beneficio.valor_por_defecto)}</span>
+          </div>
+        ))}
 
         {extras.length > 0 && (
           <div className="bg-brand-gold-soft/60 border border-brand-gold/30 rounded-2xl p-3.5 space-y-2">

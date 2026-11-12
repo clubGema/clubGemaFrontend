@@ -110,6 +110,7 @@ export const API_ROUTES = {
     BASE: "/catalogo",
     ACTIVOS: "/catalogo/activos",
     VIGENTES: "/catalogo/vigentes",
+    LEGACY: "/catalogo/legacy",
     BY_ID: (id) => `/catalogo/${id}`,
   },
   PARAMETROS: {
@@ -135,6 +136,7 @@ export const API_ROUTES = {
     DIA_CORTE: "/alumno/gestion/resumen-cortes",
     DIA_CORTE_COORDINADOR: "/alumno/gestion/cortes-alumnos",
     CAMBIAR_HISTORIAL: "/alumno/gestion/cambiar-historial",
+    VERIFICAR_ANTIGUEDAD: "/alumno/verificar-antiguedad",
     CONTACTOS: {
       BASE: "/alumno/mi-perfil/contactos",
       BY_ID: (id) => `/alumno/mi-perfil/contactos/${id}`,
