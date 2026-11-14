@@ -18,7 +18,10 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess, onCancelR
   });
 
   const montoCalculado = Number(monto ?? debt?.saldoRestante ?? debt?.monto_final);
-  const montoFijo = Number.isFinite(montoCalculado) && montoCalculado > 0 ? montoCalculado : null;
+  // Descuento del 100%: la deuda existe pero vale S/ 0. Igual se reporta para que
+  // el admin la apruebe (sin voucher), así la inscripción no queda "al aire".
+  const esSinCosto = Number.isFinite(montoCalculado) && montoCalculado <= 0.01;
+  const montoFijo = esSinCosto ? 0 : (Number.isFinite(montoCalculado) && montoCalculado > 0 ? montoCalculado : null);
   const montoAPagar = montoFijo ?? formData.monto;
 
   const CLUB_PHONE = "902585995";
@@ -40,10 +43,10 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess, onCancelR
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!montoAPagar || parseFloat(montoAPagar) <= 0) return toast.error("Ingresa un monto válido");
+    if (!esSinCosto && (!montoAPagar || parseFloat(montoAPagar) <= 0)) return toast.error("Ingresa un monto válido");
 
-    // Todos requieren voucher excepto Efectivo
-    if (!esEfectivo && !voucherFile) {
+    // Todos requieren voucher excepto Efectivo (y la deuda de S/ 0 por descuento)
+    if (!esSinCosto && !esEfectivo && !voucherFile) {
       return toast.error(esTarjeta ? "Sube la foto del voucher del POS" : "Sube la captura de tu pago");
     }
 
@@ -52,16 +55,17 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess, onCancelR
       const paymentData = new FormData();
       paymentData.append('deuda_id', parseInt(debt.id));
       paymentData.append('monto', parseFloat(montoAPagar));
-      paymentData.append('metodo_pago', formData.metodo_pago);
+      paymentData.append('metodo_pago', esSinCosto ? 'EFECTIVO' : formData.metodo_pago);
 
       // 🚩 HARDCODEO DE CÓDIGO DE OPERACIÓN PARA LA BASE DE DATOS
       let codigoGenerico = 'POR_VERIFICAR';
       if (esEfectivo) codigoGenerico = 'PAGO_PRESENCIAL';
       if (esTarjeta) codigoGenerico = 'VOUCHER_POS';
+      if (esSinCosto) codigoGenerico = 'DESCUENTO_100';
 
       paymentData.append('codigo_operacion', codigoGenerico);
 
-      if (voucherFile && !esEfectivo) paymentData.append('voucher', voucherFile);
+      if (voucherFile && !esEfectivo && !esSinCosto) paymentData.append('voucher', voucherFile);
 
       const response = await apiFetch.post(API_ROUTES.PAGOS.REPORTAR, paymentData);
       if (!response.ok) {
@@ -79,7 +83,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess, onCancelR
     }
   };
 
-  const hideRightPanel = esEfectivo || esTarjeta;
+  const hideRightPanel = esEfectivo || esTarjeta || esSinCosto;
 
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center p-2 md:p-6 bg-brand-primary-dark/90 backdrop-blur-sm animate-in fade-in duration-300">
@@ -110,7 +114,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess, onCancelR
               </div>
 
               {/* MÉTODO DE PAGO CON FLECHITA */}
-              <div className="space-y-1 relative">
+              {!esSinCosto && <div className="space-y-1 relative">
                 <label className="text-[9px] font-black text-brand-muted uppercase tracking-widest ml-1">Método</label>
                 <div className="relative">
                   <select value={formData.metodo_pago} onChange={(e) => setFormData({ ...formData, metodo_pago: e.target.value })}
@@ -124,11 +128,11 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess, onCancelR
                   {/* 🚩 Ícono de flechita para indicar que es un menú desplegable */}
                   <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted pointer-events-none" />
                 </div>
-              </div>
+              </div>}
             </div>
 
             {/* SECCIÓN VOUCHER */}
-            {!esEfectivo && (
+            {!esEfectivo && !esSinCosto && (
               <div className="space-y-1">
                 <label className="text-[9px] font-black text-brand-muted uppercase tracking-widest ml-1 flex items-center gap-1">
                   {esTarjeta ? "Sube la foto del POS" : "Sube la captura de tu pago"}
@@ -138,6 +142,15 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess, onCancelR
                   {previewUrl ? <img src={previewUrl} className="h-24 md:h-32 mx-auto rounded-lg shadow-md object-contain" alt="Voucher" /> :
                     <div className="py-2"><Upload size={32} className="mx-auto text-slate-300 mb-2 group-hover:text-brand-accent transition-colors" /><p className="text-[10px] font-black text-brand-muted uppercase italic leading-none group-hover:text-brand-accent-dark transition-colors">Seleccionar Imagen</p></div>}
                 </label>
+              </div>
+            )}
+
+            {/* INDICADOR PARA DESCUENTO 100% */}
+            {esSinCosto && (
+              <div className="bg-brand-accent-soft border border-brand-accent-soft rounded-2xl p-6 text-center">
+                <Coins size={32} className="text-brand-accent mx-auto mb-2" />
+                <h4 className="text-brand-accent-dark font-black uppercase tracking-tighter text-sm italic">Descuento del 100%</h4>
+                <p className="text-[9px] text-brand-accent-dark uppercase font-bold mt-1">No tienes nada que pagar. Envía el reporte para que la academia confirme tu inscripción.</p>
               </div>
             )}
 
@@ -154,7 +167,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess, onCancelR
               <button onClick={onClose} type="button" className="flex-1 bg-brand-surface-alt hover:bg-slate-200 text-slate-500 font-black py-3.5 rounded-xl transition-all uppercase italic text-[9px] tracking-widest active:scale-95">Cerrar</button>
               <button disabled={loading} className="flex-[2] bg-brand-primary hover:bg-brand-accent-dark text-white font-black py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 active:scale-95 shadow-lg shadow-brand-primary/20 disabled:opacity-70 disabled:active:scale-100">
                 {loading ? <Loader2 className="animate-spin" size={16} /> : <Send size={16} />}
-                <span className="uppercase italic tracking-tighter text-xs">{loading ? "ENVIANDO..." : "REPORTAR PAGO"}</span>
+                <span className="uppercase italic tracking-tighter text-xs">{loading ? "ENVIANDO..." : (esSinCosto ? "CONFIRMAR INSCRIPCIÓN" : "REPORTAR PAGO")}</span>
               </button>
             </div>
 
