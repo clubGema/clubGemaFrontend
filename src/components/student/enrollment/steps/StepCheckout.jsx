@@ -4,6 +4,7 @@ import { MODALIDAD } from '../../../../hooks/useEnrollmentWizard';
 import { cartLines, withQty, cartTotal, esCamisetaMerch } from '../../../../utils/merchCart';
 import MerchAddOnsSlider from '../../../merch/MerchAddOnsSlider';
 import EnrollmentSummary from '../EnrollmentSummary';
+import JerseyUpsellCard from '../mensual/JerseyUpsellCard';
 
 const StepCheckout = ({ state, derived, extras, onExtrasChange, catalogoMerch, ownedMerchCounts, sedes, sedeRecojoId, precioBase, beneficios, submitError, onBack }) => {
   const esMensual = state.modalidad === MODALIDAD.MENSUAL;
@@ -28,6 +29,26 @@ const StepCheckout = ({ state, derived, extras, onExtrasChange, catalogoMerch, o
     () => (catalogoMerch || []).filter((item) => !esCamisetaMerch(item)),
     [catalogoMerch]
   );
+
+  // La camiseta se ofrece al final del Paso 2, pero en celular queda muy abajo y
+  // el botón "Siguiente" fijo hace que el alumno pase sin verla. Por eso se
+  // vuelve a ofrecer aquí mientras no haya elegido ninguna talla.
+  const camisetas = useMemo(
+    () => (catalogoMerch || []).filter(esCamisetaMerch),
+    [catalogoMerch]
+  );
+  const tieneCamiseta = camisetas.some((c) => (extras.merchQty?.[c.id] || 0) > 0);
+  const [mostrarCamisetas] = React.useState(() => !tieneCamiseta);
+  const elegirCamiseta = (id, qty) => {
+    const next = { ...extras.merchQty };
+    camisetas.forEach((c) => { delete next[c.id]; });
+    onExtrasChange({ ...extras, merchQty: withQty(next, id, qty) });
+  };
+  const quitarCamisetas = () => {
+    const next = { ...extras.merchQty };
+    camisetas.forEach((c) => { delete next[c.id]; });
+    onExtrasChange({ ...extras, merchQty: next });
+  };
 
   const esMerchSeleccionado = extrasElegidos.length > 0;
   const subtotalMerch = cartTotal(lineasMerch);
@@ -82,6 +103,15 @@ const StepCheckout = ({ state, derived, extras, onExtrasChange, catalogoMerch, o
         beneficios={beneficios}
         extras={extrasElegidos}
       />
+
+      {esMensual && mostrarCamisetas && camisetas.length > 0 && (
+        <JerseyUpsellCard
+          camisetas={camisetas}
+          merchQty={extras.merchQty}
+          onSelectCamiseta={elegirCamiseta}
+          onClearCamisetas={quitarCamisetas}
+        />
+      )}
 
       {/* 🛍️ SECCIÓN DE ACCESORIOS ADICIONALES (EXCLUYE CAMISETAS YA OFRECIDAS EN EL PASO 2) */}
       {esMensual && (otrosMerch.length > 0 || esMerchSeleccionado) && (
