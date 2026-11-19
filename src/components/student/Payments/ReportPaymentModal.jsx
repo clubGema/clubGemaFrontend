@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { X, Send, Loader2, Banknote, Upload, Coins, Copy, CheckCircle2, Landmark, CreditCard, ChevronDown, Trash2 } from "lucide-react";
 import apiFetch from "../../../interceptors/api.js";
 import toast from "react-hot-toast";
@@ -21,8 +21,17 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess, onCancelR
   // Descuento del 100%: la deuda existe pero vale S/ 0. Igual se reporta para que
   // el admin la apruebe (sin voucher), así la inscripción no queda "al aire".
   const esSinCosto = Number.isFinite(montoCalculado) && montoCalculado <= 0.01;
-  const montoFijo = esSinCosto ? 0 : (Number.isFinite(montoCalculado) && montoCalculado > 0 ? montoCalculado : null);
+  const montoMaximo = Number.isFinite(montoCalculado) && montoCalculado > 0 ? montoCalculado : null;
+  // Los upgrades no aceptan pagos a medias (regla del backend): monto fijo.
+  // El resto admite pago parcial: el campo arranca con el saldo y se puede bajar.
+  const esUpgrade = String(debt?.detalle_adicional ?? '').includes('Upgrade');
+  const montoFijo = esSinCosto ? 0 : (esUpgrade ? montoMaximo : null);
   const montoAPagar = montoFijo ?? formData.monto;
+
+  // Al abrir el modal (o cambiar de deuda) el campo arranca con el saldo completo.
+  useEffect(() => {
+    if (isOpen) setFormData((f) => ({ ...f, monto: montoMaximo !== null ? montoMaximo.toFixed(2) : "" }));
+  }, [isOpen, debt?.id, montoMaximo]);
 
   const CLUB_PHONE = "902585995";
   const BCP_CUENTA = "19411410110063";
@@ -44,6 +53,9 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess, onCancelR
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!esSinCosto && (!montoAPagar || parseFloat(montoAPagar) <= 0)) return toast.error("Ingresa un monto válido");
+    if (montoMaximo !== null && parseFloat(montoAPagar) > montoMaximo + 0.01) {
+      return toast.error(`El monto no puede superar el saldo de S/ ${montoMaximo.toFixed(2)}`);
+    }
 
     // Todos requieren voucher excepto Efectivo (y la deuda de S/ 0 por descuento)
     if (!esSinCosto && !esEfectivo && !voucherFile) {
@@ -107,6 +119,7 @@ const ReportPaymentModal = ({ isOpen, onClose, debt, monto, onSuccess, onCancelR
                   <Banknote size={12} className="text-brand-accent" /> Monto (S/)
                 </label>
                 <input type="number" step="0.01"
+                  min="0.01" max={montoMaximo ?? undefined}
                   value={montoFijo !== null ? montoFijo.toFixed(2) : formData.monto}
                   readOnly={montoFijo !== null}
                   onChange={(e) => setFormData({ ...formData, monto: e.target.value })}
